@@ -1,32 +1,44 @@
 const express = require("express");
-const env = require("dotenv");
 const morgan = require("morgan");
 const cors = require("cors");
+const { ENV } = require("./config/environment");
+const CONNECT_DB = require("./database/connect");
+const errorHandling = require("./middlewares/errorHandling");
 
-const app = express();
-env.config();
+// router
+const users = require("./router/usersRoute");
+// const classes = require("./router/classesRoute");
+// const subjects = require("./router/subjectsRoute");
 
-// PORT
+const START_SERVER = () => {
+  const app = express();
 
-const PORT = process.env.PORT;
+  app.use(morgan("tiny"));
+  app.use(cors());
+  app.use(express.json());
 
-// Midlewares
+  // Routes
+  app.use("/api/users", users);
+  // app.use("/api/classes", classes);
+  // app.use("/api/subjects", subjects);
 
-app.use(morgan("tiny"));
-app.use(cors());
-app.use(express.json());
+  // Middlewares
+  app.use(errorHandling);
 
-// Routes
+  app.listen(ENV.PORT, () => {
+    console.log(`Server connected to http://localhost:${ENV.PORT}`);
+  });
+};
 
-app.get("/", (req, res) => {
+// IIFE
+(async () => {
   try {
-    res.json("Get request");
-  } catch (error) {
-    res.json(error);
-  }
-});
+    await CONNECT_DB();
+    console.log("Connect to MongoDB");
 
-// Log
-app.listen(PORT, () => {
-  console.log(`Server connected to http://localhost:${PORT}`);
-});
+    START_SERVER();
+  } catch (error) {
+    console.error(error);
+    process.exit(0);
+  }
+})();
