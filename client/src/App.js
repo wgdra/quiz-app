@@ -1,17 +1,29 @@
 import "./assets/styles/App.css";
-import { Route, Routes } from "react-router-dom";
-import NavWrapper from "./layouts/Navbar";
-import SideWrapper from "./layouts/Sidebar";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Main from "./pages/Main";
+import Manage from "./pages/admin/Manage";
+import User from "./pages/admin/Management/user";
+import Class from "./pages/admin/Management/class";
+import Subject from "./pages/admin/Management/subject";
+import Home from "./pages/projects/Home";
+import OverView from "./pages/projects/Overview";
+import Error from "./pages/Error";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<SideWrapper />} />
-      <Route path="/" element={<NavWrapper />}>
+    <BrowserRouter>
+      <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/overview" element={<Overview />} />
-      </Route>
-    </Routes>
+        <Route path="/" element={<Main />}>
+          <Route path="/manage" element={<Manage />} />
+          <Route path="/manage/user" element={<User />} />
+          <Route path="/manage/class" element={<Class />} />
+          <Route path="/manage/subject" element={<Subject />} />
+          <Route path="/overview" element={<OverView />} />
+        </Route>
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
