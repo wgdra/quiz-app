@@ -1,19 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row, Space, Popconfirm } from "antd";
 import ListTable from "../../../components/ui/Table";
-import ButtonPrimary from "../../../components/ui/Button";
-import ModalCustomize from "../../../components/ui/Modal";
-import FormInput from "../../../components/form/FormInput";
+import ButtonBasic from "../../../components/ui/Button";
+import FormInModal from "../../../components/ui/FormInModal";
 
 const User = () => {
   const [open, setOpen] = useState(false);
-  const [submittable, setSubmittable] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [titleModal, setTitleModal] = useState("");
+  const [okText, setOkText] = useState("");
+  const [isRecord, setIsRecord] = useState("");
 
-  const showModal = (record) => {
-    console.log("record", record);
-    setOpen(true);
-  };
-
+  console.log("isRecord", isRecord);
   // Fetch API
   const data = [
     {
@@ -50,7 +48,12 @@ const User = () => {
 
   const handleUpdate = () => {
     // PUT API
-    // console.log("ewewy");
+    console.log("ewewy");
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 2000);
   };
 
   const handleDelete = (key) => {
@@ -58,23 +61,57 @@ const User = () => {
     // DELETE API
   };
 
+  // Handle Modal
+  const showModal = (outerText, record) => {
+    console.log("record", record);
+
+    setIsRecord(record);
+
+    switch (outerText) {
+      case "Chỉnh sửa":
+        setTitleModal("Chỉnh sửa thông tin");
+        setOkText("Chỉnh sửa");
+        setOpen(true);
+        break;
+      case "Thêm mới":
+        setTitleModal("Thêm mới người dùng");
+        setOkText("Thêm mới");
+        setOpen(true);
+        break;
+      default:
+        break;
+    }
+  };
+
   // Button List Table
   const buttonTableUser = (_, record) => {
     if (data.length >= 1) {
       return (
         <Space wrap>
-          <ButtonPrimary label="Chỉnh sửa" onClick={() => showModal(record)} />
+          <ButtonBasic
+            label="Chỉnh sửa"
+            onClick={(e) => showModal(e.target.outerText, record)}
+          />
           <Popconfirm
             title="Bạn muốn xóa người dùng này?"
             onConfirm={() => handleDelete(record.key)}
           >
-            <ButtonPrimary label="Xóa" danger />
+            <ButtonBasic label="Xóa" danger />
           </Popconfirm>
         </Space>
       );
     } else {
       return null;
     }
+  };
+
+  const buttonTitle = () => {
+    return (
+      <ButtonBasic
+        label="Thêm mới"
+        onClick={(e) => showModal(e.target.outerText)}
+      />
+    );
   };
 
   // Data Columns Table
@@ -94,14 +131,25 @@ const User = () => {
     {
       title: "Email",
       dataIndex: "email",
-      width: "20%",
+      width: "30%",
     },
     {
-      title: "Xử Lý",
+      title: buttonTitle,
       dataIndex: "",
       render: buttonTableUser,
     },
   ];
+
+  const onHandleForm = (values, key) => {
+    console.log("Received values of form: ", values);
+    // console.log("key", key);
+
+    setConfirmLoading(true);
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 2000);
+  };
 
   return (
     <>
@@ -138,33 +186,64 @@ const User = () => {
               </span>
             </div>
             <ListTable columns={columns} data={data} />
-            <ModalCustomize
-              title="Chỉnh Sửa Thông Tin"
+            {/* <ButtonBasic
+              label="Thêm mới"
+              onClick={(e) => showModal(e.target.outerText)}
+            /> */}
+            <FormInModal
+              title={titleModal}
+              okText={okText}
+              cancelText="Hủy"
               open={open}
-              setOpen={setOpen}
-              handleUpdate={handleUpdate}
-            >
-              <FormInput
-                items={[
-                  {
-                    name: "username",
-                    label: "Tên người dùng",
-                  },
-                  {
-                    name: "full_name",
-                    label: "Họ và Tên",
-                  },
-                  {
-                    name: "password",
-                    label: "Mật khẩu",
-                  },
-                  {
-                    name: "email",
-                    label: "Email",
-                  },
-                ]}
-              />
-            </ModalCustomize>
+              onHandleForm={onHandleForm}
+              confirmLoading={confirmLoading}
+              onCancel={() => {
+                setOpen(false);
+              }}
+              items={[
+                {
+                  name: "username",
+                  label: "Tên người dùng",
+                  initialValue: `${isRecord ? isRecord?.username : ""}`,
+                  rule: [
+                    {
+                      min: 3,
+                      required: true,
+                      message: "Tối thiểu 3 ký tự",
+                    },
+                  ],
+                },
+                {
+                  name: "full_name",
+                  label: "Họ và Tên",
+                  initialValue: `${isRecord ? isRecord?.full_name : ""}`,
+                  rule: [
+                    {
+                      min: 3,
+                      required: true,
+                      message: "Điền đầy đủ cả họ tên",
+                    },
+                  ],
+                },
+                {
+                  name: "password",
+                  label: "Mật khẩu",
+                  initialValue: `${isRecord ? isRecord?.password : ""}`,
+                  rule: [
+                    {
+                      min: 6,
+                      required: true,
+                      message: "Mật khẩu phải trên 6 ký tự",
+                    },
+                  ],
+                },
+                {
+                  name: "email",
+                  label: "Email",
+                  initialValue: `${isRecord ? isRecord?.email : ""}`,
+                },
+              ]}
+            />
           </div>
         </Col>
       </Row>

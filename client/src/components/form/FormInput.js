@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Space } from "antd";
 
-const SubmitButton = ({ form }) => {
+const HandleSubmit = ({ form }) => {
   const [submittable, setSubmittable] = useState(false);
 
   // Watch all values
@@ -33,29 +33,27 @@ const FormInput = ({ ...props }) => {
   const [form] = Form.useForm();
   const items = props?.items;
 
+  console.log("form", form);
+
   return (
-    <Form form={form} name="validateOnly" layout="vertical" autoComplete="off">
+    <Form form={form} name="form" layout="vertical" autoComplete="off">
       {items.map((item, index) => {
         return (
           <Form.Item
+            hasFeedback
+            validateFirst
             key={index}
             name={item.name}
             label={item.label}
-            rules={[
-              {
-                required: true,
-              },
-            ]}
+            rules={item.rule}
           >
             <Input placeholder="e" />
           </Form.Item>
         );
       })}
-      <Form.Item>
-        <Space>
-          <SubmitButton form={form} />
-        </Space>
-      </Form.Item>
+      {/* <Form.Item>
+        <SubmitButton form={form} />
+      </Form.Item> */}
     </Form>
   );
 };

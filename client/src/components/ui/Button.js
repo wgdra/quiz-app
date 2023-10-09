@@ -1,6 +1,7 @@
 import { ConfigProvider, Button } from "antd";
 
-const ButtonPrimary = ({ ...props }) => {
+const ButtonBasic = ({ ...props }) => {
+  const name = props.name;
   return (
     <ConfigProvider
       theme={{
@@ -16,4 +17,4 @@ const ButtonPrimary = ({ ...props }) => {
   );
 };
 
-export default ButtonPrimary;
+export default ButtonBasic;
