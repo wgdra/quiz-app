@@ -3,6 +3,7 @@ import { Col, Row, Space, Popconfirm } from "antd";
 import ListTable from "../../../components/ui/Table";
 import ButtonBasic from "../../../components/ui/Button";
 import FormInModal from "../../../components/ui/FormInModal";
+import FormTitle from "../../../components/form/FormTitle";
 
 const User = () => {
   const [open, setOpen] = useState(false);
@@ -10,8 +11,8 @@ const User = () => {
   const [titleModal, setTitleModal] = useState("");
   const [okText, setOkText] = useState("");
   const [isRecord, setIsRecord] = useState("");
+  const [isNameModal, setIsNameModal] = useState("");
 
-  console.log("isRecord", isRecord);
   // Fetch API
   const data = [
     {
@@ -43,44 +44,71 @@ const User = () => {
       email: "New York No. 1 Lake Park",
     },
   ];
+  useEffect(() => {
+    fetchDataUser();
+  }, []);
 
-  // Handle API
-
-  const handleUpdate = () => {
-    // PUT API
-    console.log("ewewy");
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
+  const fetchDataUser = async () => {
+    // GET API
   };
 
-  const handleDelete = (key) => {
+  // Handle API
+  const handleCreate = async (dataForm) => {
+    // POST data
+    setConfirmLoading(false);
+    setOpen(false);
+    console.log("create", dataForm);
+  };
+
+  const handleUpdate = async (dataForm) => {
+    // PUT data
+    setConfirmLoading(false);
+    setOpen(false);
+    console.log("key update", isRecord.key);
+    console.log("update", dataForm);
+  };
+
+  const handleDelete = async (key) => {
     // console.log("key", key);
-    // DELETE API
+    // DELETE data
   };
 
   // Handle Modal
   const showModal = (outerText, record) => {
-    console.log("record", record);
-
-    setIsRecord(record);
-
     switch (outerText) {
       case "Chỉnh sửa":
+        setOpen(true);
         setTitleModal("Chỉnh sửa thông tin");
         setOkText("Chỉnh sửa");
-        setOpen(true);
+        setIsNameModal("modal-update");
+        setIsRecord(record);
+
         break;
       case "Thêm mới":
+        setOpen(true);
         setTitleModal("Thêm mới người dùng");
         setOkText("Thêm mới");
-        setOpen(true);
+        setIsNameModal("modal-create");
         break;
       default:
         break;
     }
+  };
+
+  const onHandleForm = (values, isHandle) => {
+    setConfirmLoading(true);
+    setTimeout(() => {
+      switch (isHandle) {
+        case "modal-create":
+          handleCreate(values);
+          break;
+        case "modal-update":
+          handleUpdate(values);
+          break;
+        default:
+          break;
+      }
+    }, 2000);
   };
 
   // Button List Table
@@ -89,14 +117,16 @@ const User = () => {
       return (
         <Space wrap>
           <ButtonBasic
+            type="primary"
             label="Chỉnh sửa"
+            style={{ background: "#eb9a25" }}
             onClick={(e) => showModal(e.target.outerText, record)}
           />
           <Popconfirm
             title="Bạn muốn xóa người dùng này?"
             onConfirm={() => handleDelete(record.key)}
           >
-            <ButtonBasic label="Xóa" danger />
+            <ButtonBasic type="primary" label="Xóa" danger />
           </Popconfirm>
         </Space>
       );
@@ -108,7 +138,9 @@ const User = () => {
   const buttonTitle = () => {
     return (
       <ButtonBasic
+        type="primary"
         label="Thêm mới"
+        style={{ background: "#04aa6d" }}
         onClick={(e) => showModal(e.target.outerText)}
       />
     );
@@ -140,17 +172,6 @@ const User = () => {
     },
   ];
 
-  const onHandleForm = (values, key) => {
-    console.log("Received values of form: ", values);
-    // console.log("key", key);
-
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
-  };
-
   return (
     <>
       <Row>
@@ -169,28 +190,15 @@ const User = () => {
               margin: 16,
             }}
           >
-            <div
-              style={{
-                color: "#fff",
-                background: "#1677ff",
-                padding: "8px 0px",
-              }}
-            >
-              <span
-                style={{
-                  fontSize: "1.4em",
-                  fontWeight: "bold",
-                }}
-              >
-                Bảng Thông Tin Người Dùng
-              </span>
-            </div>
+            <FormTitle
+              title="Bảng Thông Tin Người Dùng"
+              fontSize="1.4em"
+              background="#1677ff"
+            />
             <ListTable columns={columns} data={data} />
-            {/* <ButtonBasic
-              label="Thêm mới"
-              onClick={(e) => showModal(e.target.outerText)}
-            /> */}
+
             <FormInModal
+              nameModal={isNameModal}
               title={titleModal}
               okText={okText}
               cancelText="Hủy"

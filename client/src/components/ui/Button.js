@@ -1,13 +1,15 @@
 import { ConfigProvider, Button } from "antd";
 
 const ButtonBasic = ({ ...props }) => {
-  const name = props.name;
   return (
     <ConfigProvider
       theme={{
         components: {
           Button: {
             /* here is your component tokens */
+            defaultColor: "#ffffff",
+            defaultBg: props.tokenDefaultColor,
+            defaultBorderColor: props.tokenDefaultColor,
           },
         },
       }}

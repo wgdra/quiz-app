@@ -5,6 +5,7 @@ import Manage from "./pages/admin/Manage";
 import User from "./pages/admin/Management/user";
 import Class from "./pages/admin/Management/class";
 import Subject from "./pages/admin/Management/subject";
+import Synthetic from "./pages/admin/Management/synthetic";
 import Home from "./pages/projects/Home";
 import OverView from "./pages/projects/Overview";
 import Error from "./pages/Error";
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Main />}>
           <Route path="/manage" element={<Manage />} />
           <Route path="/manage/user" element={<User />} />
+          <Route path="/manage/synthetic" element={<Synthetic />} />
           <Route path="/manage/class" element={<Class />} />
           <Route path="/manage/subject" element={<Subject />} />
           <Route path="/overview" element={<OverView />} />

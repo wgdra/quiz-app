@@ -27,7 +27,7 @@ const SideWrapper = (props) => {
     getItem("DASHBOARD", "1", <AppstoreOutlined />),
     getItem("Người Dùng", "2", <TeamOutlined />),
     getItem("Quản Lý", "sub1", <UnorderedListOutlined />, [
-      getItem("Quản Lý Lớp", "4"),
+      getItem("Tổng hợp", "4"),
       getItem("Quản Lý Môn Học", "5"),
       getItem("Quản Lý Chương", "6"),
       getItem("Quản Lý Bài tập", "7"),
@@ -54,7 +54,7 @@ const SideWrapper = (props) => {
         break;
 
       case "4":
-        navigate("/manage/class");
+        navigate("/manage/synthetic");
         break;
 
       case "5":
@@ -98,7 +98,6 @@ const SideWrapper = (props) => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["1"]}
         items={items}
         style={{ fontSize: "1.1em" }}
         onClick={(e) => handleNavigate(e.key)}

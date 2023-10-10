@@ -13,11 +13,13 @@ const FormInModal = ({ ...props }) => {
         onCancel();
       }}
       onOk={() => {
+        const isHandle = form.__INTERNAL__.name;
+
         form
           .validateFields()
           .then((values) => {
             form.resetFields();
-            onHandleForm(values);
+            onHandleForm(values, isHandle);
           })
           .catch((info) => {
             console.log("Validate Failed:", info);
@@ -27,7 +29,7 @@ const FormInModal = ({ ...props }) => {
       <Form
         form={form}
         layout="vertical"
-        name="form_in_modal"
+        name={props.nameModal}
         initialValues={{
           modifier: "public",
         }}
