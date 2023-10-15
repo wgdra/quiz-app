@@ -4,9 +4,11 @@ import { Divider, Input, Select, Space, Button, ConfigProvider } from "antd";
 
 let index = 0;
 const FormSelect = ({ ...props }) => {
-  const [items, setItems] = useState(props.items);
+  // const [items, setItems] = useState(props.items);
   const [name, setName] = useState("");
   const inputRef = useRef(null);
+
+  const { items, setItems, handleDataItem, handleOptionSelect } = props;
 
   const onNameChange = (event) => {
     setName(event.target.value);
@@ -14,16 +16,19 @@ const FormSelect = ({ ...props }) => {
 
   const addItem = (e) => {
     e.preventDefault();
-    setItems([...items, name || `New item ${index++}`]);
+    // setItems([...items, name || `New item ${index++}`]);
+    handleDataItem(name);
     setName("");
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
   };
 
-  const isItem = (value) => {
-    console.log("value", value);
-  };
+  // const isItem = (value, option) => {
+  //   console.log("value", value);
+  //   setIsOption(value, option);
+  // };
+
   return (
     <ConfigProvider
       theme={{
@@ -35,6 +40,7 @@ const FormSelect = ({ ...props }) => {
         components: {
           Select: {
             /* here is your component tokens */
+            optionFontSize: 18,
           },
         },
       }}
@@ -43,8 +49,9 @@ const FormSelect = ({ ...props }) => {
         style={{
           width: "100%",
         }}
+        listHeight={200}
         placeholder="custom dropdown render"
-        onChange={(value) => isItem(value)}
+        onChange={(_, option) => handleOptionSelect(option)}
         dropdownRender={(menu) => (
           <>
             {menu}
@@ -72,7 +79,8 @@ const FormSelect = ({ ...props }) => {
         )}
         options={items?.map((item) => ({
           value: item.id,
-          label: item.label,
+          label: item.name,
+          option: item,
         }))}
       />
     </ConfigProvider>

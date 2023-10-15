@@ -83,7 +83,7 @@ const ListTable = ({ ...props }) => {
     render: (text) => text,
   });
 
-  // Handle Colums
+  // Colums
   const newColums = columns.map((column) => {
     if (column.key) {
       return {
