@@ -1,20 +1,23 @@
-const userSchema = require("../models/userSchema");
 const { StatusCodes } = require("http-status-codes");
-const validation = require("../validations/userValidation");
+const userService = require("../Service/userService");
 
 // GET ALL
 async function getUser(req, res, next) {
   try {
-    const result = await userSchema.find();
+    const result = await userService.getAllUser();
 
-    if (!result) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Không lấy được dữ liệu...!" });
-    }
-    res
-      .status(StatusCodes.OK)
-      .json({ status: true, data: result, message: "Get Data Susses...!" });
+    res.status(StatusCodes.OK).json(result);
+  } catch (error) {
+    next(error);
+  }
+}
+
+// GET One
+async function getOneUser(req, res, next) {
+  try {
+    const result = await userService.getOneUser(req.params.id);
+
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
     next(error);
   }
@@ -23,73 +26,37 @@ async function getUser(req, res, next) {
 // CREATE
 async function createUser(req, res, next) {
   try {
-    const reqBody = req.body;
-
-    const result = await validation.validateAsync(reqBody, {
-      abortEarly: false,
-    });
-
-    console.log("result", result);
-    // const result = await userSchema.insertMany({
-    //   user_name: dataReq.user_name,
-    //   password: dataReq.password,
-    //   full_name: dataReq.full_name,
-    //   role: dataReq.role,
-    //   email: dataReq.email,
-    // });
-    if (!result) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ message: "Lỗi thêm mới người dùng...!" });
-    }
-    res
-      .status(StatusCodes.CREATED)
-      .json({ status: true, data: result, message: "Thêm mới thành công!" });
+    const createdUser = await userService.createUser(req.body);
+    res.status(StatusCodes.CREATED).json(createdUser);
   } catch (error) {
     next(error);
   }
 }
 
 // UPDATE ONE
-async function updateUser(req, res) {
+async function updateUser(req, res, next) {
   try {
-    const id = req.params.id;
-    const dataReq = req.body;
-
-    const result = await userSchema.findOneAndUpdate({ _id: id }, dataReq, {
-      new: true,
-    });
-
-    if (!result) {
-      return res.status(400).json({ msg: "Lỗi Request!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Chỉnh sửa thành công!" });
+    const updatedUser = await userService.updateUser(req.params.id, req.body);
+    res.status(StatusCodes.OK).json(updatedUser);
   } catch (error) {
-    res.status(500).json({ msg: "Lỗi chỉnh sửa người dùng...!" });
+    next(error);
   }
 }
 
 // DELETE ONE
-async function deleteUser(req, res) {
+async function deleteUser(req, res, next) {
   try {
-    const id = req.params.id;
-    const result = await userSchema.findOneAndDelete({ _id: id });
+    const deletedUser = await userService.deleteUser(req.params.id);
 
-    if (!result) {
-      return res.status(400).json({ msg: "Lỗi Request!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Xóa thành công" });
+    res.status(StatusCodes.OK).json(deletedUser);
   } catch (error) {
-    res.status(500).json({ error: "Lỗi xóa người dùng...!" });
+    next();
   }
 }
 
 module.exports = {
   getUser,
+  getOneUser,
   createUser,
   updateUser,
   deleteUser,

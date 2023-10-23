@@ -1,100 +1,59 @@
-const classSchema = require("../models/classSchema");
+const { StatusCodes } = require("http-status-codes");
+const classService = require("../Service/classService");
 
 // GET ALL
-async function getClass(req, res) {
+async function getClass(req, res, next) {
   try {
-    const result = await classSchema.find();
+    const result = await classService.getAllClass();
 
-    if (!result) {
-      return res.status(400).json({ msg: "Không lấy được dữ liệu...!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Get Data Susses...!" });
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Lỗi không lấy được dữ liệu người dùng...!" });
+    next(error);
   }
 }
 
-// GET ONE
-async function getOneClass(req, res) {
+// GET One
+async function getOneClass(req, res, next) {
   try {
-    const class_id = req.params.id;
-    console.log("class id", class_id);
-    const result = await classSchema.find({ class_id: class_id });
+    const result = await classService.getOneClass(req.params.id);
 
-    if (!result) {
-      return res.status(400).json({ msg: "Không lấy được dữ liệu...!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Get Data Susses...!" });
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Lỗi không lấy được dữ liệu người dùng...!" });
+    next(error);
   }
 }
 
-// POST
-async function createClass(req, res) {
+// CREATE
+async function createClass(req, res, next) {
   try {
-    const dataReq = req.body;
-
-    const result = await classSchema.insertMany({
-      class_id: dataReq.class_id,
-      class_name: dataReq.class_name,
-    });
-
-    if (!result) {
-      res.status(400).json({ msg: "Thêm mới lớp không thành công...!" });
-    }
-    res
-      .status(200)
-      .json({ status: true, data: result, msg: "Thêm mới thành công!" });
+    const createdClass = await classService.createClass(req.body);
+    res.status(StatusCodes.CREATED).json(createdClass);
   } catch (error) {
-    res.status(500).json({ error: "Lỗi thêm mới lớp...!" });
+    next(error);
   }
 }
 
 // UPDATE ONE
-async function updateClass(req, res) {
+async function updateClass(req, res, next) {
   try {
-    const id = req.params.id;
-    const dataReq = req.body;
-
-    const result = await classSchema.findOneAndUpdate({ _id: id }, dataReq, {
-      new: true,
-    });
-
-    if (!result) {
-      console.log("aaaaa");
-      return res.status(400).json({ msg: "Chỉnh sửa không thành công!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: "", msg: "Chỉnh sửa thành công!" });
+    const updatedClass = await classService.updateClass(
+      req.params.id,
+      req.body
+    );
+    res.status(StatusCodes.OK).json(updatedClass);
   } catch (error) {
-    res.status(500).json({ msg: "Lỗi chỉnh sửa lớp...!" });
+    next(error);
   }
 }
 
 // DELETE ONE
-async function deleteClass(req, res) {
+async function deleteClass(req, res, next) {
   try {
-    const id = req.params.id;
-    const result = await classSchema.findOneAndDelete({ _id: id });
+    const deletedClass = await classService.deleteClass(req.params.id);
 
-    if (!result) {
-      return res.status(400).json({ msg: "Xóa không thành công!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Xóa thành công" });
+    res.status(StatusCodes.OK).json(deletedClass);
   } catch (error) {
-    res.status(500).json({ error: "Lỗi xóa lớp...!" });
+    next();
   }
 }
 

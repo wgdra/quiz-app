@@ -1,98 +1,59 @@
-const subjectSchema = require("../models/subjectSchema");
+const { StatusCodes } = require("http-status-codes");
+const subjectService = require("../Service/subjectService");
 
 // GET ALL
-async function getSubject(req, res) {
+async function getSubject(req, res, next) {
   try {
-    const result = await subjectSchema.find();
+    const result = await subjectService.getAllSubject();
 
-    if (!result) {
-      return res.status(400).json({ msg: "Không lấy được dữ liệu...!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Get Data Susses...!" });
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Lỗi không lấy được dữ liệu...!" });
+    next(error);
   }
 }
 
-// GET ONE
-async function getOneSubject(req, res) {
+// GET One
+async function getOneSubject(req, res, next) {
   try {
-    const class_id = req.params.id;
-    const result = await subjectSchema.find({ class_id: class_id });
+    const result = await subjectService.getOneSubject(req.params.id);
 
-    if (!result) {
-      return res.status(400).json({ msg: "Không lấy được dữ liệu...!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Get Data Susses...!" });
+    res.status(StatusCodes.OK).json(result);
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Lỗi không lấy được dữ liệu người dùng...!" });
+    next(error);
   }
 }
 
-// POST
-async function createSubject(req, res) {
+// CREATE
+async function createSubject(req, res, next) {
   try {
-    const dataReq = req.body;
-
-    const result = await subjectSchema.insertMany({
-      class_id: dataReq.class_id,
-      subject_id: dataReq.subject_id,
-      subject_name: dataReq.subject_name,
-    });
-
-    if (!result) {
-      res.status(400).json({ msg: "Thêm mới lớp không thành công...!" });
-    }
-    res
-      .status(200)
-      .json({ status: true, data: result, msg: "Thêm mới thành công!" });
+    const createdSubject = await subjectService.createSubject(req.body);
+    res.status(StatusCodes.CREATED).json(createdSubject);
   } catch (error) {
-    res.status(500).json({ error: "Lỗi thêm mới lớp...!" });
+    next(error);
   }
 }
 
 // UPDATE ONE
-async function updateSubject(req, res) {
+async function updateSubject(req, res, next) {
   try {
-    const id = req.params.id;
-    const dataReq = req.body;
-
-    const result = await subjectSchema.findOneAndUpdate({ _id: id }, dataReq, {
-      new: true,
-    });
-
-    if (!result) {
-      console.log("aaaaa");
-      return res.status(400).json({ msg: "Chỉnh sửa không thành công!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: "", msg: "Chỉnh sửa thành công!" });
+    const updatedSubject = await subjectService.updateSubject(
+      req.params.id,
+      req.body
+    );
+    res.status(StatusCodes.OK).json(updatedSubject);
   } catch (error) {
-    res.status(500).json({ msg: "Lỗi chỉnh sửa lớp...!" });
+    next(error);
   }
 }
 
 // DELETE ONE
-async function deleteSubject(req, res) {
+async function deleteSubject(req, res, next) {
   try {
-    const id = req.params.id;
-    const result = await subjectSchema.findOneAndDelete({ _id: id });
+    const deletedSubject = await subjectService.deleteSubject(req.params.id);
 
-    if (!result) {
-      return res.status(400).json({ msg: "Xóa không thành công!" });
-    }
-    return res
-      .status(200)
-      .json({ status: true, data: result, msg: "Xóa thành công" });
+    res.status(StatusCodes.OK).json(deletedSubject);
   } catch (error) {
-    res.status(500).json({ error: "Lỗi xóa lớp...!" });
+    next();
   }
 }
 

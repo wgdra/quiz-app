@@ -17,9 +17,9 @@ const CONNECT_DB = async () => {
   instance = client.db(ENV.DATABASE_NAME);
 };
 
-// const GET_DB = () => {
-//   if (!instance) throw new Error("Hãy kết nối DataBase !");
-//   return instance;
-// };
+const GET_DB = () => {
+  if (!instance) throw new Error("Hãy kết nối DataBase !");
+  return instance;
+};
 
-module.exports = CONNECT_DB;
+module.exports = { CONNECT_DB, GET_DB };

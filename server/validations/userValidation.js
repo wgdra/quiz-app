@@ -1,10 +1,43 @@
 const Joi = require("joi");
+const { StatusCodes } = require("http-status-codes");
 
-const correctCondition = Joi.object({
-  user_name: Joi.string().required().min(3).max(20).trim().strict(),
-  password: Joi.string().required().min(6).max(20),
-  full_name: Joi.string().required().min(3).max(20).trim().strict(),
-  email: Joi.string().required().email(),
-});
+// Validate Create
+const createUser = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    user_name: Joi.string().required().min(3).max(20).trim().strict(),
+    password: Joi.string().required().min(6).max(20),
+    full_name: Joi.string().required().min(3).max(20).trim().strict(),
+    role: Joi.number(),
+    email: Joi.string().required().email(),
+  });
 
-module.exports = correctCondition;
+  try {
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+    });
+    next();
+  } catch (error) {
+    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(error.message);
+  }
+};
+
+const updateUser = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    user_name: Joi.string().required().min(3).max(20).trim().strict(),
+    password: Joi.string().required().min(6).max(20),
+    full_name: Joi.string().required().min(3).max(20).trim().strict(),
+    role: Joi.number(),
+    email: Joi.string().required().email(),
+  });
+
+  try {
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+    });
+    next();
+  } catch (error) {
+    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(error.message);
+  }
+};
+
+module.exports = { createUser, updateUser };

@@ -2,13 +2,16 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const { ENV } = require("./config/environment");
-const CONNECT_DB = require("./database/connect");
+const connect = require("./database/connect");
 const errorHandling = require("./middlewares/errorHandling");
 
 // router
 const users = require("./router/usersRoute");
-// const classes = require("./router/classesRoute");
-// const subjects = require("./router/subjectsRoute");
+const classes = require("./router/classesRoute");
+const subjects = require("./router/subjectsRoute");
+const chapters = require("./router/chapterRoute");
+const quizes = require("./router/quizRoute");
+const theories = require("./router/theoryRoute");
 
 const START_SERVER = () => {
   const app = express();
@@ -19,8 +22,11 @@ const START_SERVER = () => {
 
   // Routes
   app.use("/api/users", users);
-  // app.use("/api/classes", classes);
-  // app.use("/api/subjects", subjects);
+  app.use("/api/classes", classes);
+  app.use("/api/subjects", subjects);
+  app.use("/api/chapters", chapters);
+  app.use("/api/quizes", quizes);
+  app.use("/api/theories", theories);
 
   // Middlewares
   app.use(errorHandling);
@@ -33,7 +39,7 @@ const START_SERVER = () => {
 // IIFE
 (async () => {
   try {
-    await CONNECT_DB();
+    await connect.CONNECT_DB();
     console.log("Connect to MongoDB");
 
     START_SERVER();
