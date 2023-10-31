@@ -1,76 +1,142 @@
 import React, { useEffect, useState } from "react";
-import { Col, Row, Space, Popconfirm } from "antd";
+import { Col, Row, Space, Popconfirm, notification } from "antd";
 import ListTable from "../../../components/ui/Table";
 import ButtonBasic from "../../../components/ui/Button";
 import FormInModal from "../../../components/ui/FormInModal";
 import FormTitle from "../../../components/form/FormTitle";
+import {
+  getDataUser,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../../../services/userApiService";
 
 const User = () => {
   const [open, setOpen] = useState(false);
+
+  const [data, setData] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [titleModal, setTitleModal] = useState("");
   const [okText, setOkText] = useState("");
   const [isRecord, setIsRecord] = useState("");
   const [isNameModal, setIsNameModal] = useState("");
 
+  const [api, contextHolder] = notification.useNotification();
+
+  // Notidication
+  const openNotification = (info) => {
+    api[info.type]({
+      message: info.message,
+      description: info.description,
+    });
+  };
+
   // Fetch API
-  const data = [
-    {
-      key: "1",
-      username: "John Brown",
-      password: "123456",
-      full_name: "John Brown",
-      email: "New York No. 1 Lake Park",
-    },
-    {
-      key: "2",
-      username: "Jn",
-      password: "123456",
-      full_name: "Nguyen",
-      email: "New York No. 1 Lake Park",
-    },
-    {
-      key: "3",
-      username: "John",
-      password: "123456",
-      full_name: "Tien",
-      email: "New York No. 1 Lake Park",
-    },
-    {
-      key: "4",
-      username: "Jrown",
-      password: "123456",
-      full_name: "Trung",
-      email: "New York No. 1 Lake Park",
-    },
-  ];
   useEffect(() => {
     fetchDataUser();
   }, []);
 
   const fetchDataUser = async () => {
     // GET API
+    let result = await getDataUser();
+
+    if (result.status === 200) {
+      setTimeout(() => {
+        setData(result.data);
+      }, 600);
+    } else {
+      return openNotification({
+        type: "error",
+        message: "Lỗi lấy dữ liệu người dùng",
+        description: `Server: ${result}`,
+      });
+    }
   };
 
   // Handle API
   const handleCreate = async (dataForm) => {
     // POST data
-    setConfirmLoading(false);
-    setOpen(false);
-    console.log("create", dataForm);
+    let result = await createUser(dataForm);
+
+    if (result.status === 201) {
+      setConfirmLoading(false);
+      setOpen(false);
+      fetchDataUser();
+
+      return openNotification({
+        type: "success",
+        message: "Thêm mới thành công",
+      });
+    } else {
+      setConfirmLoading(false);
+      setOpen(false);
+
+      return openNotification({
+        type: "error",
+        message: "Lỗi thêm mới người dùng",
+        description: `Server: ${result}`,
+      });
+    }
   };
 
   const handleUpdate = async (dataForm) => {
     // PUT data
-    setConfirmLoading(false);
-    setOpen(false);
-    console.log("key update", isRecord.key);
-    console.log("update", dataForm);
+    if (dataForm.outOfDate === false) {
+      setConfirmLoading(false);
+
+      return openNotification({
+        type: "error",
+        message: "Vui lòng điền đầy đủ thông tin",
+      });
+    } else {
+      let result = await updateUser(isRecord._id, dataForm);
+
+      if (result.res === true) {
+        if (result.status === 200) {
+          setConfirmLoading(false);
+          setOpen(false);
+          fetchDataUser();
+          return openNotification({
+            type: "success",
+            message: "Cập nhật thông tin thành công",
+          });
+        } else {
+          setConfirmLoading(false);
+          setOpen(false);
+          return openNotification({
+            type: "error",
+            message: "Lỗi cập nhật thông tin",
+            description: `Server: ${result}`,
+          });
+        }
+      } else {
+        setConfirmLoading(false);
+        setOpen(false);
+        return openNotification({
+          type: "error",
+          message: "Vui lòng điền đầy đủ thông tin",
+          description: `Server: ${result}`,
+        });
+      }
+    }
   };
 
-  const handleDelete = async (key) => {
-    // console.log("key", key);
+  const handleDelete = async (_id) => {
     // DELETE data
+    let result = await deleteUser(_id);
+
+    if (result.status === 200) {
+      fetchDataUser();
+      return openNotification({
+        type: "success",
+        message: "Xóa thành công",
+      });
+    } else {
+      return openNotification({
+        type: "error",
+        message: "Lỗi xóa thông tin",
+      });
+    }
   };
 
   // Handle Modal
@@ -89,21 +155,23 @@ const User = () => {
         setTitleModal("Thêm mới người dùng");
         setOkText("Thêm mới");
         setIsNameModal("modal-create");
+        setIsRecord("");
+
         break;
       default:
         break;
     }
   };
 
-  const onHandleForm = (values, isHandle) => {
+  const onHandleForm = (dataForm, isHandle) => {
     setConfirmLoading(true);
     setTimeout(() => {
       switch (isHandle) {
         case "modal-create":
-          handleCreate(values);
+          handleCreate(dataForm);
           break;
         case "modal-update":
-          handleUpdate(values);
+          handleUpdate(dataForm);
           break;
         default:
           break;
@@ -124,7 +192,7 @@ const User = () => {
           />
           <Popconfirm
             title="Bạn muốn xóa người dùng này?"
-            onConfirm={() => handleDelete(record.key)}
+            onConfirm={() => handleDelete(record._id)}
           >
             <ButtonBasic type="primary" label="Xóa" danger />
           </Popconfirm>
@@ -212,7 +280,7 @@ const User = () => {
                 {
                   name: "username",
                   label: "Tên người dùng",
-                  initialValue: `${isRecord ? isRecord?.username : ""}`,
+                  placeholder: `${isRecord ? isRecord?.username : ""}`,
                   rule: [
                     {
                       min: 3,
@@ -224,7 +292,7 @@ const User = () => {
                 {
                   name: "full_name",
                   label: "Họ và Tên",
-                  initialValue: `${isRecord ? isRecord?.full_name : ""}`,
+                  placeholder: `${isRecord ? isRecord?.full_name : ""}`,
                   rule: [
                     {
                       min: 3,
@@ -236,7 +304,7 @@ const User = () => {
                 {
                   name: "password",
                   label: "Mật khẩu",
-                  initialValue: `${isRecord ? isRecord?.password : ""}`,
+                  placeholder: `${isRecord ? isRecord?.password : ""}`,
                   rule: [
                     {
                       min: 6,
@@ -248,12 +316,23 @@ const User = () => {
                 {
                   name: "email",
                   label: "Email",
-                  initialValue: `${isRecord ? isRecord?.email : ""}`,
+                  placeholder: `${isRecord ? isRecord?.email : ""}`,
+                  rule: [
+                    {
+                      type: "email",
+                      message: "Hãy nhập đúng Email!",
+                    },
+                    {
+                      required: true,
+                      message: "Vui lòng điền Email",
+                    },
+                  ],
                 },
               ]}
             />
           </div>
         </Col>
+        {contextHolder}
       </Row>
     </>
   );

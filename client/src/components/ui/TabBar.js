@@ -15,13 +15,13 @@ const TabBar = ({ ...props }) => {
   const boxContent = (item) => {
     return (
       <Card
-        title={item.question}
+        title={item.question_name}
         extra={
           <ButtonBasic
             type="primary"
             label="Chỉnh sửa"
             style={{ background: "#eb9a25" }}
-            onClick={() => handleUpdateQuestion(item.id)}
+            onClick={() => handleUpdateQuestion(item._id)}
           />
         }
         bodyStyle={{ display: "flex", flexDirection: "column" }}
@@ -46,8 +46,8 @@ const TabBar = ({ ...props }) => {
   // Tabbar ỉtems
   const initialItems = items.map((item, _) => {
     return {
-      key: item.id,
-      label: `Câu ${item.id}`,
+      key: item.questionId,
+      label: `Câu ${item.questionId}`,
       children: boxContent(item),
     };
   });

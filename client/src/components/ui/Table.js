@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
-import { ConfigProvider, Table, Button, Input, Space } from "antd";
+import React, { useRef } from "react";
+import { ConfigProvider, Table, Button, Input, Space, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 const ListTable = ({ ...props }) => {
-  const [loading, setLoading] = useState(false);
   const searchInput = useRef(null);
   const columns = props.columns;
 
@@ -107,7 +106,12 @@ const ListTable = ({ ...props }) => {
         },
       }}
     >
-      <Table columns={newColums} loading={loading} dataSource={props.data} />;
+      <Table
+        columns={newColums}
+        loading={props.data.length === 0 ? <Spin size="large" /> : false}
+        dataSource={props.data}
+      />
+      ;
     </ConfigProvider>
   );
 };

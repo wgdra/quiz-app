@@ -1,14 +1,15 @@
 import React, { useState, useRef } from "react";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import { Divider, Input, Select, Space, Button, ConfigProvider } from "antd";
 
-let index = 0;
 const FormSelect = ({ ...props }) => {
   // const [items, setItems] = useState(props.items);
-  const [name, setName] = useState("");
-  const inputRef = useRef(null);
-
   const { items, setItems, handleDataItem, handleOptionSelect } = props;
+
+  const [name, setName] = useState("");
+  const [dataOption, setDataOption] = useState({});
+
+  const inputRef = useRef(null);
 
   const onNameChange = (event) => {
     setName(event.target.value);
@@ -29,6 +30,13 @@ const FormSelect = ({ ...props }) => {
   //   setIsOption(value, option);
   // };
 
+  const updateItem = () => {
+    console.log("update");
+  };
+  const deleteItem = () => {
+    console.log("deleteItem");
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -46,12 +54,16 @@ const FormSelect = ({ ...props }) => {
       }}
     >
       <Select
+        {...props}
         style={{
           width: "100%",
         }}
         listHeight={200}
-        placeholder="custom dropdown render"
-        onChange={(_, option) => handleOptionSelect(option)}
+        // placeholder="custom dropdown render"
+        onChange={(_, option) => {
+          handleOptionSelect(option);
+          setDataOption(option.option);
+        }}
         dropdownRender={(menu) => (
           <>
             {menu}
@@ -62,24 +74,60 @@ const FormSelect = ({ ...props }) => {
             />
             <Space
               style={{
+                display: "flex",
+                flexDirection: "column",
                 padding: "0 8px 4px",
               }}
             >
-              <Input
-                placeholder="Nhập để thêm mới"
-                ref={inputRef}
-                value={name}
-                onChange={onNameChange}
-              />
-              <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
-                Thêm mới
-              </Button>
+              <Space>
+                <Input
+                  placeholder="Nhập để thêm mới"
+                  ref={inputRef}
+                  value={name}
+                  onChange={onNameChange}
+                />
+                <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
+                  Thêm mới
+                </Button>
+              </Space>
+
+              <Space>
+                <Input
+                  placeholder={
+                    dataOption.class_name ||
+                    dataOption.subject_name ||
+                    dataOption.chapter_name ||
+                    dataOption.quiz_name
+                  }
+                  ref={inputRef}
+                  value={name}
+                  onChange={onNameChange}
+                />
+
+                <EditOutlined
+                  style={{
+                    margin: "0px 20px",
+                    cursor: "pointer",
+                  }}
+                  onClick={updateItem}
+                />
+                <CloseOutlined
+                  style={{
+                    margin: "0px 20px",
+                  }}
+                  onClick={deleteItem}
+                />
+              </Space>
             </Space>
           </>
         )}
         options={items?.map((item) => ({
-          value: item.id,
-          label: item.name,
+          value: item._id,
+          label:
+            item.class_name ||
+            item.subject_name ||
+            item.chapter_name ||
+            item.quiz_name,
           option: item,
         }))}
       />

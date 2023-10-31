@@ -5,6 +5,7 @@ import FormSelect from "../../../components/form/FormSelect";
 import BreadCrumb from "../../../components/ui/BreadCrumb";
 import TabBar from "../../../components/ui/TabBar";
 import ImgQuestion from "../../../assets/images/img-question.png";
+import { getDataClass } from "../../../services/apiService";
 
 const Synthetic = () => {
   const [data, setData] = useState({
@@ -14,195 +15,66 @@ const Synthetic = () => {
     dataQuiz: [],
   });
 
+  const [state, setState] = useState({
+    subject: { disabled: true, placeholder: "Vui lòng chọn lớp" },
+    chapter: { disabled: true, placeholder: "Vui lòng chọn môn học" },
+    quiz: { disabled: true, placeholder: "Vui lòng chọn chương học" },
+  });
+
   const [dataBreadcrumb, setDataBreadcrumb] = useState([]);
   const [itemsQuestion, setItemsQuestion] = useState([]);
-
-  // Data test
-  const itemsClass = [
-    {
-      id: 1,
-      name: "Lớp 1",
-    },
-    {
-      id: 2,
-      name: "Lớp 2",
-    },
-  ];
-
-  const itemsSubject = [
-    {
-      id: 1,
-      name: "Môn Toán",
-    },
-    {
-      id: 2,
-      name: "Tiếng Việt",
-    },
-  ];
-
-  const itemsChapter = [
-    {
-      id: 1,
-      name: "Chương 1: CÁC SỐ ĐẾN 10. HÌNH VUÔNG, HÌNH TRÒN, HÌNH TAM GIÁC",
-    },
-    {
-      id: 2,
-      name: "Chương 2",
-    },
-  ];
-
-  const itemsQuiz = [
-    {
-      id: 1,
-      name: "Bài 1: Nhiều hơn, ít hơn",
-      thumbnail: "",
-      quiz: [
-        {
-          id: 1,
-          question: "Câu 1: Các hình trong đáp án nào có nhiều đồ vật hơn ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 3,
-          suggest: "Đại lượng nào còn thừa thì đại lượng đó nhiều hơn",
-        },
-        {
-          id: 2,
-          question: "Câu 2: Các hình trong đáp án nào có ít đồ vật hơn ?",
-          question_image: "",
-          options: ["hi", "he", "C", "D"],
-          answer: 1,
-          suggest:
-            "Xếp tương ứng từng đồ vật với nhau, đại lượng nào thiếu thì đại lượng đó ít hơn.",
-        },
-        {
-          id: 3,
-          question: "Câu 3: Chọn đáp án có nhiều đồ vật hơn ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 3,
-          suggest: "Xác định hình có nhiều đồ vật hơn.",
-        },
-        {
-          id: 4,
-          question: "Câu 4: Hình nào có ít con vật hơn ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 2,
-          suggest: "Đếm số lượng con vật.",
-        },
-        {
-          id: 5,
-          question:
-            "Câu 5: Đáp án nào dưới đây bằng với số quả dâu tây trong hình ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 4,
-          suggest: "Đếm số quả dâu tây, rồi đếm số quả của từng đáp án.",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Bài 2: Hình vuông, hình tròn, hình tam giác",
-      thumbnail: "",
-      quiz: [
-        {
-          id: 1,
-          question: "Câu 1: kkk ?",
-          question_image: "",
-          options: ["hi", "hu", "C", "D"],
-          answer: 3,
-          suggest: "Đại lượng nào còn thừa thì đại lượng đó nhiều hơn",
-        },
-        {
-          id: 2,
-          question: "Câu 2: Các hình trong đáp án nào có ít đồ vật hơn ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 1,
-          suggest:
-            "Xếp tương ứng từng đồ vật với nhau, đại lượng nào thiếu thì đại lượng đó ít hơn.",
-        },
-        {
-          id: 3,
-          question: "Câu 3: Chọn đáp án có nhiều đồ vật hơn ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 3,
-          suggest: "Xác định hình có nhiều đồ vật hơn.",
-        },
-        {
-          id: 4,
-          question: "Câu 4: Hình nào có ít con vật hơn ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 2,
-          suggest: "Đếm số lượng con vật.",
-        },
-        {
-          id: 5,
-          question:
-            "Câu 5: Đáp án nào dưới đây bằng với số quả dâu tây trong hình ?",
-          question_image: "",
-          options: ["A", "B", "C", "D"],
-          answer: 4,
-          suggest: "Đếm số quả dâu tây, rồi đếm số quả của từng đáp án.",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Bài 3: Các số 1, 2, 3, 4, 5",
-    },
-    {
-      id: 4,
-      name: "Bài 4: Bé hơn, lớn hơn, bằng",
-    },
-    {
-      id: 5,
-      name: "Bài 5: Số 10",
-    },
-  ];
 
   // Handle data item
   const handleDataItem = (dataInput) => {
     console.log("items in create", dataInput);
   };
 
-  const handleOptionSelect = (options) => {
-    console.log("option", options);
-    setDataBreadcrumb([...dataBreadcrumb, options.option.name]);
-    if (options.option.quiz) {
-      setItemsQuestion(options.option.quiz);
+  const handleOptionSelect = (isOption) => {
+    console.log("option", isOption);
+
+    setDataBreadcrumb([...dataBreadcrumb, isOption.label]);
+
+    if (isOption.option.class_name !== undefined) {
+      setData((prev) => ({ ...prev, dataSubject: isOption.option.subjects }));
+      setState((prev) => ({
+        ...prev,
+        subject: { disabled: false, placeholder: "Chọn môn học" },
+      }));
+    }
+
+    if (isOption.option.subject_name !== undefined) {
+      setData((prev) => ({ ...prev, dataChapter: isOption.option.chapter }));
+      setState((prev) => ({
+        ...prev,
+        chapter: { disabled: false, placeholder: "Chọn chương học" },
+      }));
+    }
+    if (isOption.option.chapter_name !== undefined) {
+      setData((prev) => ({ ...prev, dataQuiz: isOption.option.quiz }));
+      setState((prev) => ({
+        ...prev,
+        quiz: { disabled: false, placeholder: "Chọn câu hỏi" },
+      }));
+    }
+    if (isOption.option.quiz_name !== undefined) {
+      setItemsQuestion(isOption.option.questions);
     }
   };
 
   // Handle API
   useEffect(() => {
     fetchDataClass();
-    fetchDataSubject();
-    fetchDataChapter();
-    fetchDataQuiz();
   }, []);
 
   const fetchDataClass = async () => {
     // Fetch data class
-    setData((prev) => ({ ...prev, dataClass: itemsClass }));
-  };
+    let result = await getDataClass();
 
-  const fetchDataSubject = async () => {
-    // Fetch data subject
-    setData((prev) => ({ ...prev, dataSubject: itemsSubject }));
-  };
-
-  const fetchDataChapter = async () => {
-    // Fetch data chapter
-    setData((prev) => ({ ...prev, dataChapter: itemsChapter }));
-  };
-
-  const fetchDataQuiz = async () => {
-    // Fetch data quiz
-    setData((prev) => ({ ...prev, dataQuiz: itemsQuiz }));
+    if (result.status === 200) {
+      setData((prev) => ({ ...prev, dataClass: result.data }));
+    } else {
+      console.log("Looix");
+    }
   };
 
   const handleCreate = async () => {
@@ -282,6 +154,7 @@ const Synthetic = () => {
 
                 <FormSelect
                   items={data.dataClass}
+                  placeholder="Lựa chọn lớp học"
                   handleDataItem={handleDataItem}
                   handleOptionSelect={handleOptionSelect}
                 />
@@ -296,12 +169,14 @@ const Synthetic = () => {
 
                 <FormSelect
                   items={data.dataSubject}
+                  disabled={state.subject.disabled}
+                  placeholder={state.subject.placeholder}
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
               <Col className="gutter-row" span={12}>
                 <FormTitle
-                  title="Danh sách chương học"
+                  title="Danh sách chương"
                   fontSize="1.1em"
                   background="#0092ff"
                   margin="0px 0px 8px 0px"
@@ -309,6 +184,8 @@ const Synthetic = () => {
 
                 <FormSelect
                   items={data.dataChapter}
+                  disabled={state.chapter.disabled}
+                  placeholder={state.chapter.placeholder}
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
@@ -322,6 +199,8 @@ const Synthetic = () => {
 
                 <FormSelect
                   items={data.dataQuiz}
+                  disabled={state.quiz.disabled}
+                  placeholder={state.quiz.placeholder}
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>

@@ -22,6 +22,7 @@ const FormInModal = ({ ...props }) => {
             onHandleForm(values, isHandle);
           })
           .catch((info) => {
+            onHandleForm(info, isHandle);
             console.log("Validate Failed:", info);
           });
       }}
@@ -43,9 +44,12 @@ const FormInModal = ({ ...props }) => {
               name={item.name}
               label={item.label}
               rules={item.rule}
-              initialValue={item.initialValue}
             >
-              {item.name === "password" ? <Input.Password /> : <Input />}
+              {item.name === "password" ? (
+                <Input.Password placeholder="******" />
+              ) : (
+                <Input placeholder={item.placeholder} />
+              )}
             </Form.Item>
           );
         })}
