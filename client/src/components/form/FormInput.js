@@ -47,7 +47,7 @@ const FormInput = ({ ...props }) => {
             label={item.label}
             rules={item.rule}
           >
-            <Input placeholder="e" />
+            <Input defaultValue={item} />
           </Form.Item>
         );
       })}

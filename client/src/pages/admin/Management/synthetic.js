@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import FormTitle from "../../../components/form/FormTitle";
 import FormSelect from "../../../components/form/FormSelect";
-import BreadCrumb from "../../../components/ui/BreadCrumb";
 import TabBar from "../../../components/ui/TabBar";
 import ImgQuestion from "../../../assets/images/img-question.png";
 import { getDataClass } from "../../../services/apiService";
@@ -120,7 +119,7 @@ const Synthetic = () => {
       // }}
       >
         <Col
-          span={12}
+          span={24}
           style={{
             height: "80vh",
             maxHeight: "80vh",
@@ -131,20 +130,20 @@ const Synthetic = () => {
               height: "100%",
               maxHeight: "100%",
               boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-              margin: 8,
+              // margin: 8,
             }}
           >
             <FormTitle
-              title="Nhóm Quản Lý"
+              title="Thông Tin Tổng Hợp"
               fontSize="1.4em"
               background="#1677ff"
             />
             <Row
               gutter={[16, 24]}
-              justify="space-around"
-              style={{ height: "95%", padding: 16 }}
+              // justify="space-around"
+              style={{ padding: 8 }}
             >
-              <Col className="gutter-row" span={12}>
+              <Col className="gutter-row" span={6}>
                 <FormTitle
                   title="Danh sách lớp"
                   fontSize="1.1em"
@@ -159,7 +158,7 @@ const Synthetic = () => {
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
-              <Col className="gutter-row" span={12}>
+              <Col className="gutter-row" span={6}>
                 <FormTitle
                   title="Danh sách môn học"
                   fontSize="1.1em"
@@ -174,7 +173,7 @@ const Synthetic = () => {
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
-              <Col className="gutter-row" span={12}>
+              <Col className="gutter-row" span={6}>
                 <FormTitle
                   title="Danh sách chương"
                   fontSize="1.1em"
@@ -189,7 +188,7 @@ const Synthetic = () => {
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
-              <Col className="gutter-row" span={12}>
+              <Col className="gutter-row" span={6}>
                 <FormTitle
                   title="Danh sách bài tập"
                   fontSize="1.1em"
@@ -205,9 +204,17 @@ const Synthetic = () => {
                 />
               </Col>
             </Row>
+            <Row style={{ padding: "0px 8px" }}>
+              <TabBar
+                style={{ width: "100%" }}
+                items={itemsQuestion}
+                setItems={setItemsQuestion}
+                handleUpdateQuestion={handleUpdateQuestion}
+              />
+            </Row>
           </div>
         </Col>
-        <Col
+        {/* <Col
           span={12}
           style={{
             height: "80vh",
@@ -254,7 +261,7 @@ const Synthetic = () => {
               />
             </div>
           </div>
-        </Col>
+        </Col> */}
       </Row>
     </>
   );

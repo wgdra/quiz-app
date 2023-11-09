@@ -1,6 +1,8 @@
 import { ConfigProvider, Button, Space } from "antd";
 
 const ButtonGroup = ({ ...props }) => {
+  const { items } = props;
+
   return (
     <ConfigProvider
       theme={{
@@ -12,10 +14,15 @@ const ButtonGroup = ({ ...props }) => {
       }}
     >
       <Space wrap>
-        <Button {...props}>{props.labelPrev}</Button>
-        <Button {...props} danger>
-          {props.labelNext}
-        </Button>
+        {items &&
+          items.length >= 0 &&
+          items.map((item, _) => {
+            return (
+              <Button key={_} {...item}>
+                {item.label}
+              </Button>
+            );
+          })}
       </Space>
     </ConfigProvider>
   );

@@ -4,8 +4,13 @@ import { Dropdown } from "antd";
 const DropDown = ({ ...props }) => {
   const items = props.items;
 
+  const handleMenuClick = (e) => {
+    console.log("e", e);
+  };
+
   const menuProps = {
     items,
+    onClick: handleMenuClick,
   };
 
   return (
