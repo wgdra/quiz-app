@@ -4,11 +4,11 @@ const { StatusCodes } = require("http-status-codes");
 // Validate Create
 const createUser = async (req, res, next) => {
   const correctCondition = Joi.object({
-    user_name: Joi.string().required().min(3).max(20).trim().strict(),
+    username: Joi.string().required().min(3).max(20).trim().strict(),
     password: Joi.string().required().min(6).max(20),
     full_name: Joi.string().required().min(3).max(20).trim().strict(),
     role: Joi.number(),
-    email: Joi.string().required().email(),
+    email: Joi.string().email().strict().default(""),
   });
 
   try {
@@ -23,11 +23,11 @@ const createUser = async (req, res, next) => {
 
 const updateUser = async (req, res, next) => {
   const correctCondition = Joi.object({
-    user_name: Joi.string().required().min(3).max(20).trim().strict(),
+    username: Joi.string().required().min(3).max(20).trim().strict(),
     password: Joi.string().required().min(6).max(20),
     full_name: Joi.string().required().min(3).max(20).trim().strict(),
     role: Joi.number(),
-    email: Joi.string().required().email(),
+    email: Joi.string().required().email().strict(),
   });
 
   try {

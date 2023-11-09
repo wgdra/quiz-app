@@ -1,13 +1,18 @@
 const Joi = require("joi");
 const connect = require("../database/connect");
 const { ObjectId } = require("mongodb");
+const subjectModel = require("./subjectModel");
+const chapterModel = require("./chapterModel");
+const quizModel = require("./quizModel");
 
 // SCHEMA
 const COLLECTION_NAME = "classes";
 const COLLECTION_SCHEMA = Joi.object({
-  // classId: Joi.number().required(),
+  classId: Joi.number().required(),
   class_name: Joi.string().required().min(3).max(10).trim().strict(),
   subjects: Joi.array().items(Joi.string().trim()).default([]),
+  chapter: Joi.array().items(Joi.string().trim()).default([]),
+  quizIds: Joi.array().items(Joi.number()).default([]),
   createdAt: Joi.date().default(Date.now),
   updatedAt: Joi.date().default(null),
 });
@@ -25,8 +30,36 @@ const getAllClass = async () => {
     const getAll = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
-      .find({})
+      // .find({})
+      // .toArray();
+      .aggregate([
+        {
+          $lookup: {
+            from: subjectModel.COLLECTION_NAME,
+            localField: "classId",
+            foreignField: "classIds",
+            as: "subjects",
+          },
+        },
+        {
+          $lookup: {
+            from: chapterModel.COLLECTION_NAME,
+            localField: "chapter",
+            foreignField: "chapter_name",
+            as: "chapter",
+          },
+        },
+        {
+          $lookup: {
+            from: quizModel.COLLECTION_NAME,
+            localField: "classId",
+            foreignField: "classId",
+            as: "quizIds",
+          },
+        },
+      ])
       .toArray();
+
     return getAll;
   } catch (error) {
     throw new Error(error);
@@ -39,9 +72,41 @@ const getOneClass = async (id) => {
     const getOne = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
-      .findOne({ _id: new ObjectId(id) });
+      // .findOne({ _id: new ObjectId(id) });
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: subjectModel.COLLECTION_NAME,
+            localField: "classId",
+            foreignField: "classIds",
+            as: "subjects",
+          },
+        },
+        {
+          $lookup: {
+            from: chapterModel.COLLECTION_NAME,
+            localField: "chapter",
+            foreignField: "chapter_name",
+            as: "chapter",
+          },
+        },
+        {
+          $lookup: {
+            from: quizModel.COLLECTION_NAME,
+            localField: "classId",
+            foreignField: "classId",
+            as: "quizIds",
+          },
+        },
+      ])
+      .toArray();
 
-    return getOne;
+    return getOne[0];
   } catch (error) {
     throw new Error(error);
   }
@@ -85,6 +150,8 @@ const updateClass = async (id, reqBody) => {
         classId: validateReq.classId,
         class_name: validateReq.class_name,
         subjects: validateReq.subjects,
+        chapter: validateReq.chapter,
+        quizIds: validateReq.quizIds,
       },
     };
 

@@ -5,11 +5,12 @@ const { ObjectId } = require("mongodb");
 // SCHEMA
 const COLLECTION_NAME = "quizes";
 const COLLECTION_SCHEMA = Joi.object({
-  quizId: Joi.number().required(),
+  classId: Joi.number().required(),
+  subject: Joi.string().required(),
+  chapter: Joi.string().required(),
   quiz_name: Joi.string().required().trim().strict(),
   quiz_img: Joi.string().default(""),
-  // chapterId: Joi.number().default(),
-  quiz: Joi.array()
+  questions: Joi.array()
     .items(
       Joi.object({
         questionId: Joi.number().required(),
@@ -95,11 +96,12 @@ const updateQuiz = async (id, reqBody) => {
     const _id = { _id: new ObjectId(id) };
     const update = {
       $set: {
-        quizId: validateReq.quizId,
+        classId: validateReq.classId,
+        subject: validateReq.subject,
+        chapter: validateReq.chapter,
         quiz_name: validateReq.quiz_name,
         quiz_img: validateReq.quiz_img,
-        // subjectIds: validateReq.subjectIds,
-        quiz: validateReq.quiz,
+        questions: validateReq.questions,
       },
     };
 

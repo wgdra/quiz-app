@@ -5,10 +5,8 @@ const { ObjectId } = require("mongodb");
 // SCHEMA
 const COLLECTION_NAME = "subjects";
 const COLLECTION_SCHEMA = Joi.object({
-  // subjectId: Joi.number().required(),
+  classIds: Joi.array().items(Joi.number()).default([]),
   subject_name: Joi.string().required().min(3).max(20).trim().strict(),
-  // classIds: Joi.array().items(Joi.number()).default([]),
-  chapters: Joi.array().items(Joi.string().trim()).default([]),
   createdAt: Joi.date().default(Date.now),
   updatedAt: Joi.date().default(null),
 });
@@ -83,10 +81,8 @@ const updateSubject = async (id, reqBody) => {
     const _id = { _id: new ObjectId(id) };
     const update = {
       $set: {
-        // subjectId: validateReq.subjectId,
+        classIds: validateReq.classIds,
         subject_name: validateReq.subject_name,
-        // classIds: validateReq.classIds,
-        chapters: validateReq.chapters,
       },
     };
 

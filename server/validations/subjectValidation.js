@@ -6,8 +6,8 @@ const createSubject = async (req, res, next) => {
   const correctCondition = Joi.object({
     subjectId: Joi.number().required(),
     subject_name: Joi.string().required().min(3).max(20).trim().strict(),
-    classIds: Joi.array().items(Joi.number()).default([]),
-    chapterIds: Joi.array().items(Joi.number()).default([]),
+    // classIds: Joi.array().items(Joi.number()).default([]),
+    chapters: Joi.array().items(Joi.string().trim()).default([]),
   });
 
   try {
@@ -24,8 +24,8 @@ const updateSubject = async (req, res, next) => {
   const correctCondition = Joi.object({
     subjectId: Joi.number().required(),
     subject_name: Joi.string().required().min(3).max(20).trim().strict(),
-    classIds: Joi.array().items(Joi.number()).default([]),
-    chapterIds: Joi.array().items(Joi.number()).default([]),
+    // classIds: Joi.array().items(Joi.number()).default([]),
+    chapters: Joi.array().items(Joi.string().trim()).default([]),
   });
 
   try {

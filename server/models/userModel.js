@@ -5,7 +5,7 @@ const { ObjectId } = require("mongodb");
 // SCHEMA
 const COLLECTION_NAME = "users";
 const COLLECTION_SCHEMA = Joi.object({
-  user_name: Joi.string().required().min(3).max(20).trim().strict(),
+  username: Joi.string().required().min(3).max(20).trim().strict(),
   password: Joi.string().required().min(6).max(20),
   full_name: Joi.string().required().min(3).max(20).trim().strict(),
   role: Joi.number().default(1),
@@ -84,6 +84,7 @@ const updateUser = async (id, reqBody) => {
     const _id = { _id: new ObjectId(id) };
     const update = {
       $set: {
+        username: validateReq.username,
         password: validateReq.password,
         full_name: validateReq.full_name,
         email: validateReq.email,

@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const { corsOptions } = require("./config/cors");
 const { ENV } = require("./config/environment");
 const connect = require("./database/connect");
 const errorHandling = require("./middlewares/errorHandling");
@@ -18,6 +19,7 @@ const START_SERVER = () => {
 
   app.use(morgan("tiny"));
   app.use(cors());
+  // app.use(cors(corsOptions));
   app.use(express.json());
 
   // Routes

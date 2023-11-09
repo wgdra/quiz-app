@@ -6,7 +6,8 @@ const createClass = async (req, res, next) => {
   const correctCondition = Joi.object({
     classId: Joi.number().required(),
     class_name: Joi.string().required().min(3).max(20).trim().strict(),
-    subjectIds: Joi.array().items(Joi.number()).default([]),
+    subjects: Joi.array().items(Joi.string().trim()).default([]),
+    books: Joi.array().items(Joi.string().trim()).default([]),
   });
 
   try {
@@ -23,7 +24,8 @@ const updateClass = async (req, res, next) => {
   const correctCondition = Joi.object({
     classId: Joi.number().required(),
     class_name: Joi.string().required().min(3).max(20).trim().strict(),
-    subjectIds: Joi.array().items(Joi.number()).default([]),
+    subjects: Joi.array().items(Joi.string().trim()).default([]),
+    books: Joi.array().items(Joi.string().trim()).default([]),
   });
 
   try {

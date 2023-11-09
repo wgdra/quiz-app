@@ -5,16 +5,17 @@ const { ObjectId } = require("mongodb");
 // SCHEMA
 const COLLECTION_NAME = "theories";
 const COLLECTION_SCHEMA = Joi.object({
-  theoryId: Joi.number().required(),
+  classId: Joi.number().required(),
+  subject: Joi.string().required(),
+  chapter: Joi.string().required(),
   theory_name: Joi.string().required().min(3).max(50).trim().strict(),
-  // chapterId: Joi.number().default(),
   lessons: Joi.array()
     .items(
       Joi.object({
         lessonId: Joi.number().required(),
         lesson_title: Joi.string().required().trim(),
-        lesson_content: Joi.string(),
         lesson_img: Joi.string().default(""),
+        lesson_content: Joi.string(),
       })
     )
     .default([]),
@@ -92,11 +93,11 @@ const updateTheory = async (id, reqBody) => {
     const _id = { _id: new ObjectId(id) };
     const update = {
       $set: {
-        theoryId: validateReq.theoryId,
+        classId: validateReq.classId,
+        subject: validateReq.subject,
+        chapter: validateReq.chapter,
         theory_name: validateReq.theory_name,
-        theory_img: validateReq.theory_img,
-        // subjectIds: validateReq.subjectIds,
-        lesson: validateReq.lesson,
+        lessons: validateReq.lessons,
       },
     };
 

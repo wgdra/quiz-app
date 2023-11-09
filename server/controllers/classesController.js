@@ -6,7 +6,7 @@ async function getClass(req, res, next) {
   try {
     const result = await classService.getAllClass();
 
-    res.status(StatusCodes.OK).json(result);
+    res.status(StatusCodes.OK).json({ status: StatusCodes.OK, data: result });
   } catch (error) {
     next(error);
   }

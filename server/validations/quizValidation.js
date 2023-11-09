@@ -4,11 +4,12 @@ const { StatusCodes } = require("http-status-codes");
 // Validate Create
 const createQuiz = async (req, res, next) => {
   const correctCondition = Joi.object({
-    quizId: Joi.number().required(),
+    classId: Joi.number().required(),
+    subject: Joi.string().default(),
+    chapter: Joi.string().default(),
     quiz_name: Joi.string().required().trim().strict(),
     quiz_img: Joi.string().default(""),
-    // chapterId: Joi.number().default(),
-    quiz: Joi.array()
+    questions: Joi.array()
       .items(
         Joi.object({
           questionId: Joi.number().required(),
@@ -34,11 +35,12 @@ const createQuiz = async (req, res, next) => {
 
 const updateQuiz = async (req, res, next) => {
   const correctCondition = Joi.object({
-    quizId: Joi.number().required(),
+    classId: Joi.number().required(),
+    subject: Joi.string().default(),
+    chapter: Joi.string().default(),
     quiz_name: Joi.string().required().trim().strict(),
     quiz_img: Joi.string().default(""),
-    // chapterId: Joi.number().default(),
-    quiz: Joi.array()
+    questions: Joi.array()
       .items(
         Joi.object({
           questionId: Joi.number().required(),
