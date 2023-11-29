@@ -4,11 +4,15 @@ import SideWrapper from "../../layouts/Sidebar";
 import HeaderWrapper from "../../layouts/Header";
 import FooterWrapper from "../../layouts/Footer";
 import {
-  DesktopOutlined,
   PieChartOutlined,
+  MessageOutlined,
+  TeamOutlined,
+  ContactsOutlined,
+  DownOutlined,
   UserOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout } from "antd";
+import { Layout } from "antd";
 import DropDown from "../../components/ui/Dropdown";
 const { Header, Content, Footer } = Layout;
 
@@ -22,50 +26,70 @@ function getItem(label, key, icon, children) {
 }
 const items = [
   getItem("Tổng Quan", "1", <PieChartOutlined />),
-  getItem("Option 2", "2", <DesktopOutlined />),
-  getItem("Chọn lớp", "sub1", <UserOutlined />, [
+  getItem("Trò chuyện", "2", <MessageOutlined />),
+  getItem("Chọn lớp", "sub1", <TeamOutlined />, [
     getItem("Lớp 1", "3"),
     getItem("Lớp 2", "4"),
     getItem("Lớp 3", "5"),
     getItem("Lớp 4", "6"),
     getItem("Lớp 5", "7"),
   ]),
+  getItem("Liên Hệ", "8", <ContactsOutlined />),
 ];
 
 const MainProject = () => {
   const navigate = useNavigate();
-  const role = 1;
 
-  const isRole = role === 0 ? "Admin" : "Tài khoản";
+  const full_name = "Nguyễn Tiến Trung";
 
   // Handle Navigate
-  const handleNavigate = (e) => {
-    // switch (e) {
-    //   case "1":
-    //     navigate("/project/overview");
-    //     break;
-    //   case "2":
-    //     navigate("/manage/user");
-    //     break;
-    //   case "4":
-    //     navigate("/manage/synthetic");
-    //     break;
-    //   case "5":
-    //     navigate("/manage/theory");
-    //     break;
-    //   case "6":
-    //     navigate("/manage/test");
-    //     break;
-    //   case "9":
-    //     navigate("/result/test");
-    //     break;
-    //   default:
-    //     break;
-    // }
+  const handleNavigate = (key) => {
+    switch (key) {
+      case "1":
+        navigate("/project/overview");
+        break;
+      case "3":
+        navigate("/project/method", {
+          state: {
+            class: "Lớp 1",
+          },
+        });
+        break;
+      case "4":
+        navigate("/project/method", {
+          state: {
+            class: "Lớp 2",
+          },
+        });
+        break;
+      case "5":
+        navigate("/project/method", {
+          state: {
+            class: "Lớp 3",
+          },
+        });
+        break;
+      case "6":
+        navigate("/project/method", {
+          state: {
+            class: "Lớp 4",
+          },
+        });
+        break;
+      case "7":
+        navigate("/project/method", {
+          state: {
+            class: "Lớp 5",
+          },
+        });
+        break;
+      default:
+        break;
+    }
   };
 
-  const handleButtonClick = (e) => {
-    console.log("e", e);
+  const handleButtonClick = () => {
+    console.log("account");
   };
   return (
     <Layout
@@ -79,6 +103,13 @@ const MainProject = () => {
         items={items}
         handleNavigate={handleNavigate}
         background="#6051f8"
+        menuCustomize={{
+          darkSubMenuItemBg: "#6051f8",
+          darkItemSelectedBg: "#95d354",
+          itemHeight: 50,
+          itemBorderRadius: "0px 50px 50px 0px",
+          itemMarginInline: "0px 30px",
+        }}
       />
       <Layout
         style={{
@@ -91,39 +122,45 @@ const MainProject = () => {
             background: "#f5f5f5",
             borderTopLeftRadius: "50px",
             borderTopRightRadius: "50px",
-
-            padding: "8px 16px",
+            padding: "0px 30px",
             display: "flex",
             alignItems: "center",
           }}
         >
           <DropDown
-            key="1"
-            label={isRole}
-            icon={<UserOutlined />}
+            label={full_name}
+            icon={<DownOutlined />}
             items={[
               {
-                key: "2",
+                key: "1",
                 label: "Hồ Sơ",
                 icon: <UserOutlined />,
               },
               {
+                key: "2",
+                label: "Thiết lập",
+                icon: <SettingOutlined />,
+              },
+              {
+                type: "divider",
+              },
+              {
                 key: "3",
                 label: "Đăng Xuất",
-                icon: <UserOutlined />,
               },
             ]}
             placement="bottomLeft"
             style={{
               justifyContent: "end",
-              marginRight: 18,
+              margin: "30px 0px",
             }}
+            colorPrimary="#6051f8"
             onClick={handleButtonClick}
           />
         </HeaderWrapper>
         <Content
           style={{
-            padding: "0 16px",
+            padding: "0 30px",
             background: "#f5f5f5",
           }}
         >

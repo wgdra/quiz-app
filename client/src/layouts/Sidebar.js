@@ -14,14 +14,9 @@ const SideWrapper = ({ ...props }) => {
           /* here is your global tokens */
         },
         components: {
-          Menu: {
+          Menu:
             /* here is your component tokens */
-            darkSubMenuItemBg: "#6051f8",
-            darkItemSelectedBg: "#95d354",
-            itemHeight: 50,
-            itemBorderRadius: "0px 50px 50px 0px",
-            itemMarginInline: "0px 30px",
-          },
+            props.menuCustomize,
         },
       }}
     >

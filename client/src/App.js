@@ -8,6 +8,8 @@ import Synthetic from "./pages/admin/Management/synthetic";
 import MainProject from "./pages/projects/Main";
 import OverView from "./pages/projects/Overview";
 import Error from "./pages/Error";
+import Classes from "./pages/projects/Contents/Classes";
+import Method from "./pages/projects/Contents/Method";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         </Route>
         <Route path="/project" element={<MainProject />}>
           <Route path="/project/overview" element={<OverView />} />
+          <Route path="/project/classes" element={<Classes />} />
+          <Route path="/project/method" element={<Method />} />
         </Route>
         <Route path="*" element={<Error />} />
       </Routes>

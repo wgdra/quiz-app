@@ -4,10 +4,15 @@ const ButtonBasic = ({ ...props }) => {
   return (
     <ConfigProvider
       theme={{
+        token: props.tokenCustomize,
+        // {
+        //   /* here is your global tokens */
+        //   colorPrimaryHover: props.colorPrimaryHover,
+        // },
         components: {
           Button: {
             /* here is your component tokens */
-            defaultColor: "#ffffff",
+            defaultColor: props.defaultColor,
             defaultBg: props.tokenDefaultColor,
             defaultBorderColor: props.tokenDefaultColor,
           },

@@ -1,8 +1,8 @@
 import React from "react";
-import { Dropdown } from "antd";
+import { ConfigProvider, Dropdown } from "antd";
 
 const DropDown = ({ ...props }) => {
-  const items = props.items;
+  const { items } = props;
 
   const handleMenuClick = (e) => {
     console.log("e", e);
@@ -14,9 +14,18 @@ const DropDown = ({ ...props }) => {
   };
 
   return (
-    <Dropdown.Button menu={menuProps} {...props}>
-      {props.label}
-    </Dropdown.Button>
+    <ConfigProvider
+      theme={{
+        token: {
+          /* here is your global tokens */
+          colorPrimary: props.colorPrimary,
+        },
+      }}
+    >
+      <Dropdown.Button menu={menuProps} {...props}>
+        {props.label}
+      </Dropdown.Button>
+    </ConfigProvider>
   );
 };
 
