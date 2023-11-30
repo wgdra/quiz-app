@@ -10,7 +10,7 @@ const BoxContentClass = ({ ...props }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-evenly",
-        margin: "16px 0px",
+        marginBottom: 27,
       }}
     >
       <img src={props.thumbnail} />
