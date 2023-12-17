@@ -3,19 +3,20 @@ const connect = require("../database/connect");
 const { ObjectId } = require("mongodb");
 
 // SCHEMA
-const COLLECTION_NAME = "theories";
+const COLLECTION_NAME = "test";
 const COLLECTION_SCHEMA = Joi.object({
   classId: Joi.number().required(),
   subject: Joi.string().required(),
-  chapter: Joi.string().required(),
-  theory_name: Joi.string().required().min(3).max(50).trim().strict(),
-  lessons: Joi.array()
+  test_name: Joi.string().required().trim().strict(),
+  test_img: Joi.string().default(""),
+  questions: Joi.array()
     .items(
       Joi.object({
-        lessonId: Joi.number().required(),
-        lesson_title: Joi.string().required().trim(),
-        lesson_img: Joi.string().default(""),
-        lesson_content: Joi.string(),
+        questionId: Joi.number().required(),
+        question_name: Joi.string().required().trim(),
+        question_img: Joi.string().default(""),
+        options: Joi.array().items(Joi.string().trim()).default([]),
+        answer: Joi.number().required(),
       })
     )
     .default([]),
@@ -31,7 +32,7 @@ const validate = async (data) => {
 };
 
 // GET ALL
-const getAllTheory = async () => {
+const getAllTest = async () => {
   try {
     const getAll = await connect
       .GET_DB()
@@ -45,7 +46,7 @@ const getAllTheory = async () => {
 };
 
 // GET ONE
-const getOneTheory = async (id) => {
+const getOneTest = async (id) => {
   try {
     const getOne = await connect
       .GET_DB()
@@ -59,7 +60,7 @@ const getOneTheory = async (id) => {
 };
 
 // CREATE
-const createTheory = async (reqBody) => {
+const createTest = async (reqBody) => {
   try {
     const validateReq = await validate(reqBody);
     const createNew = await connect
@@ -73,7 +74,7 @@ const createTheory = async (reqBody) => {
 };
 
 // Find One After Create
-const getTheoryAfterCreate = async (id) => {
+const getTestAfterCreate = async (id) => {
   try {
     const result = await connect
       .GET_DB()
@@ -85,8 +86,8 @@ const getTheoryAfterCreate = async (id) => {
   }
 };
 
-// UPDATE Theory
-const updateTheory = async (id, reqBody) => {
+// UPDATE Test
+const updateTest = async (id, reqBody) => {
   try {
     const validateReq = await validate(reqBody);
 
@@ -95,9 +96,9 @@ const updateTheory = async (id, reqBody) => {
       $set: {
         classId: validateReq.classId,
         subject: validateReq.subject,
-        chapter: validateReq.chapter,
-        theory_name: validateReq.theory_name,
-        lessons: validateReq.lessons,
+        test_name: validateReq.quiz_name,
+        test_img: validateReq.quiz_img,
+        questions: validateReq.questions,
       },
     };
 
@@ -112,33 +113,33 @@ const updateTheory = async (id, reqBody) => {
   }
 };
 
-// DELETE Theory
-const deleteTheory = async (id) => {
+// DELETE Test
+const deleteTest = async (id) => {
   try {
-    const deleteTheory = await connect
+    const deleteTest = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
       .deleteOne({ _id: new ObjectId(id) });
 
-    return deleteTheory;
+    return deleteTest;
   } catch (error) {
     throw new Error(error);
   }
 };
 
 // DELETE Question
-const deleteLessonFromTheory = async (theoryId, lessonId) => {
+const deleteQuestionFromTest = async (quizId, questionId) => {
   try {
-    const deletedLesson = await connect
+    const deletedQuestion = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
       .updateOne(
-        { theoryId: new ObjectId(theoryId) },
-        { $pull: { theory: { lessonId: lessonId } } },
+        { quizId: new ObjectId(quizId) },
+        { $pull: { quiz: { questionId: questionId } } },
         { new: true }
       );
 
-    return deletedLesson;
+    return deletedQuestion;
   } catch (error) {
     throw new Error(error);
   }
@@ -147,11 +148,11 @@ const deleteLessonFromTheory = async (theoryId, lessonId) => {
 module.exports = {
   COLLECTION_NAME,
   COLLECTION_SCHEMA,
-  getAllTheory,
-  getOneTheory,
-  createTheory,
-  getTheoryAfterCreate,
-  updateTheory,
-  deleteTheory,
-  deleteLessonFromTheory,
+  getAllTest,
+  getOneTest,
+  createTest,
+  getTestAfterCreate,
+  updateTest,
+  deleteTest,
+  deleteQuestionFromTest,
 };

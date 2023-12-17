@@ -8,6 +8,7 @@ const errorHandling = require("./middlewares/errorHandling");
 
 // router
 const users = require("./router/usersRoute");
+const data = require("./router/dataRoute");
 const classes = require("./router/classesRoute");
 const subjects = require("./router/subjectsRoute");
 const chapters = require("./router/chapterRoute");
@@ -24,6 +25,7 @@ const START_SERVER = () => {
 
   // Routes
   app.use("/api/users", users);
+  app.use("/api/v1/data", data);
   app.use("/api/classes", classes);
   app.use("/api/subjects", subjects);
   app.use("/api/chapters", chapters);
