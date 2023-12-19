@@ -1,16 +1,31 @@
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Col, Row } from "antd";
-import { RightOutlined } from "@ant-design/icons";
-import ImgMethod1 from "../../../assets/images/img-method-1.png";
-import ImgMethod2 from "../../../assets/images/img-method-2.png";
-import ImgMethod3 from "../../../assets/images/img-method-3.png";
-import { useLocation } from "react-router-dom";
+import MenuSubject from "../../../components/ui/MenuSubject";
+import "../../../assets/styles/App.css";
 
 const Method = () => {
+  const navigate = useNavigate();
   const location = useLocation();
+  const dataClass = location.state.data;
+
+  console.log("dataaaaa", dataClass);
+  const [subjectSelect, setSubjectSelect] = useState(dataClass.subjects[0]);
+  console.log("subjectSelect", subjectSelect);
+
+  const handleClickBoxMethod = (data) => {
+    navigate("/project/chapter", {
+      state: {
+        class_name: dataClass.class_name,
+        subject_name: subjectSelect.subject_name,
+        data: data,
+      },
+    });
+  };
 
   return (
     <>
-      <h1 style={{ color: "#e29000" }}>{location.state.class}</h1>
+      <h1 style={{ color: "#e29000" }}>{dataClass.class_name}</h1>
       <Row
         gutter={{
           xs: 8,
@@ -20,45 +35,10 @@ const Method = () => {
         }}
       >
         <Col className="gutter-row" span={6}>
-          <div
-            style={{
-              height: 36,
-              width: 245,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              fontSize: "1.3em",
-              fontWeight: "bold",
-              color: "#fff",
-              background: "linear-gradient(90deg, #44a500 0%, #baef48 100%)",
-              borderRadius: "5px",
-              padding: "8px 16px",
-              marginBottom: 16,
-            }}
-          >
-            <p>MÔN TOÁN</p>
-            <RightOutlined />
-          </div>
-          <div
-            style={{
-              height: 36,
-              width: 245,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              fontSize: "1.3em",
-              fontWeight: "bold",
-              //   color: "#fff",
-              //   background: "linear-gradient(90deg, #44a500 0%, #baef48 100%)",
-              border: "1px solid #cfcfcf",
-              borderRadius: "5px",
-              padding: "8px 16px",
-              marginBottom: 16,
-            }}
-          >
-            <p>MÔN TIẾNG VIỆT</p>
-            <RightOutlined />
-          </div>
+          <MenuSubject
+            setSubjectSelect={setSubjectSelect}
+            dataSubject={dataClass.subjects}
+          />
         </Col>
         <Col className="gutter-row" span={18}>
           <span
@@ -69,58 +49,37 @@ const Method = () => {
               marginBottom: 20,
             }}
           >
-            Bạn đã chọn MÔN TOÁN. Chọn phương thức bạn muốn ôn luyện.
+            Bạn đã chọn {subjectSelect?.subject_name}. Chọn phương thức bạn muốn
+            ôn luyện.
           </span>
           <div style={{ display: "flex" }}>
-            <div
-              style={{
-                width: 186,
-                height: 166,
-                fontSize: "1.2em",
-                fontWeight: "bold",
-                textAlign: "center",
-                border: "2px solid #cfcfcf",
-                borderRadius: "5px",
-                padding: 16,
-                marginRight: 16,
-              }}
-            >
-              <img src={ImgMethod1} style={{ width: 60, height: 60 }} />
-              <p>Luyện bài tập trắc nghiệm</p>
-            </div>
-            <div
-              style={{
-                width: 186,
-                height: 166,
-                fontSize: "1.2em",
-                fontWeight: "bold",
-                textAlign: "center",
-                border: "2px solid #cfcfcf",
-                borderRadius: "5px",
-                padding: 16,
-                marginRight: 16,
-              }}
-            >
-              <img src={ImgMethod2} style={{ width: 60, height: 60 }} />
-              <p>Ôn tập lý thuyết</p>
-            </div>
-
-            <div
-              style={{
-                width: 186,
-                height: 166,
-                fontSize: "1.2em",
-                fontWeight: "bold",
-                textAlign: "center",
-                border: "2px solid #cfcfcf",
-                borderRadius: "5px",
-                padding: 16,
-                marginRight: 16,
-              }}
-            >
-              <img src={ImgMethod3} style={{ width: 60, height: 60 }} />
-              <p>Làm đề thi</p>
-            </div>
+            {subjectSelect?.methods.map((item, index) => {
+              return (
+                <div
+                  className="box-method"
+                  key={index}
+                  style={{
+                    width: 186,
+                    height: 166,
+                    fontSize: "1.2em",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    border: "2px solid #cfcfcf",
+                    borderRadius: "5px",
+                    padding: 16,
+                    marginRight: 16,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleClickBoxMethod(item)}
+                >
+                  <img
+                    src={item.method_img}
+                    style={{ width: 60, height: 60, margin: "10px 0px" }}
+                  />
+                  <p>{item.method}</p>
+                </div>
+              );
+            })}
           </div>
         </Col>
       </Row>

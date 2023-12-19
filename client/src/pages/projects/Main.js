@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import SideWrapper from "../../layouts/Sidebar";
 import HeaderWrapper from "../../layouts/Header";
@@ -14,7 +14,7 @@ import {
 } from "@ant-design/icons";
 import { Layout } from "antd";
 import DropDown from "../../components/ui/Dropdown";
-const { Header, Content, Footer } = Layout;
+import { getData } from "../../services/apiService.js";
 
 function getItem(label, key, icon, children) {
   return {
@@ -24,62 +24,80 @@ function getItem(label, key, icon, children) {
     label,
   };
 }
-const items = [
-  getItem("Tổng Quan", "1", <PieChartOutlined />),
-  getItem("Trò chuyện", "2", <MessageOutlined />),
-  getItem("Chọn lớp", "sub1", <TeamOutlined />, [
-    getItem("Lớp 1", "3"),
-    getItem("Lớp 2", "4"),
-    getItem("Lớp 3", "5"),
-    getItem("Lớp 4", "6"),
-    getItem("Lớp 5", "7"),
-  ]),
-  getItem("Liên Hệ", "8", <ContactsOutlined />),
-];
 
 const MainProject = () => {
+  const { Header, Content, Footer } = Layout;
   const navigate = useNavigate();
 
+  const [data, setData] = useState({});
   const full_name = "Nguyễn Tiến Trung";
+
+  // API
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    let res = await getData();
+
+    if (res.status !== 200) return;
+    if (res.status === 200) {
+      setData(res.data);
+    }
+  };
+
+  const items = [
+    getItem("Tổng Quan", "overview", <PieChartOutlined />),
+    getItem("Trò chuyện", "chat", <MessageOutlined />),
+    getItem("Chọn lớp", "sub1", <TeamOutlined />, [
+      getItem("Lớp 1", "1"),
+      getItem("Lớp 2", "2"),
+      getItem("Lớp 3", "3"),
+      getItem("Lớp 4", "4"),
+      getItem("Lớp 5", "5"),
+    ]),
+    getItem("Liên Hệ", "8", <ContactsOutlined />),
+  ];
 
   // Handle Navigate
   const handleNavigate = (key) => {
     switch (key) {
-      case "1":
+      case "overview":
         navigate("/project/overview");
+        break;
+
+      case "1":
+        navigate("/project/method", {
+          state: {
+            data: data[0],
+          },
+        });
+        break;
+      case "2":
+        navigate("/project/method", {
+          state: {
+            data: data[1],
+          },
+        });
         break;
       case "3":
         navigate("/project/method", {
           state: {
-            class: "Lớp 1",
+            data: data[2],
           },
         });
         break;
       case "4":
         navigate("/project/method", {
           state: {
-            class: "Lớp 2",
+            data: data[3],
           },
         });
         break;
       case "5":
         navigate("/project/method", {
           state: {
-            class: "Lớp 3",
-          },
-        });
-        break;
-      case "6":
-        navigate("/project/method", {
-          state: {
-            class: "Lớp 4",
-          },
-        });
-        break;
-      case "7":
-        navigate("/project/method", {
-          state: {
-            class: "Lớp 5",
+            data: data[4],
           },
         });
         break;
@@ -91,6 +109,7 @@ const MainProject = () => {
   const handleButtonClick = () => {
     console.log("account");
   };
+
   return (
     <Layout
       style={{

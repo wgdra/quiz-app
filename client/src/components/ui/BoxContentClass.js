@@ -26,6 +26,7 @@ const BoxContentClass = ({ ...props }) => {
         tokenCustomize={{
           colorPrimaryHover: "#ffff",
           borderRadius: "10px",
+          colorPrimaryActive: "#ffff",
         }}
         style={{
           fontSize: "1.3em",

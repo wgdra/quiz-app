@@ -4,7 +4,7 @@ import FormTitle from "../../../components/form/FormTitle";
 import FormSelect from "../../../components/form/FormSelect";
 import TabBar from "../../../components/ui/TabBar";
 import ImgQuestion from "../../../assets/images/img-question.png";
-import { getDataClass } from "../../../services/apiService";
+import { getData } from "../../../services/apiService";
 
 const Synthetic = () => {
   const [data, setData] = useState({
@@ -62,12 +62,12 @@ const Synthetic = () => {
 
   // Handle API
   useEffect(() => {
-    fetchDataClass();
+    fetchData();
   }, []);
 
-  const fetchDataClass = async () => {
+  const fetchData = async () => {
     // Fetch data class
-    let result = await getDataClass();
+    let result = await getData();
 
     if (result.status === 200) {
       setData((prev) => ({ ...prev, dataClass: result.data }));

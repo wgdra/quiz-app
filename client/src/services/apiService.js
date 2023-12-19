@@ -1,7 +1,7 @@
 import instance from "../utils/axiosCustomize";
 
-const getDataClass = () => {
-  return instance.get(`api/classes`);
+const getData = () => {
+  return instance.get(`api/v1/data`);
 };
 
-export { getDataClass };
+export { getData };
