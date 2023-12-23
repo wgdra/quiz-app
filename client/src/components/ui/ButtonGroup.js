@@ -4,27 +4,30 @@ const ButtonGroup = ({ ...props }) => {
   const { items } = props;
 
   return (
-    <ConfigProvider
-      theme={{
-        components: {
-          Button: {
-            /* here is your component tokens */
-          },
-        },
-      }}
-    >
-      <Space wrap>
-        {items &&
-          items.length >= 0 &&
-          items.map((item, _) => {
-            return (
-              <Button key={_} {...item}>
+    <Space wrap>
+      {items &&
+        items.length >= 0 &&
+        items.map((item, _) => {
+          return (
+            <ConfigProvider
+              theme={{
+                token: item.tokenCustomize,
+                components: {
+                  Button: item.buttonDesign,
+                  // {
+                  //   /* here is your component tokens */
+                  //   defaultColor
+                  // },
+                },
+              }}
+            >
+              <Button key={_} {...props}>
                 {item.label}
               </Button>
-            );
-          })}
-      </Space>
-    </ConfigProvider>
+            </ConfigProvider>
+          );
+        })}
+    </Space>
   );
 };
 

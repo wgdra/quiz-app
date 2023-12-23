@@ -10,9 +10,6 @@ const Theory = () => {
   const dataChapter = location.state.dataChapter;
   const dataTheory = location.state.dataTheory;
 
-  console.log("dataChapter", dataChapter);
-  console.log("dataTheory", dataTheory);
-
   const [dataContent, setDataContent] = useState(dataTheory.lessons);
 
   return (

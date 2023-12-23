@@ -9,12 +9,10 @@ const Method = () => {
   const location = useLocation();
   const dataClass = location.state.data;
 
-  console.log("dataaaaa", dataClass);
   const [subjectSelect, setSubjectSelect] = useState(dataClass.subjects[0]);
-  console.log("subjectSelect", subjectSelect);
 
   const handleClickBoxMethod = (data) => {
-    navigate("/project/chapter", {
+    navigate("/project/set", {
       state: {
         class_name: dataClass.class_name,
         subject_name: subjectSelect.subject_name,

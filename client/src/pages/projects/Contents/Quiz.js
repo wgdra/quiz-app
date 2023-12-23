@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Row, Col, notification } from "antd";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
 import InfoQuiz from "../../../components/ui/InfoQuiz";
 import BoxContentQuestion from "../../../components/ui/BoxContentQuestion";
 import ButtonBasic from "../../../components/ui/Button";

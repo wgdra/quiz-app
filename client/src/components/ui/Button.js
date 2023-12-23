@@ -14,7 +14,8 @@ const ButtonBasic = ({ ...props }) => {
             /* here is your component tokens */
             defaultColor: props.defaultColor,
             defaultBg: props.tokenDefaultColor,
-            defaultBorderColor: props.tokenDefaultColor,
+            defaultBorderColor:
+              props.tokenDefaultColor || props.defaultBorderColor,
           },
         },
       }}

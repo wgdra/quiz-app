@@ -10,9 +10,10 @@ import OverView from "./pages/projects/Overview";
 import Error from "./pages/Error";
 import Classes from "./pages/projects/Contents/Classes";
 import Method from "./pages/projects/Contents/Method";
-import Chapter from "./pages/projects/Contents/Chapter";
+import Set from "./pages/projects/Contents/Set";
 import Quiz from "./pages/projects/Contents/Quiz";
 import Theory from "./pages/projects/Contents/Theory";
+import Test from "./pages/projects/Contents/Test";
 
 function App() {
   return (
@@ -28,9 +29,10 @@ function App() {
           <Route path="/project/overview" element={<OverView />} />
           <Route path="/project/classes" element={<Classes />} />
           <Route path="/project/method" element={<Method />} />
-          <Route path="/project/chapter" element={<Chapter />} />
+          <Route path="/project/set" element={<Set />} />
           <Route path="/project/quiz" element={<Quiz />} />
           <Route path="/project/theory" element={<Theory />} />
+          <Route path="/project/test" element={<Test />} />
         </Route>
         <Route path="*" element={<Error />} />
       </Routes>

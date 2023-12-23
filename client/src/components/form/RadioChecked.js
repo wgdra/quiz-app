@@ -16,7 +16,7 @@ const RadioChecked = ({ ...props }) => {
         },
       }}
     >
-      <Radio value={props.value} defaultChecked={false}>
+      <Radio {...props} value={props.value} defaultChecked={false}>
         {optionImg ? (
           <img src={props.option} style={{ width: "100%" }} />
         ) : (

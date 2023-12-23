@@ -2,19 +2,6 @@ import React, { useState } from "react";
 import { ConfigProvider, Modal } from "antd";
 
 const ModalCustomize = ({ ...props }) => {
-  // const handleOk = () => {
-  //   setConfirmLoading(true);
-  //   setTimeout(() => {
-  //     handleUpdate();
-  //     setOpen(false);
-  //     setConfirmLoading(false);
-  //   }, 2000);
-  // };
-
-  // const handleCancel = () => {
-  //   setOpen(false);
-  // };
-
   return (
     <ConfigProvider
       theme={{
