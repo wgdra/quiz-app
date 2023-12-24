@@ -1,28 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import RadioChecked from "../form/RadioChecked";
 import InputCustomize from "../form/InputCustomize";
+import DragAndDropTest from "./DragAndDropTest";
 
 const BoxContentTest = ({ ...props }) => {
   const { contents } = props;
 
-  const [textDragOver, setTextDragOver] = useState(null);
-  const [isDragOver, setIsDragOver] = useState();
-
   // Handle
-  const handleDragStart = (e, item, index) => {
-    console.log("handleDragStart", item);
-    setTextDragOver(item);
-  };
-
-  const handleDrop = (e) => {
-    setTextDragOver(null);
-  };
-
-  const handleDragOver = (e, index) => {
-    console.log("handleDragOver", index);
-    setIsDragOver(index);
-  };
 
   return (
     contents.length > 0 &&
@@ -100,78 +85,10 @@ const BoxContentTest = ({ ...props }) => {
                   )}
 
                   {question.topic && question.drag === true && (
-                    <>
-                      <Col span={16} style={{ fontSize: "1.3em" }}>
-                        {question.topic.map((item, index) => {
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                display: "flex",
-                                marginBottom: 16,
-                              }}
-                            >
-                              <div
-                                style={{
-                                  height: 80,
-                                  width: "40%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  border: "2px solid black",
-                                  borderRight: "none",
-                                }}
-                              >
-                                {item}
-                              </div>
-
-                              <div
-                                style={{
-                                  color: "#999999",
-                                  height: 80,
-                                  width: "50%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  border: "2px dashed #999999",
-                                }}
-                                onDrop={handleDrop}
-                                onDragOver={(e) => handleDragOver(e, index)}
-                              >
-                                {isDragOver === index
-                                  ? textDragOver
-                                  : "ô tương ứng"}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </Col>
-                      <Col span={8} style={{ fontSize: "1.3em" }}>
-                        {question.topic_answer.map((item, index) => {
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                marginBottom: 16,
-                                height: 80,
-                                width: "100%",
-                                border: "2px solid black",
-                                cursor: "pointer",
-                              }}
-                              draggable={true}
-                              onDragStart={(e) =>
-                                handleDragStart(e, item, index)
-                              }
-                            >
-                              <span>{item}</span>
-                            </div>
-                          );
-                        })}
-                      </Col>
-                    </>
+                    <DragAndDropTest
+                      topic={question.topic}
+                      topic_answer={question.topic_answer}
+                    />
                   )}
                 </Row>
               </div>
