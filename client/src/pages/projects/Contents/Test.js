@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Row, Col, notification } from "antd";
 import InfoTest from "../../../components/ui/InfoTest";
@@ -7,6 +8,10 @@ const Test = () => {
   const location = useLocation();
   const data = location.state.dataTest;
   console.log("data test ", data);
+
+  const [dataAnswer, setDataAnswer] = useState([]);
+
+  console.log("dataAnswer", dataAnswer);
 
   const totalQuestion = [];
   data.content.forEach((item) => {
@@ -22,6 +27,8 @@ const Test = () => {
   const handleClickButton = (e) => {
     console.log("handleClickButton", e.target.innerText);
   };
+
+  // Handle Answer User
 
   return (
     <>
@@ -39,7 +46,10 @@ const Test = () => {
               padding: "16px 32px",
             }}
           >
-            <BoxContentTest contents={data.content} />
+            <BoxContentTest
+              contents={data.content}
+              setDataAnswer={setDataAnswer}
+            />
           </div>
         </Col>
         <Col className="gutter-row" span={6}>

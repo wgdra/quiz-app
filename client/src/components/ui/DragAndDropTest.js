@@ -2,20 +2,24 @@ import { useEffect, useState } from "react";
 import { Col } from "antd";
 
 const DragAndDropTest = ({ ...props }) => {
-  const { topic, topic_answer } = props;
+  const { topic, topic_answer, setDataAnswerDragAndDrop } = props;
 
-  const [textDragOver, setTextDragOver] = useState();
   const [isDrag, setIsDrag] = useState(false);
-  const [isDrop, setIsDrop] = useState([]);
-
-  console.log("isDrop", isDrop);
-  const a = isDrop.map((i) => i);
-  console.log("a", a);
+  const [isDragResult, setIsDragResult] = useState(false);
 
   const [dataDrag, setDataDrag] = useState(topic_answer);
-  const [dataDrop, setDataDrop] = useState(dataDrag.map(() => "ô tương ứng"));
+  const [dataDrop, setDataDrop] = useState(
+    dataDrag.map(() => {
+      return { label: "ô tương ứng", active: false };
+    })
+  );
+
+  useEffect(() => {
+    setDataAnswerDragAndDrop(dataDrop);
+  }, [dataDrop]);
 
   // Handle
+  // Drag
   const handleDragStart = (e, item, index) => {
     e.dataTransfer.setData("text", item);
     e.dataTransfer.setData("index", index);
@@ -30,34 +34,67 @@ const DragAndDropTest = ({ ...props }) => {
   };
 
   const handleDragStartResult = (e, item, index) => {
-    console.log("handleDragStartResult", item);
+    e.dataTransfer.setData("textDragResult", item);
+    e.dataTransfer.setData("indexDragResult", index);
+
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.dropEffect = "move";
+
+    const newDataDrop = [...dataDrop];
+    newDataDrop.splice(index, 1, { label: "ô tương ứng", active: false });
+    setDataDrop(newDataDrop);
+
+    setIsDragResult(true);
+  };
+
+  const handleDragEndResult = (e) => {
+    setIsDrag(false);
   };
 
   const handleDragOver = (e, index) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e, index) => {
+  // Drop
+  const handleDrop = (e, label, index, active) => {
     e.preventDefault();
     setIsDrag(false);
+    setIsDragResult(false);
 
-    setIsDrop([...isDrop, index]);
-
+    // Drag
     const text = e.dataTransfer.getData("text");
     const indexDrag = e.dataTransfer.getData("index");
 
-    const newDataDrag = [...dataDrag];
-    newDataDrag.splice(indexDrag, 1);
-    setDataDrag(newDataDrag);
+    // Drag Result
+    const textDragResult = e.dataTransfer.getData("textDragResult");
+    const indexDragResult = e.dataTransfer.getData("indexDragResult");
 
+    // Handle drag start
+    if (isDrag) {
+      const newDataDrag = [...dataDrag];
+      newDataDrag.splice(indexDrag, 1);
+      setDataDrag(newDataDrag);
+      if (isDrag && active) {
+        newDataDrag.push(label);
+      }
+    }
+
+    // Handle drag result
     const newDataDrop = [...dataDrop];
-    newDataDrop.splice(index, 1, text);
+    newDataDrop.splice(index, 1, {
+      label: text || textDragResult,
+      active: true,
+    });
     setDataDrop(newDataDrop);
+    if (isDragResult && active) {
+      newDataDrop.splice(indexDragResult, 1, { label: label, active: true });
+      setDataDrop(newDataDrop);
+    }
   };
 
   return (
     <>
-      <Col span={8} style={{ fontSize: "1.3em" }}>
+      <Col span={8} style={{ fontSize: "1.3em", fontWeight: "bold" }}>
         {topic.map((item, index) => {
           return (
             <div
@@ -82,26 +119,27 @@ const DragAndDropTest = ({ ...props }) => {
           return (
             <div
               style={{
-                color: "#999999",
+                color: item.active ? "black" : "#999999",
                 height: 80,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                border:
-                  a === index
-                    ? "4px dashed #6DAE40"
-                    : isDrag
-                    ? "4px dashed #6DAE40"
-                    : "2px dashed #999999",
+                border: item.active
+                  ? "4px solid #6DAE40"
+                  : isDrag || isDragResult
+                  ? "4px dashed #EC8E00"
+                  : "2px dashed #999999",
                 marginBottom: 16,
                 marginLeft: "-36px",
+                cursor: item.active && "pointer",
               }}
               draggable={true}
-              onDragStart={(e) => handleDragStartResult(e, item, index)}
-              onDrop={(e) => handleDrop(e, index)}
+              onDragStart={(e) => handleDragStartResult(e, item.label, index)}
+              onDragEnd={handleDragEndResult}
+              onDrop={(e) => handleDrop(e, item.label, index, item.active)}
               onDragOver={(e) => handleDragOver(e, index)}
             >
-              {item}
+              {item.label}
             </div>
           );
         })}
@@ -113,7 +151,6 @@ const DragAndDropTest = ({ ...props }) => {
               <div
                 key={index}
                 style={{
-                  //   display: isDragStart != index ? "flex" : "none",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
