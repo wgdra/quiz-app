@@ -2,22 +2,21 @@ import { useEffect, useState } from "react";
 import { Col, Row } from "antd";
 import FormTitle from "../../../components/form/FormTitle";
 import FormSelect from "../../../components/form/FormSelect";
-import TabBar from "../../../components/ui/TabBar";
-import ImgQuestion from "../../../assets/images/img-question.png";
 import { getData } from "../../../services/apiService";
+import ManageTheories from "../../../components/ui/ManageTheories";
 
-const Synthetic = () => {
+const Theories = () => {
   const [data, setData] = useState({
     dataClass: [],
     dataSubject: [],
     dataChapter: [],
-    dataQuiz: [],
+    dataTheories: [],
   });
-  console.log("data dataQuiz", data.dataQuiz);
+
   const [state, setState] = useState({
     subject: { disabled: true, placeholder: "Vui lòng chọn lớp" },
     chapter: { disabled: true, placeholder: "Vui lòng chọn môn học" },
-    quiz: { disabled: true, placeholder: "Vui lòng chọn chương học" },
+    theory: { disabled: true, placeholder: "Vui lòng chọn chương học" },
   });
 
   const [dataBreadcrumb, setDataBreadcrumb] = useState([]);
@@ -29,8 +28,6 @@ const Synthetic = () => {
   };
 
   const handleOptionSelect = (isOption) => {
-    console.log("option", isOption);
-
     setDataBreadcrumb([...dataBreadcrumb, isOption.label]);
 
     if (isOption.option.class_name !== undefined) {
@@ -44,7 +41,7 @@ const Synthetic = () => {
     if (isOption.option.subject_name !== undefined) {
       isOption.option.methods.forEach((method) => {
         console.log("method", method);
-        if (method.method === "Làm trắc nghiệm") {
+        if (method.method === "Ôn tập lý thuyết") {
           setData((prev) => ({
             ...prev,
             dataChapter: method.chapters,
@@ -57,14 +54,14 @@ const Synthetic = () => {
       });
     }
     if (isOption.option.chapter_name !== undefined) {
-      setData((prev) => ({ ...prev, dataQuiz: isOption.option.quizes }));
+      setData((prev) => ({ ...prev, dataTheories: isOption.option.theories }));
       setState((prev) => ({
         ...prev,
-        quiz: { disabled: false, placeholder: "Chọn câu hỏi" },
+        theory: { disabled: false, placeholder: "Chọn câu hỏi" },
       }));
     }
-    if (isOption.option.quiz_name !== undefined) {
-      setItemsQuestion(isOption.option.questions);
+    if (isOption.option.theory_name !== undefined) {
+      setItemsQuestion(isOption.option.lessons);
     }
   };
 
@@ -121,11 +118,7 @@ const Synthetic = () => {
 
   return (
     <>
-      <Row
-      // style={{
-      //   boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-      // }}
-      >
+      <Row>
         <Col
           span={24}
           style={{
@@ -205,74 +198,20 @@ const Synthetic = () => {
                 />
 
                 <FormSelect
-                  items={data.dataQuiz}
-                  disabled={state.quiz.disabled}
-                  placeholder={state.quiz.placeholder}
+                  items={data.dataTheories}
+                  disabled={state.theory.disabled}
+                  placeholder={state.theory.placeholder}
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
             </Row>
-            <Row style={{ padding: "0px 8px" }}>
-              <TabBar
-                style={{ width: "100%" }}
-                items={itemsQuestion}
-                setItems={setItemsQuestion}
-                handleUpdateQuestion={handleUpdateQuestion}
-              />
-            </Row>
+
+            <ManageTheories dataContent={itemsQuestion} />
           </div>
         </Col>
-        {/* <Col
-          span={12}
-          style={{
-            height: "80vh",
-            maxHeight: "80vh",
-          }}
-        >
-          <div
-            style={{
-              height: "100%",
-              maxHeight: "100%",
-              boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-              margin: 8,
-            }}
-          >
-            <FormTitle
-              title="Thông Tin"
-              fontSize="1.4em"
-              background="#1677ff"
-            />
-            <div style={{ height: "95%", padding: 16 }}>
-              <FormTitle
-                title={
-                  <BreadCrumb
-                    itemColor="rgb(255 255 255 / 71%);"
-                    lastItemColor="#ffff"
-                    style={{
-                      fontSize: "1.1em",
-                      padding: "0px 16px",
-                    }}
-                    items={dataBreadcrumb.map((item) => {
-                      return {
-                        title: item,
-                      };
-                    })}
-                  />
-                }
-                background="#0092ff"
-                margin="0px 0px 8px 0px"
-              />
-              <TabBar
-                items={itemsQuestion}
-                setItems={setItemsQuestion}
-                handleUpdateQuestion={handleUpdateQuestion}
-              />
-            </div>
-          </div>
-        </Col> */}
       </Row>
     </>
   );
 };
 
-export default Synthetic;
+export default Theories;

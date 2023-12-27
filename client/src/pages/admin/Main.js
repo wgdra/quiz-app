@@ -57,7 +57,7 @@ const MainAdmin = () => {
         break;
 
       case "5":
-        navigate("/manage/theory");
+        navigate("/manage/theories");
         break;
 
       case "6":
