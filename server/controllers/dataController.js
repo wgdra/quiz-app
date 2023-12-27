@@ -7,7 +7,7 @@ async function getAllData(req, res, next) {
   try {
     const result = await dataService.getAllData();
 
-    res.status(StatusCodes.OK).json(result);
+    res.status(StatusCodes.OK).json({ status: StatusCodes.OK, data: result });
   } catch (error) {
     next(error);
   }

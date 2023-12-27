@@ -47,6 +47,7 @@ const getAllData = async () => {
       delete classes.chapters;
       delete classes.quizes;
       delete classes.theories;
+      delete classes.test;
     });
 
     return result;
