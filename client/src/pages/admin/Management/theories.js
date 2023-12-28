@@ -119,19 +119,11 @@ const Theories = () => {
   return (
     <>
       <Row>
-        <Col
-          span={24}
-          style={{
-            height: "80vh",
-            maxHeight: "80vh",
-          }}
-        >
+        <Col span={24}>
           <div
             style={{
-              height: "100%",
-              maxHeight: "100%",
+              minHeight: "860px",
               boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-              // margin: 8,
             }}
           >
             <FormTitle

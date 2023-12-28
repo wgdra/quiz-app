@@ -3,7 +3,7 @@ const FormTitle = ({ ...props }) => {
     <div
       style={{
         color: "#fff",
-        // background: "#1677ff",
+        textAlign: "center",
         background: props.background,
         padding: "8px 0px",
         margin: props.margin,

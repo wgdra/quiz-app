@@ -12,16 +12,12 @@ const PageContainer = (props) => {
     <Content
       style={{
         margin: "24px 16px",
-        overflow: "initial",
-        // minHeight: "88vh",
       }}
     >
       <div
         style={{
-          height: "88vh",
-          maxHeight: "88vh",
+          minHeight: "88vh",
           padding: 24,
-          textAlign: "center",
           background: colorBgContainer,
         }}
       >

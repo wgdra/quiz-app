@@ -26,7 +26,7 @@ function getItem(label, key, icon, children) {
 }
 
 const MainProject = () => {
-  const { Header, Content, Footer } = Layout;
+  const { Content } = Layout;
   const navigate = useNavigate();
 
   const [data, setData] = useState({});

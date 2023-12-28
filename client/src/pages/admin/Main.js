@@ -23,7 +23,7 @@ const getItem = (label, key, icon, children, type) => {
 };
 
 const items = [
-  getItem("DASHBOARD", "1", <AppstoreOutlined />),
+  // getItem("DASHBOARD", "1", <AppstoreOutlined />),
   getItem("Người Dùng", "2", <TeamOutlined />),
   getItem("Quản Lý", "sub1", <UnorderedListOutlined />, [
     getItem("Bài Tập Trắc Nghiệm", "4"),
@@ -40,6 +40,7 @@ const items = [
 
 const MainAdmin = () => {
   const navigate = useNavigate();
+  const { Content } = Layout;
 
   // Handle Navigate
   const handleNavigate = (e) => {
@@ -80,8 +81,9 @@ const MainAdmin = () => {
       }}
     >
       <SideWrapper items={items} handleNavigate={handleNavigate} />
-      <Layout className="site-layout">
+      <Layout>
         <HeaderWrapper />
+
         <PageContainer>
           <Outlet />
         </PageContainer>
