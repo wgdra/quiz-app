@@ -5,7 +5,7 @@ import PopConfirm from "./Popconfirm";
 const InfoCount = ({ ...props }) => {
   const { Countdown } = Statistic;
 
-  const { totalQuestion } = props;
+  const { count, stateQuestion } = props;
 
   const [time, setTime] = useState();
 
@@ -16,7 +16,7 @@ const InfoCount = ({ ...props }) => {
   const dataInfoTest = [
     {
       title: "Số câu đã làm",
-      content: `10 / ${totalQuestion.length}`,
+      content: `${count} / ${stateQuestion.length}`,
     },
     {
       title: "Thời gian làm bài",

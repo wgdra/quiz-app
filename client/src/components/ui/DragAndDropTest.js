@@ -10,15 +10,20 @@ const DragAndDropTest = ({ ...props }) => {
   const [dataDrag, setDataDrag] = useState(topic_answer);
   const [dataDrop, setDataDrop] = useState(
     dataDrag.map(() => {
-      return { label: "ô tương ứng", active: false };
+      return { label: "ô tương ứng", answer: "answer", active: false };
     })
   );
 
+  // Handle
+  // Answer
   useEffect(() => {
-    setDataAnswerDragAndDrop(dataDrop);
+    setDataAnswerDragAndDrop(
+      dataDrop.map((data) => {
+        return data.answer;
+      })
+    );
   }, [dataDrop]);
 
-  // Handle
   // Drag
   const handleDragStart = (e, item, index) => {
     e.dataTransfer.setData("text", item);
@@ -41,7 +46,11 @@ const DragAndDropTest = ({ ...props }) => {
     e.dataTransfer.dropEffect = "move";
 
     const newDataDrop = [...dataDrop];
-    newDataDrop.splice(index, 1, { label: "ô tương ứng", active: false });
+    newDataDrop.splice(index, 1, {
+      label: "ô tương ứng",
+      answer: "answer",
+      active: false,
+    });
     setDataDrop(newDataDrop);
 
     setIsDragResult(true);
@@ -51,7 +60,7 @@ const DragAndDropTest = ({ ...props }) => {
     setIsDrag(false);
   };
 
-  const handleDragOver = (e, index) => {
+  const handleDragOver = (e) => {
     e.preventDefault();
   };
 
@@ -83,11 +92,16 @@ const DragAndDropTest = ({ ...props }) => {
     const newDataDrop = [...dataDrop];
     newDataDrop.splice(index, 1, {
       label: text || textDragResult,
+      answer: text || textDragResult,
       active: true,
     });
     setDataDrop(newDataDrop);
     if (isDragResult && active) {
-      newDataDrop.splice(indexDragResult, 1, { label: label, active: true });
+      newDataDrop.splice(indexDragResult, 1, {
+        label: label,
+        answer: label,
+        active: true,
+      });
       setDataDrop(newDataDrop);
     }
   };

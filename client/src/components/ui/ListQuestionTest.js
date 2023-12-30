@@ -1,7 +1,7 @@
 import { Row, Col } from "antd";
 
 const ListQuestionTest = ({ ...props }) => {
-  const { totalQuestion, handleClickQuestion } = props;
+  const { stateQuestion, handleClickQuestion } = props;
 
   const colorNote = [
     {
@@ -13,8 +13,8 @@ const ListQuestionTest = ({ ...props }) => {
       color: "#f1f1f1",
     },
     {
-      label: "Câu đã làm nhưng chưa chắc chắn",
-      color: "#9298c2",
+      label: "Câu chưa chắc chắn",
+      color: "#EC8E00",
     },
   ];
 
@@ -28,8 +28,8 @@ const ListQuestionTest = ({ ...props }) => {
         }}
         gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
       >
-        {totalQuestion.length > 0 &&
-          totalQuestion.map((question, index) => {
+        {stateQuestion.length > 0 &&
+          stateQuestion.map((state, index) => {
             return (
               <Col key={index} className="gutter-row" style={{ width: "20%" }}>
                 <div
@@ -41,10 +41,15 @@ const ListQuestionTest = ({ ...props }) => {
                     padding: "8px 14px",
                     borderRadius: "50%",
                     marginBottom: 16,
-                    background: "#f1f1f1",
+                    color: !state.state ? "black" : "#FFFFFF",
+                    background:
+                      (state.state === 0 && "#f1f1f1") ||
+                      (state.state === 2 && "#EC8E00") ||
+                      (state.state === 1 && "#6dae40"),
+
                     cursor: "pointer",
                   }}
-                  onClick={() => handleClickQuestion(question.question)}
+                  onClick={() => handleClickQuestion(state)}
                 >
                   {index + 1}
                 </div>

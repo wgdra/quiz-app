@@ -4,7 +4,8 @@ import ListQuestionTest from "./ListQuestionTest";
 import ButtonGroup from "./ButtonGroup";
 
 const InfoTest = ({ ...props }) => {
-  const { totalQuestion, handleClickButton, handleClickQuestion } = props;
+  const { count, stateQuestion, handleClickButton, handleClickQuestion } =
+    props;
 
   return (
     <div
@@ -14,9 +15,9 @@ const InfoTest = ({ ...props }) => {
         border: "1px solid #cfcfcf",
       }}
     >
-      <InfoCount totalQuestion={totalQuestion} />
+      <InfoCount count={count} stateQuestion={stateQuestion} />
       <ListQuestionTest
-        totalQuestion={totalQuestion}
+        stateQuestion={stateQuestion}
         handleClickQuestion={handleClickQuestion}
       />
       <div

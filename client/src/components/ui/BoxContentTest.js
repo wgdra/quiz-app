@@ -6,42 +6,59 @@ import CheckboxCustomize from "../form/CheckBoxCustomize";
 import DragAndDropTest from "./DragAndDropTest";
 
 const BoxContentTest = ({ ...props }) => {
-  const { contents, setDataAnswer } = props;
+  const {
+    contents,
+    setDataAnswer,
+    handleAnswerChoise,
+    handleChangeCheckBoxWonder,
+  } = props;
 
-  const [dataAnswerChecked, setDataAnswerChecked] = useState([]);
-  const [dataAnswerInput, setDataAnswerInput] = useState({});
+  const [dataAnswerInput, setDataAnswerInput] = useState([]);
   const [dataAnswerDragAndDrop, setDataAnswerDragAndDrop] = useState([]);
 
   const [dataChecked, setDataChecked] = useState(
-    contents[0].questions.map(() => "answer")
+    contents[0].questions.map(() => {
+      return {
+        value: "answer",
+        checked: false,
+      };
+    })
   );
   const [dataInput, setDataInput] = useState(
     contents[1].questions.map((question) => question.topic.map(() => "answer"))
   );
 
-  useEffect(() => {
-    setDataAnswerChecked(dataChecked);
-  }, [dataChecked]);
-
-  // const [a, setA] = useState(
-  //   contents[1].questions.map((question, index) => {
-  //     if (question.drag === true) {
-  //       return index;
-  //     }
-  //   })
-  // );
-
-  console.log("dataAnswerDragAndDrop", dataAnswerDragAndDrop);
-
   // Handle
-  const handleChangeCheckBoxWonder = (question) => {
-    console.log("qq", question);
+
+  useEffect(() => {
+    handleDataEssay();
+  }, [dataInput, dataAnswerDragAndDrop]);
+
+  const handleDataEssay = () => {
+    dataAnswerInput.length > 0 &&
+      dataAnswerInput.map((data, _) => {
+        data.map((item, idx) => {
+          if (item.length === dataAnswerDragAndDrop.length) {
+            const newDataEssay = [...data];
+            newDataEssay.splice(idx, 1, dataAnswerDragAndDrop);
+            setDataAnswer(newDataEssay);
+          }
+        });
+      });
   };
 
+  // Event
   const handleChecked = (value, indexQuestion) => {
     const newDataChecked = [...dataChecked];
-    newDataChecked.splice(indexQuestion, 1, value);
-    setDataChecked(newDataChecked);
+
+    if (!newDataChecked[indexQuestion].checked) {
+      newDataChecked.splice(indexQuestion, 1, {
+        value: value,
+        checked: true,
+      });
+      setDataChecked(newDataChecked);
+      handleAnswerChoise(newDataChecked, indexQuestion);
+    }
   };
 
   const handleChangeInput = (value, indexInput, indexQuestion) => {
@@ -51,7 +68,7 @@ const BoxContentTest = ({ ...props }) => {
   };
 
   const handleBlur = () => {
-    setDataAnswerInput({ dataInput });
+    setDataAnswerInput([dataInput]);
   };
 
   return (
@@ -83,7 +100,7 @@ const BoxContentTest = ({ ...props }) => {
                     }}
                     onChange={() =>
                       handleChangeCheckBoxWonder(
-                        index === 0 ? indexQuestion + 1 : indexQuestion + 6,
+                        index === 0 ? indexQuestion : indexQuestion + 5,
                         indexQuestion
                       )
                     }
