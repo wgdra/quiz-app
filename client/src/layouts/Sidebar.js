@@ -26,9 +26,6 @@ const SideWrapper = ({ ...props }) => {
         collapsible
         collapsed={collapsed}
         style={{
-          // overflow: "auto",
-          // position: "fixed",
-          // height: "100vh",
           left: 0,
           top: 0,
           bottom: 0,

@@ -20,7 +20,7 @@ const BoxContent = ({ ...props }) => {
       <p style={{ marginBottom: 42, fontSize: "1.2em" }}>{props.content}</p>
       <ButtonBasic
         size="large"
-        label="Bắt đầu"
+        label={props.labelBtn}
         defaultColor={props.mainColor}
         tokenDefaultColor="#ffff"
         tokenCustomize={{
@@ -33,7 +33,7 @@ const BoxContent = ({ ...props }) => {
           fontWeight: "bold",
           padding: "0px 28px",
         }}
-        onClick={() => handleClickStart(props.heading)}
+        onClick={() => handleClickStart(props.labelBtn)}
       />
     </div>
   );

@@ -5,7 +5,7 @@ import PopConfirm from "./Popconfirm";
 const InfoCount = ({ ...props }) => {
   const { Countdown } = Statistic;
 
-  const { count, stateQuestion } = props;
+  const { count, stateQuestion, onChangeCountdown, onFinishCountdown } = props;
 
   const [time, setTime] = useState();
 
@@ -25,8 +25,8 @@ const InfoCount = ({ ...props }) => {
           <Countdown
             value={time}
             valueStyle={{ color: "#77909b" }}
-            // onChange={onChangeCountdown}
-            // onFinish={onFinishCountdown}
+            onChange={onChangeCountdown}
+            onFinish={onFinishCountdown}
           />
         </PopConfirm>
       ),

@@ -4,22 +4,30 @@ import { Divider, Input, Select, Space, Button, ConfigProvider } from "antd";
 
 const FormSelect = ({ ...props }) => {
   // const [items, setItems] = useState(props.items);
-  const { items, setItems, handleDataItem, handleOptionSelect } = props;
+  const { items, setItems, handleCreate, handleOptionSelect } = props;
 
   const [name, setName] = useState("");
+  const [dataInput, setDataInput] = useState("");
   const [dataOption, setDataOption] = useState({});
 
   const inputRef = useRef(null);
 
-  const onNameChange = (event) => {
-    setName(event.target.value);
+  const onClickSelect = (data) => {
+    setName(data);
+  };
+
+  const onChangeCreate = (e) => {
+    setDataInput(e.target.value);
+  };
+  const onChangeUpdate = (e) => {
+    console.log("e", e.target.value);
   };
 
   const addItem = (e) => {
     e.preventDefault();
     // setItems([...items, name || `New item ${index++}`]);
-    handleDataItem(name);
-    setName("");
+    handleCreate(dataInput, name);
+    setDataInput("");
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
@@ -64,6 +72,7 @@ const FormSelect = ({ ...props }) => {
           handleOptionSelect(option);
           setDataOption(option.option);
         }}
+        onClick={() => onClickSelect(props.name)}
         dropdownRender={(menu) => (
           <>
             {menu}
@@ -83,8 +92,8 @@ const FormSelect = ({ ...props }) => {
                 <Input
                   placeholder="Nhập để thêm mới"
                   ref={inputRef}
-                  value={name}
-                  onChange={onNameChange}
+                  value={dataInput}
+                  onChange={onChangeCreate}
                 />
                 <Button type="text" icon={<PlusOutlined />} onClick={addItem}>
                   Thêm mới
@@ -101,8 +110,7 @@ const FormSelect = ({ ...props }) => {
                     dataOption.theory_name
                   }
                   ref={inputRef}
-                  value={name}
-                  onChange={onNameChange}
+                  onChange={onChangeUpdate}
                 />
 
                 <EditOutlined

@@ -1,7 +1,7 @@
 import { Row, Col } from "antd";
 
 const ListQuestionTest = ({ ...props }) => {
-  const { stateQuestion, handleClickQuestion } = props;
+  const { docHidden, stateQuestion, handleClickQuestion } = props;
 
   const colorNote = [
     {
@@ -92,6 +92,16 @@ const ListQuestionTest = ({ ...props }) => {
             </Col>
           );
         })}
+        <span style={{ padding: "0px 16px", fontSize: "1.1em" }}>
+          <p style={{ fontSize: "1.3em", fontWeight: "bold", color: "red" }}>
+            Lưu ý:
+          </p>{" "}
+          Em không được phép rời khỏi trang thi trong lúc làm bài. Nếu vượt quá
+          3 lần bài thi sẽ bị hủy !!!
+          <p style={{ fontWeight: "bold", margin: "8px 0px" }}>
+            Số lần vi phạm: {docHidden}
+          </p>{" "}
+        </span>
       </Row>
     </>
   );

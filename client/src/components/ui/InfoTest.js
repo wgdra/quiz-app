@@ -4,8 +4,15 @@ import ListQuestionTest from "./ListQuestionTest";
 import ButtonGroup from "./ButtonGroup";
 
 const InfoTest = ({ ...props }) => {
-  const { count, stateQuestion, handleClickButton, handleClickQuestion } =
-    props;
+  const {
+    docHidden,
+    count,
+    stateQuestion,
+    handleClickButton,
+    handleClickQuestion,
+    onChangeCountdown,
+    onFinishCountdown,
+  } = props;
 
   return (
     <div
@@ -15,8 +22,14 @@ const InfoTest = ({ ...props }) => {
         border: "1px solid #cfcfcf",
       }}
     >
-      <InfoCount count={count} stateQuestion={stateQuestion} />
+      <InfoCount
+        count={count}
+        stateQuestion={stateQuestion}
+        onChangeCountdown={onChangeCountdown}
+        onFinishCountdown={onFinishCountdown}
+      />
       <ListQuestionTest
+        docHidden={docHidden}
         stateQuestion={stateQuestion}
         handleClickQuestion={handleClickQuestion}
       />

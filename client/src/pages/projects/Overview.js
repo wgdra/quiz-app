@@ -1,26 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Avatar, Row, Col, Progress, Space } from "antd";
 import BoxTitle from "../../components/ui/BoxTitle";
 import BoxContent from "../../components/ui/BoxContent";
 import FormChart from "../../components/form/Chart";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { getData } from "../../services/apiService";
 
 const OverView = () => {
-  const [user, setUser] = useState("T");
   const navigate = useNavigate();
+
+  const [user, setUser] = useState("T");
+  const [data, setData] = useState("T");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    let res = await getData();
+
+    if (res.status !== 200) return;
+    if (res.status === 200) {
+      setData(res.data);
+    }
+  };
 
   const colorsProgress = {
     "0%": "#108ee9",
     "100%": "#87d068",
   };
 
-  const handleClickStart = (name) => {
-    console.log("name", name);
-    navigate("/project/classes", {
-      state: {
-        name: name,
-      },
-    });
+  const handleClickStart = (label) => {
+    if (label === "Bắt đầu") {
+      navigate("/project/classes", {
+        state: {
+          data: data,
+        },
+      });
+    }
   };
 
   return (
@@ -54,6 +71,7 @@ const OverView = () => {
           <BoxTitle title="Ôn luyện bài tập" />
           <BoxContent
             mainColor="#50C4EE"
+            labelBtn="Bắt đầu"
             heading="Bài tập trắc nghiệm"
             content="Hơn 600 bài trắc nghiệm"
             handleClickStart={handleClickStart}
@@ -69,6 +87,7 @@ const OverView = () => {
             <Col span={12}>
               <BoxContent
                 mainColor="#F372C7"
+                labelBtn="Bắt đầu"
                 heading="Ôn luyện lý thuyết"
                 content="Hơn 620 bài lý thuyết"
                 handleClickStart={handleClickStart}
@@ -77,6 +96,7 @@ const OverView = () => {
             <Col span={12}>
               <BoxContent
                 mainColor="#9077F5"
+                labelBtn="Bắt đầu"
                 heading="Làm bài kiểm tra"
                 content="Hơn 300 bài kiểm tra"
                 handleClickStart={handleClickStart}
@@ -86,6 +106,7 @@ const OverView = () => {
           <BoxTitle title="Năng lực & Tư duy" />
           <BoxContent
             mainColor="#FFC2D5"
+            labelBtn="Tìm hiểu ngay"
             heading="Đánh giá"
             content="Đánh giá năng lực, đánh giá tư duy và học online cùng giáo viên"
             handleClickStart={handleClickStart}

@@ -8,13 +8,19 @@ import DragAndDropTest from "./DragAndDropTest";
 const BoxContentTest = ({ ...props }) => {
   const {
     contents,
-    setDataAnswer,
+    setDataUserAnswerChoise,
+    setDataUserAnswerEssay,
     handleAnswerChoise,
+    handleStateQuestion,
     handleChangeCheckBoxWonder,
   } = props;
 
   const [dataAnswerInput, setDataAnswerInput] = useState([]);
   const [dataAnswerDragAndDrop, setDataAnswerDragAndDrop] = useState([]);
+
+  const [dataAnswerChecked, setDataAnswerChecked] = useState(
+    contents[0].questions.map(() => "answer")
+  );
 
   const [dataChecked, setDataChecked] = useState(
     contents[0].questions.map(() => {
@@ -24,27 +30,25 @@ const BoxContentTest = ({ ...props }) => {
       };
     })
   );
+
   const [dataInput, setDataInput] = useState(
     contents[1].questions.map((question) => question.topic.map(() => "answer"))
   );
 
   // Handle
-
   useEffect(() => {
     handleDataEssay();
-  }, [dataInput, dataAnswerDragAndDrop]);
+  }, [dataAnswerInput, dataAnswerDragAndDrop]);
 
   const handleDataEssay = () => {
-    dataAnswerInput.length > 0 &&
-      dataAnswerInput.map((data, _) => {
-        data.map((item, idx) => {
-          if (item.length === dataAnswerDragAndDrop.length) {
-            const newDataEssay = [...data];
-            newDataEssay.splice(idx, 1, dataAnswerDragAndDrop);
-            setDataAnswer(newDataEssay);
-          }
-        });
-      });
+    const newDataAnswer = [...dataInput];
+    newDataAnswer.map((data, idx) => {
+      if (data.length === dataAnswerDragAndDrop.length) {
+        const newDataEssay = [...newDataAnswer];
+        newDataEssay.splice(idx, 1, dataAnswerDragAndDrop);
+        setDataUserAnswerEssay(newDataEssay);
+      }
+    });
   };
 
   // Event
@@ -59,16 +63,23 @@ const BoxContentTest = ({ ...props }) => {
       setDataChecked(newDataChecked);
       handleAnswerChoise(newDataChecked, indexQuestion);
     }
+
+    const newDataAnswerChecked = [...dataAnswerChecked];
+    newDataAnswerChecked.splice(indexQuestion, 1, value);
+    setDataAnswerChecked(newDataAnswerChecked);
+    setDataUserAnswerChoise(newDataAnswerChecked);
   };
 
   const handleChangeInput = (value, indexInput, indexQuestion) => {
     const newDataInput = [...dataInput];
     newDataInput[indexQuestion].splice(indexInput, 1, value);
     setDataInput(newDataInput);
+
+    handleStateQuestion(indexQuestion);
   };
 
   const handleBlur = () => {
-    setDataAnswerInput([dataInput]);
+    setDataAnswerInput(dataInput);
   };
 
   return (

@@ -1,6 +1,7 @@
 import ButtonBasic from "./Button";
 
 const BoxContentClass = ({ ...props }) => {
+  const { index, data, handleClickClass } = props;
   return (
     <div
       style={{
@@ -13,10 +14,10 @@ const BoxContentClass = ({ ...props }) => {
         marginBottom: 27,
       }}
     >
-      <img src={props.thumbnail} />
+      <img src={data.thumbnail} />
       <div style={{ width: "70%" }}>
-        <h2 style={{ margin: 0, color: "#44a500" }}>{props.class_name}</h2>
-        <span style={{ fontSize: "1.3em" }}>{props.description}</span>
+        <h2 style={{ margin: 0, color: "#44a500" }}>{data.class_name}</h2>
+        <span style={{ fontSize: "1.3em" }}>{data.description}</span>
       </div>
       <ButtonBasic
         size="large"
@@ -33,6 +34,7 @@ const BoxContentClass = ({ ...props }) => {
           fontWeight: "bold",
           padding: "0px 28px",
         }}
+        onClick={() => handleClickClass(data)}
       />
     </div>
   );
