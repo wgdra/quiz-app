@@ -27,7 +27,10 @@ async function getOneChapter(req, res, next) {
 async function createChapter(req, res, next) {
   try {
     const createdChapter = await chapterService.createChapter(req.body);
-    res.status(StatusCodes.CREATED).json(createdChapter);
+    res.status(StatusCodes.CREATED).json({
+      status: StatusCodes.CREATED,
+      data: createdChapter,
+    });
   } catch (error) {
     next(error);
   }
@@ -40,7 +43,10 @@ async function updateChapter(req, res, next) {
       req.params.id,
       req.body
     );
-    res.status(StatusCodes.OK).json(updatedChapter);
+    res.status(StatusCodes.OK).json({
+      status: StatusCodes.OK,
+      data: updatedChapter,
+    });
   } catch (error) {
     next(error);
   }
@@ -51,7 +57,10 @@ async function deleteChapter(req, res, next) {
   try {
     const deletedChapter = await chapterService.deleteChapter(req.params.id);
 
-    res.status(StatusCodes.OK).json(deletedChapter);
+    res.status(StatusCodes.OK).json({
+      status: StatusCodes.OK,
+      data: deletedChapter,
+    });
   } catch (error) {
     next();
   }

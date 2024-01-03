@@ -4,10 +4,9 @@ const { StatusCodes } = require("http-status-codes");
 // Validate Create
 const createSubject = async (req, res, next) => {
   const correctCondition = Joi.object({
-    subjectId: Joi.number().required(),
+    classIds: Joi.array().items(Joi.number()).default([]),
     subject_name: Joi.string().required().min(3).max(20).trim().strict(),
-    // classIds: Joi.array().items(Joi.number()).default([]),
-    chapters: Joi.array().items(Joi.string().trim()).default([]),
+    methods: Joi.array().items(Joi.object().default({})).default([]),
   });
 
   try {
@@ -22,10 +21,9 @@ const createSubject = async (req, res, next) => {
 
 const updateSubject = async (req, res, next) => {
   const correctCondition = Joi.object({
-    subjectId: Joi.number().required(),
+    classIds: Joi.array().items(Joi.number()).default([]),
     subject_name: Joi.string().required().min(3).max(20).trim().strict(),
-    // classIds: Joi.array().items(Joi.number()).default([]),
-    chapters: Joi.array().items(Joi.string().trim()).default([]),
+    methods: Joi.array().items(Joi.object().default({})).default([]),
   });
 
   try {

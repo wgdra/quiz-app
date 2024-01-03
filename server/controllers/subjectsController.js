@@ -27,7 +27,9 @@ async function getOneSubject(req, res, next) {
 async function createSubject(req, res, next) {
   try {
     const createdSubject = await subjectService.createSubject(req.body);
-    res.status(StatusCodes.CREATED).json(createdSubject);
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.CREATED, data: createdSubject });
   } catch (error) {
     next(error);
   }

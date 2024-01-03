@@ -7,6 +7,7 @@ const COLLECTION_NAME = "subjects";
 const COLLECTION_SCHEMA = Joi.object({
   classIds: Joi.array().items(Joi.number()).default([]),
   subject_name: Joi.string().required().min(3).max(20).trim().strict(),
+  methods: Joi.array().items(Joi.object().default({})).default([]),
   createdAt: Joi.date().default(Date.now),
   updatedAt: Joi.date().default(null),
 });
@@ -83,6 +84,7 @@ const updateSubject = async (id, reqBody) => {
       $set: {
         classIds: validateReq.classIds,
         subject_name: validateReq.subject_name,
+        methods: validateReq.methods,
       },
     };
 

@@ -5,20 +5,20 @@ const { ObjectId } = require("mongodb");
 // SCHEMA
 const COLLECTION_NAME = "quizes";
 const COLLECTION_SCHEMA = Joi.object({
-  classId: Joi.number().required(),
-  subject: Joi.string().required(),
-  chapter: Joi.string().required(),
-  quiz_name: Joi.string().required().trim().strict(),
+  classId: Joi.number().required().default(""),
+  subject: Joi.string().required().default(""),
+  chapter: Joi.string().required().default(""),
+  quiz_name: Joi.string().required().trim().strict().default(""),
   quiz_img: Joi.string().default(""),
   questions: Joi.array()
     .items(
       Joi.object({
-        questionId: Joi.number().required(),
-        question_name: Joi.string().required().trim(),
+        questionId: Joi.number().required().default(""),
+        question_name: Joi.string().required().trim().default(""),
         question_img: Joi.string().default(""),
         options: Joi.array().items(Joi.string().trim()).default([]),
         suggest: Joi.string().default(""),
-        answer: Joi.number().required(),
+        answer: Joi.number().required().default(""),
       })
     )
     .default([]),
