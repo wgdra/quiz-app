@@ -3,20 +3,23 @@ import { Radio, Space, Input } from "antd";
 import UploadPicturesWall from "../ui/UploadPicturesWall";
 
 const RadioInput = ({ ...props }) => {
-  const { options, setFormOptions, valueRadio, setValueRadio } = props;
+  const { options, formOptions, setFormOptions, valueRadio, setValueRadio } =
+    props;
 
   const onChangeRadio = (e) => {
     setValueRadio(e.target.value);
   };
 
   const onChangeInput = (value, index) => {
-    options.splice(index, 1, value);
-    setFormOptions(options);
+    const newOptions = [...formOptions];
+    newOptions.splice(index, 1, value);
+    setFormOptions(newOptions);
   };
 
   const onChangeImage = (value, index) => {
-    options.splice(index, 1, value);
-    setFormOptions(options);
+    const newOptions = [...formOptions];
+    newOptions.splice(index, 1, value);
+    setFormOptions(newOptions);
   };
 
   return (

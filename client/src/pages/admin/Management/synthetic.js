@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Row } from "antd";
+import { Col, Row, message } from "antd";
 import FormTitle from "../../../components/form/FormTitle";
 import FormSelect from "../../../components/form/FormSelect";
 import TabBar from "../../../components/ui/TabBar";
@@ -7,8 +7,16 @@ import ImgQuestion from "../../../assets/images/img-question.png";
 import { getData } from "../../../services/apiService";
 import { createSubject } from "../../../services/subjectApiService";
 import { createChapter } from "../../../services/chapterApiService";
+import {
+  createQuiz,
+  createQuestion,
+  updateQuestion,
+  deleteQuestion,
+} from "../../../services/quizApiService";
 
 const Synthetic = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [data, setData] = useState({
     dataClass: [],
     dataSubject: [],
@@ -17,23 +25,23 @@ const Synthetic = () => {
     dataQuiz: [],
   });
 
-  const [dataSelected, setDataSelected] = useState({
-    class: "",
-    subject: "",
-    method: "",
-    chapter: "",
-  });
-
-  console.log("dataSelected", dataSelected);
   const [state, setState] = useState({
     subject: { disabled: true, placeholder: "Vui lòng chọn lớp" },
     chapter: { disabled: true, placeholder: "Vui lòng chọn môn học" },
     quiz: { disabled: true, placeholder: "Vui lòng chọn chương học" },
   });
 
+  const [dataSelected, setDataSelected] = useState({
+    class: "",
+    subject: "",
+    method: "",
+    chapter: "",
+    quizId: "",
+  });
+
   const [itemsQuestion, setItemsQuestion] = useState([]);
 
-  // Handle data item
+  // Handle select
 
   const handleOptionSelect = (isOption) => {
     console.log("option", isOption);
@@ -83,6 +91,10 @@ const Synthetic = () => {
     }
     if (isOption.option.quiz_name !== undefined) {
       setItemsQuestion(isOption.option.questions);
+      setDataSelected((prev) => ({
+        ...prev,
+        quizId: isOption.option._id,
+      }));
     }
   };
 
@@ -93,17 +105,20 @@ const Synthetic = () => {
 
   const fetchData = async () => {
     // Fetch data
-    let result = await getData();
+    let res = await getData();
 
-    if (result.status === 200) {
-      setData((prev) => ({ ...prev, dataClass: result.data }));
+    if (res.status === 200) {
+      setData((prev) => ({ ...prev, dataClass: res.data }));
     } else {
-      console.log("Looix");
+      messageApi.open({
+        type: "error",
+        content: "Lỗi lấy dữ liệu !!!",
+      });
+      return;
     }
   };
 
   const handleCreate = async (data, name) => {
-    console.log("data", data);
     switch (name) {
       case "subject":
         const resSubject = await createSubject({
@@ -118,15 +133,22 @@ const Synthetic = () => {
           ],
         });
         if (resSubject.status !== 201) {
+          messageApi.open({
+            type: "error",
+            content: "Có lỗi !!!",
+          });
           return;
         }
         if (resSubject.status === 201) {
+          messageApi.open({
+            type: "success",
+            content: "Thêm mới thành công",
+          });
           fetchData();
         }
         break;
 
       case "chapter":
-        console.log("chap");
         const resChapter = await createChapter({
           chapter_name: data,
           classId: dataSelected.class,
@@ -134,17 +156,43 @@ const Synthetic = () => {
           method: dataSelected.method,
         });
         if (resChapter.status !== 201) {
+          messageApi.open({
+            type: "error",
+            content: "Có lỗi !!!",
+          });
           return;
         }
         if (resChapter.status === 201) {
+          messageApi.open({
+            type: "success",
+            content: "Thêm mới thành công",
+          });
           fetchData();
         }
 
         break;
 
       case "quiz":
-        console.log("quiz");
-        // console.log("ré", res);
+        const resQuiz = await createQuiz({
+          quiz_name: data,
+          classId: dataSelected.class,
+          subject: dataSelected.subject,
+          chapter: dataSelected.chapter,
+        });
+        if (resQuiz.status !== 201) {
+          messageApi.open({
+            type: "error",
+            content: "Có lỗi !!!",
+          });
+          return;
+        }
+        if (resQuiz.status === 201) {
+          messageApi.open({
+            type: "success",
+            content: "Thêm mới thành công",
+          });
+          fetchData();
+        }
 
         break;
 
@@ -154,40 +202,88 @@ const Synthetic = () => {
   };
 
   // Handle API Questions
-  const handleCreateQuestion = () => {
-    console.log("handleUpdateQuestion");
-
-    // const result = await createClass ( class_name: dataInput )
-    // if(result===true){
-    //   fetchDataClass()
-    // }
+  const handleCreateQuestion = async (
+    questionId,
+    dataQuestion,
+    options,
+    answer
+  ) => {
+    const res = await createQuestion(dataSelected.quizId, {
+      questionId: questionId,
+      question_name: dataQuestion.question_name,
+      question_img: dataQuestion.question_img || "",
+      options: options,
+      suggest: dataQuestion.suggest,
+      answer: answer,
+    });
+    if (res.status !== 201) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 201) {
+      messageApi.open({
+        type: "success",
+        content: "Thêm mới thành công",
+      });
+      fetchData();
+    }
   };
 
-  const handleUpdateQuestion = (id) => {
-    console.log("handleUpdateQuestion", id);
-
-    // const result = await createClass ( class_name: dataInput )
-    // if(result===true){
-    //   fetchDataClass()
-    // }
+  const handleUpdateQuestion = async (
+    questionId,
+    dataQuestion,
+    options,
+    answer
+  ) => {
+    const res = await updateQuestion(dataSelected.quizId, {
+      questionId: questionId,
+      question_name: dataQuestion.question_name,
+      question_img: dataQuestion.question_img || "",
+      options: options,
+      suggest: dataQuestion.suggest,
+      answer: answer,
+    });
+    if (res.status !== 200) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 200) {
+      messageApi.open({
+        type: "success",
+        content: "Cập nhật thành công",
+      });
+      fetchData();
+    }
   };
 
-  const handleDeleteQuestion = (id) => {
-    console.log("handleUpdateQuestion", id);
-
-    // const result = await createClass ( class_name: dataInput )
-    // if(result===true){
-    //   fetchDataClass()
-    // }
+  const handleDeleteQuestion = async (questionId) => {
+    const res = await deleteQuestion(dataSelected.quizId, questionId);
+    if (res.status !== 200) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 200) {
+      messageApi.open({
+        type: "success",
+        content: "Xóa thành công",
+      });
+      fetchData();
+    }
   };
 
   return (
     <>
-      <Row
-      // style={{
-      //   boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-      // }}
-      >
+      {contextHolder}
+      <Row>
         <Col
           span={24}
           style={{
@@ -281,12 +377,16 @@ const Synthetic = () => {
               </Col>
             </Row>
             <Row style={{ padding: "0px 8px" }}>
-              <TabBar
-                style={{ width: "100%" }}
-                items={itemsQuestion}
-                setItems={setItemsQuestion}
-                handleUpdateQuestion={handleUpdateQuestion}
-              />
+              {itemsQuestion.length > 0 ? (
+                <TabBar
+                  style={{ width: "100%" }}
+                  items={itemsQuestion}
+                  setItems={setItemsQuestion}
+                  handleCreateQuestion={handleCreateQuestion}
+                  handleUpdateQuestion={handleUpdateQuestion}
+                  handleDeleteQuestion={handleDeleteQuestion}
+                />
+              ) : null}
             </Row>
           </div>
         </Col>

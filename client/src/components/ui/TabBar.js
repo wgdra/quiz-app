@@ -7,74 +7,52 @@ import ButtonBasic from "./Button";
 import ButtonGroup from "./ButtonGroup";
 
 const TabBar = ({ ...props }) => {
-  const { items, setItems, handleUpdateQuestion } = props;
+  const {
+    items,
+    setItems,
+    handleCreateQuestion,
+    handleUpdateQuestion,
+    handleDeleteQuestion,
+  } = props;
+
+  const [dataItems, setDataItems] = useState(
+    items.map((item) => {
+      return {
+        item: item,
+        state: 0,
+        disabled: true,
+      };
+    })
+  );
+
+  const [addNew, setAddNew] = useState(false);
+  const [disabledForm, setDisabledForm] = useState(true);
 
   const [defaultValueInput, setDefaultValueInput] = useState({});
-  const [formOptions, setFormOptions] = useState([]);
-  const [disabledForm, setDisabledForm] = useState(true);
+  const [formOptions, setFormOptions] = useState(["", "", "", ""]);
   const [valueRadio, setValueRadio] = useState("");
 
   const [activeKey, setActiveKey] = useState("");
   // initialItems[0].key
-  const newTabIndex = useRef(0);
 
-  const customRequest = (data) => {
-    console.log("data customRequest", data);
-  };
+  // console.log("data activeKey", activeKey);
 
-  // Handle
-  const add = () => {
-    console.log("create");
-    // const newActiveKey = `newTab${newTabIndex.current++}`;
-    // const newPanes = [...items];
-    // newPanes.push({
-    //   label: "New Tab",
-    //   children: "Content of new Tab",
-    //   key: newActiveKey,
-    // });
-    // setItems(newPanes);
-    // setActiveKey(newActiveKey);
-  };
+  const customRequest = (data) => {};
 
-  const remove = (targetKey) => {
-    console.log("targetKey", targetKey);
-
-    // let newActiveKey = activeKey;
-    // let lastIndex = -1;
-    // items.forEach((item, i) => {
-    //   if (item.key === targetKey) {
-    //     lastIndex = i - 1;
-    //   }
-    // });
-
-    // const newPanes = items.filter((item) => item.key !== targetKey);
-    // if (newPanes.length && newActiveKey === targetKey) {
-    //   if (lastIndex >= 0) {
-    //     newActiveKey = newPanes[lastIndex].key;
-    //   } else {
-    //     newActiveKey = newPanes[0].key;
-    //   }
-    // }
-    // setItems(newPanes);
-    // setActiveKey(newActiveKey);
-  };
-
-  // Content Quiz
-  const boxContent = (item) => {
+  // UI
+  const boxContent = (items, idx) => {
     const { TextArea } = Input;
 
-    console.log("defaultValueInput", defaultValueInput);
+    // console.log("defaultValueInput", defaultValueInput);
     // handle click update
-    const handleButtonClickUpdate = (innerText) => {
+    const onClick = (innerText, item, idx) => {
       switch (innerText) {
         case "Chỉnh sửa":
-          setDisabledForm(false);
+          handleClickUpdate(item, idx);
           break;
-        case "Lưu chỉnh sửa":
-          setDisabledForm(false);
-          break;
+
         case "Hủy bỏ":
-          setDisabledForm(true);
+          handleClickCancelUpdate(item, idx);
           break;
         default:
           break;
@@ -86,24 +64,45 @@ const TabBar = ({ ...props }) => {
       console.log("data image", data.file.thumbUrl);
     };
 
-    const onFinish = (data) => {
-      console.log("data form", data);
-      console.log("formOptions", formOptions);
-      console.log("radio checked", valueRadio);
+    const onFinish = (data, item, idx) => {
+      const nameButton = document.activeElement.getAttribute("name");
+
+      if (nameButton === "add") {
+        handleCreateQuestion(activeKey, data, formOptions, valueRadio);
+
+        const newDataItems = [...dataItems];
+        newDataItems.splice(idx, 1, {
+          item: item,
+          state: 0,
+          disabled: true,
+        });
+        setDataItems(newDataItems);
+      }
+      if (nameButton === "update") {
+        handleUpdateQuestion(activeKey, data, formOptions, valueRadio);
+
+        const newDataItems = [...dataItems];
+        newDataItems.splice(idx, 1, {
+          item: item,
+          state: 0,
+          disabled: true,
+        });
+        setDataItems(newDataItems);
+      }
     };
 
     return (
       <>
         <Form
           layout="vertical"
-          disabled={disabledForm}
-          onFinish={onFinish}
-          initialValues={{ question_name: item.question_name }}
+          disabled={items.disabled}
+          onFinish={(data) => onFinish(data, items.item, idx)}
+          initialValues={items.item.question_name}
         >
           <Row gutter={16}>
             <Col className="gutter-row" span={12}>
               <Form.Item name="question_name" label="Câu hỏi">
-                <Input defaultValue={item.question_name} />
+                <Input defaultValue={items.item.question_name} />
               </Form.Item>
               <Form.Item
                 name="question_img"
@@ -116,13 +115,14 @@ const TabBar = ({ ...props }) => {
                 </Upload>
               </Form.Item>
               <Form.Item name="suggest" label="Gợi ý">
-                <TextArea rows={6} defaultValue={item.suggest} />
+                <TextArea rows={6} defaultValue={items.item.suggest} />
               </Form.Item>
             </Col>
             <Col className="gutter-row" span={12}>
               <Form.Item name="options" label="Phần trả lời">
                 <RadioInput
-                  options={item.options}
+                  options={items.item.options}
+                  formOptions={formOptions}
                   setFormOptions={setFormOptions}
                   valueRadio={valueRadio}
                   setValueRadio={setValueRadio}
@@ -130,58 +130,111 @@ const TabBar = ({ ...props }) => {
               </Form.Item>
             </Col>
           </Row>
-
-          {disabledForm === false && (
-            <ButtonGroup
-              items={[
-                {
-                  htmlType: "submit",
-                  type: "primary",
-                  label: "Lưu chỉnh sửa",
-                  style: { background: "#04aa6d" },
-                  onClick: (e) => handleButtonClickUpdate(e.target.innerText),
-                },
-                {
-                  type: "primary",
-                  label: "Hủy bỏ",
-                  danger: true,
-                  onClick: (e) => handleButtonClickUpdate(e.target.innerText),
-                },
-              ]}
+          <div style={{ textAlign: "center" }}>
+            {items.state === 1 && (
+              <ButtonGroup
+                items={[
+                  {
+                    name: "update",
+                    type: "primary",
+                    label: "Lưu chỉnh sửa",
+                    style: { background: "#04aa6d" },
+                    htmlType: "submit",
+                  },
+                  {
+                    type: "primary",
+                    label: "Hủy bỏ",
+                    danger: true,
+                    submit: "button",
+                    onClick: (e) =>
+                      onClick(e.target.innerText, items.item, idx),
+                  },
+                ]}
+              />
+            )}
+            {items.state === 3 && (
+              <ButtonBasic
+                type="primary"
+                name="add"
+                label="Thêm"
+                style={{ background: "#6DAE40" }}
+                htmlType="submit"
+              />
+            )}
+          </div>
+        </Form>
+        <div style={{ textAlign: "center" }}>
+          {items.state === 0 && (
+            <ButtonBasic
+              type="primary"
+              label="Chỉnh sửa"
+              style={{ background: "#eb9a25", alignItem: "center" }}
+              onClick={(e) => onClick(e.target.innerText, items.item, idx)}
             />
           )}
-        </Form>
-        {disabledForm === true && (
-          <ButtonBasic
-            type="primary"
-            label="Chỉnh sửa"
-            style={{ background: "#eb9a25" }}
-            onClick={(e) => handleButtonClickUpdate(e.target.innerText)}
-          />
-        )}
+        </div>
       </>
     );
   };
 
   // Tabbar ỉtems
-  const initialItems = items.map((item, _) => {
+  const initialItems = dataItems.map((items, index) => {
     return {
-      key: item.questionId,
-      label: `Câu ${item.questionId}`,
-      children: boxContent(item),
+      key: items.item.questionId || index + 1,
+      label: `Câu ${index + 1}`,
+      children: boxContent(items, index),
     };
   });
-
+  // Handle
   const onChange = (newActiveKey) => {
     setActiveKey(newActiveKey);
   };
 
   const onEdit = (targetKey, action) => {
     if (action === "add") {
-      add();
+      addQuestion();
     } else {
       remove(targetKey);
     }
+  };
+
+  const addQuestion = () => {
+    const newPanes = [...dataItems];
+    newPanes.push({
+      item: {
+        question_name: "",
+        question_img: "",
+        options: ["", "", "", ""],
+        suggest: "",
+        answer: "",
+      },
+      state: 3,
+    });
+    setDataItems(newPanes);
+  };
+
+  const remove = (targetKey) => {
+    handleDeleteQuestion(targetKey);
+  };
+
+  const handleClickUpdate = (item, idx) => {
+    const newDataItems = [...dataItems];
+    newDataItems.splice(idx, 1, {
+      item: item,
+      state: 1,
+      disabled: false,
+    });
+    setDataItems(newDataItems);
+  };
+
+  const handleClickCancelUpdate = (item, idx) => {
+    const newDataItems = [...dataItems];
+    newDataItems.splice(idx, 1, {
+      item: item,
+      state: 0,
+      disabled: true,
+    });
+    setDataItems(newDataItems);
   };
 
   return (
@@ -190,7 +243,7 @@ const TabBar = ({ ...props }) => {
       type="editable-card"
       onChange={onChange}
       defaultActiveKey={1}
-      // activeKey={activeKey}
+      activeKey={activeKey}
       onEdit={onEdit}
       items={initialItems}
     />

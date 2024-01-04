@@ -21,7 +21,13 @@ const ButtonGroup = ({ ...props }) => {
                 },
               }}
             >
-              <Button key={_} {...props}>
+              <Button
+                key={_}
+                {...props}
+                name={item.name}
+                htmlType={item.htmlType || props.htmlType}
+                onClick={item.onClick}
+              >
                 {item.label}
               </Button>
             </ConfigProvider>
