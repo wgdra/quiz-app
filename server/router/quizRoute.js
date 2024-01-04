@@ -11,6 +11,8 @@ router
   .route("/update/:id")
   .put(quizValidation.updateQuiz, quizController.updateQuiz);
 router.route("/delete/:id").delete(quizController.deleteQuiz);
+router.route("/question/create/:id").put(quizController.createQuestionFromQuiz);
+router.route("/question/update/:id").put(quizController.updateQuestionFromQuiz);
 router
   .route("/question/delete/:id")
   .patch(quizController.deleteQuestionFromQuiz);

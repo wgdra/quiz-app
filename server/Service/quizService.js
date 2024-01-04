@@ -57,6 +57,28 @@ const deleteQuiz = async (id) => {
   }
 };
 
+// Create Question
+const createQuestionFromQuiz = async (quizId, reqBody) => {
+  try {
+    const result = await quizModel.createQuestionFromQuiz(quizId, reqBody);
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Update Question
+const updateQuestionFromQuiz = async (quizId, reqBody) => {
+  try {
+    const result = await quizModel.updateQuestionFromQuiz(quizId, reqBody);
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Delete Question
 const deleteQuestionFromQuiz = async (quizId, questionId) => {
   try {
@@ -74,5 +96,7 @@ module.exports = {
   createQuiz,
   updateQuiz,
   deleteQuiz,
+  createQuestionFromQuiz,
+  updateQuestionFromQuiz,
   deleteQuestionFromQuiz,
 };

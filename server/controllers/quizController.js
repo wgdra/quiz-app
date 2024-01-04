@@ -53,6 +53,37 @@ async function deleteQuiz(req, res, next) {
     next();
   }
 }
+// Create Question
+const createQuestionFromQuiz = async (req, res, next) => {
+  try {
+    const createdQuestion = await quizService.createQuestionFromQuiz(
+      req.params.id,
+      req.body
+    );
+
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.CREATED, data: createdQuestion });
+  } catch (error) {
+    next();
+  }
+};
+
+// Update Question
+const updateQuestionFromQuiz = async (req, res, next) => {
+  try {
+    const updatedQuestion = await quizService.updateQuestionFromQuiz(
+      req.params.id,
+      req.body
+    );
+
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: updatedQuestion });
+  } catch (error) {
+    next();
+  }
+};
 
 // Delete Question
 const deleteQuestionFromQuiz = async (req, res, next) => {
@@ -62,7 +93,9 @@ const deleteQuestionFromQuiz = async (req, res, next) => {
       req.body.questionId
     );
 
-    res.status(StatusCodes.OK).json(deletedQuestion);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: deletedQuestion });
   } catch (error) {
     next();
   }
@@ -74,5 +107,7 @@ module.exports = {
   createQuiz,
   updateQuiz,
   deleteQuiz,
+  createQuestionFromQuiz,
+  updateQuestionFromQuiz,
   deleteQuestionFromQuiz,
 };

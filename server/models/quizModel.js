@@ -116,8 +116,6 @@ const updateQuiz = async (id, reqBody) => {
   }
 };
 
-// UPDATE Question
-
 // DELETE Quiz
 const deleteQuiz = async (id) => {
   try {
@@ -132,16 +130,75 @@ const deleteQuiz = async (id) => {
   }
 };
 
+// CREATE Question
+const createQuestionFromQuiz = async (quizId, reqBody) => {
+  try {
+    const create = {
+      questionId: reqBody.questionId,
+      question_name: reqBody.question_name,
+      question_img: reqBody.question_img,
+      options: reqBody.options,
+      suggest: reqBody.suggest,
+      answer: reqBody.answer,
+    };
+
+    const createQuestion = await connect
+      .GET_DB()
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        { _id: new ObjectId(quizId) },
+        { $push: { questions: create } },
+        { new: true }
+      );
+
+    return createQuestion;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// UPDATE Question
+const updateQuestionFromQuiz = async (quizId, reqBody) => {
+  try {
+    const update = {
+      questionId: reqBody.questionId,
+      question_name: reqBody.question_name,
+      question_img: reqBody.question_img,
+      options: reqBody.options,
+      suggest: reqBody.suggest,
+      answer: reqBody.answer,
+    };
+
+    const updateQuestion = await connect
+      .GET_DB()
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        {
+          _id: new ObjectId(quizId),
+          "questions.questionId": reqBody.questionId,
+        },
+        {
+          $set: { "questions.$": update },
+        },
+        { new: true }
+      );
+
+    return updateQuestion;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 // DELETE Question
 const deleteQuestionFromQuiz = async (quizId, questionId) => {
   try {
     const deletedQuestion = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
-      .updateOne(
-        { quizId: new ObjectId(quizId) },
-        { $pull: { quiz: { questionId: questionId } } },
-        { new: true }
+      .findOneAndUpdate(
+        { _id: new ObjectId(quizId) },
+        { $pull: { questions: { questionId: questionId } } },
+        { returnDocument: "after" }
       );
 
     return deletedQuestion;
@@ -159,5 +216,7 @@ module.exports = {
   getQuizAfterCreate,
   updateQuiz,
   deleteQuiz,
+  createQuestionFromQuiz,
+  updateQuestionFromQuiz,
   deleteQuestionFromQuiz,
 };
