@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Button, Col, Form, Input, Row, Tabs, Upload } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Col, Form, Input, Row, Tabs, Upload, message } from "antd";
 import RadioInput from "../form/RadioInput";
 import FormInput from "../form/FormInput";
 import PopConfirm from "./Popconfirm";
@@ -15,35 +15,26 @@ const TabBar = ({ ...props }) => {
     handleDeleteQuestion,
   } = props;
 
-  const [dataItems, setDataItems] = useState(
-    items.map((item) => {
-      return {
-        item: item,
-        state: 0,
-        disabled: true,
-      };
-    })
-  );
-
-  const [addNew, setAddNew] = useState(false);
-  const [disabledForm, setDisabledForm] = useState(true);
-
-  const [defaultValueInput, setDefaultValueInput] = useState({});
+  const [dataItems, setDataItems] = useState([]);
   const [formOptions, setFormOptions] = useState(["", "", "", ""]);
   const [valueRadio, setValueRadio] = useState("");
-
   const [activeKey, setActiveKey] = useState("");
-  // initialItems[0].key
 
-  // console.log("data activeKey", activeKey);
+  const newItem = items.map((item) => {
+    return {
+      item: item,
+      state: 0,
+      disabled: true,
+    };
+  });
 
-  const customRequest = (data) => {};
+  useEffect(() => {
+    setDataItems(newItem);
+  }, [items]);
 
   // UI
   const boxContent = (items, idx) => {
     const { TextArea } = Input;
-
-    // console.log("defaultValueInput", defaultValueInput);
     // handle click update
     const onClick = (innerText, item, idx) => {
       switch (innerText) {
@@ -60,8 +51,13 @@ const TabBar = ({ ...props }) => {
     };
 
     // onChange Image Question
-    const onChangeImageQuestion = (data) => {
-      console.log("data image", data.file.thumbUrl);
+    const onChangeImageQuestion = (info) => {
+      console.log("ìno", info);
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} đã tải ảnh lên`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} Lỗi tải ảnh.`);
+      }
     };
 
     const onFinish = (data, item, idx) => {
@@ -69,7 +65,6 @@ const TabBar = ({ ...props }) => {
 
       if (nameButton === "add") {
         handleCreateQuestion(activeKey, data, formOptions, valueRadio);
-
         const newDataItems = [...dataItems];
         newDataItems.splice(idx, 1, {
           item: item,
@@ -80,7 +75,6 @@ const TabBar = ({ ...props }) => {
       }
       if (nameButton === "update") {
         handleUpdateQuestion(activeKey, data, formOptions, valueRadio);
-
         const newDataItems = [...dataItems];
         newDataItems.splice(idx, 1, {
           item: item,
@@ -104,14 +98,13 @@ const TabBar = ({ ...props }) => {
               <Form.Item name="question_name" label="Câu hỏi">
                 <Input defaultValue={items.item.question_name} />
               </Form.Item>
-              <Form.Item
-                name="question_img"
-                label="Hình ảnh câu hỏi (nếu có)"
-                valuePropName="fileList"
-                getValueFromEvent={onChangeImageQuestion}
-              >
-                <Upload name="question_img" listType="picture">
-                  <Button>Chọn để thêm</Button>
+              <Form.Item name="question_img" label="Hình ảnh câu hỏi (nếu có)">
+                <Upload
+                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
+                  listType="picture"
+                  onChange={onChangeImageQuestion}
+                >
+                  <Button>Nhấn để thêm</Button>
                 </Upload>
               </Form.Item>
               <Form.Item name="suggest" label="Gợi ý">

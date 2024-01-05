@@ -4,7 +4,7 @@ import UploadPicturesWall from "./UploadPicturesWall";
 
 const ManageTheories = ({ ...props }) => {
   const { dataContent } = props;
-  console.log("dataContent", dataContent);
+  // console.log("dataContent", dataContent);
   return (
     <Row
       style={{ padding: "0px 8px" }}

@@ -14,7 +14,7 @@ const createSubject = (data) => {
 
 const updateSubject = (_id, data) => {
   return instance.put(`/api/subjects/update/${_id}`, {
-    classIds: data.username,
+    classIds: data.classIds,
     subject_name: data.subject_name,
     methods: data.methods,
   });

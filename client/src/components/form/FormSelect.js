@@ -3,11 +3,17 @@ import { PlusOutlined, EditOutlined, CloseOutlined } from "@ant-design/icons";
 import { Divider, Input, Select, Space, Button, ConfigProvider } from "antd";
 
 const FormSelect = ({ ...props }) => {
-  // const [items, setItems] = useState(props.items);
-  const { items, setItems, handleCreate, handleOptionSelect } = props;
+  const {
+    items,
+    handleCreate,
+    handleUpdate,
+    handleDelete,
+    handleOptionSelect,
+  } = props;
 
   const [name, setName] = useState("");
   const [dataInput, setDataInput] = useState("");
+  const [dataInputUpdate, setDataInputUpdate] = useState("");
   const [dataOption, setDataOption] = useState({});
 
   const inputRef = useRef(null);
@@ -20,12 +26,11 @@ const FormSelect = ({ ...props }) => {
     setDataInput(e.target.value);
   };
   const onChangeUpdate = (e) => {
-    console.log("e", e.target.value);
+    setDataInputUpdate(e.target.value);
   };
 
   const addItem = (e) => {
     e.preventDefault();
-    // setItems([...items, name || `New item ${index++}`]);
     handleCreate(dataInput, name);
     setDataInput("");
     setTimeout(() => {
@@ -33,16 +38,14 @@ const FormSelect = ({ ...props }) => {
     }, 0);
   };
 
-  // const isItem = (value, option) => {
-  //   console.log("value", value);
-  //   setIsOption(value, option);
-  // };
-
-  const updateItem = () => {
-    console.log("update");
+  const updateItem = (e) => {
+    e.preventDefault();
+    setDataInputUpdate("");
+    handleUpdate(dataInputUpdate, name);
   };
+
   const deleteItem = () => {
-    console.log("deleteItem");
+    handleDelete(name);
   };
 
   return (
@@ -67,7 +70,6 @@ const FormSelect = ({ ...props }) => {
           width: "100%",
         }}
         listHeight={200}
-        // placeholder="custom dropdown render"
         onChange={(_, option) => {
           handleOptionSelect(option);
           setDataOption(option.option);
@@ -110,6 +112,7 @@ const FormSelect = ({ ...props }) => {
                     dataOption.theory_name
                   }
                   ref={inputRef}
+                  value={dataInputUpdate}
                   onChange={onChangeUpdate}
                 />
 
