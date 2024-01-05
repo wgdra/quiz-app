@@ -27,7 +27,9 @@ async function getOneTheory(req, res, next) {
 async function createTheory(req, res, next) {
   try {
     const createdTheory = await theoryService.createTheory(req.body);
-    res.status(StatusCodes.CREATED).json(createdTheory);
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.CREATED, data: createdTheory });
   } catch (error) {
     next(error);
   }
@@ -40,7 +42,9 @@ async function updateTheory(req, res, next) {
       req.params.id,
       req.body
     );
-    res.status(StatusCodes.OK).json(updatedTheory);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: updatedTheory });
   } catch (error) {
     next(error);
   }
@@ -51,11 +55,45 @@ async function deleteTheory(req, res, next) {
   try {
     const deletedTheory = await theoryService.deleteTheory(req.params.id);
 
-    res.status(StatusCodes.OK).json(deletedTheory);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: deletedTheory });
   } catch (error) {
     next();
   }
 }
+
+// Create Lesson
+const createLessonFromTheory = async (req, res, next) => {
+  try {
+    const createdLesson = await theoryService.createLessonFromTheory(
+      req.params.id,
+      req.body
+    );
+
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.CREATED, data: createdLesson });
+  } catch (error) {
+    next();
+  }
+};
+
+// Update Lesson
+const updateLessonFromTheory = async (req, res, next) => {
+  try {
+    const updatedLesson = await theoryService.updateLessonFromTheory(
+      req.params.id,
+      req.body
+    );
+
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: updatedLesson });
+  } catch (error) {
+    next();
+  }
+};
 
 // Delete Lesson
 const deleteLessonFromTheory = async (req, res, next) => {
@@ -65,7 +103,9 @@ const deleteLessonFromTheory = async (req, res, next) => {
       req.body.lessonId
     );
 
-    res.status(StatusCodes.OK).json(deletedLesson);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: deletedLesson });
   } catch (error) {
     next();
   }
@@ -77,5 +117,7 @@ module.exports = {
   createTheory,
   updateTheory,
   deleteTheory,
+  createLessonFromTheory,
+  updateLessonFromTheory,
   deleteLessonFromTheory,
 };

@@ -13,6 +13,8 @@ router
   .route("/update/:id")
   .put(theoryValidation.updateTheory, theoryController.updateTheory);
 router.route("/delete/:id").delete(theoryController.deleteTheory);
+router.route("/lesson/create/:id").put(theoryController.createLessonFromTheory);
+router.route("/lesson/update/:id").put(theoryController.updateLessonFromTheory);
 router
   .route("/lesson/delete/:id")
   .patch(theoryController.deleteLessonFromTheory);

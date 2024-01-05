@@ -42,7 +42,9 @@ async function updateSubject(req, res, next) {
       req.params.id,
       req.body
     );
-    res.status(StatusCodes.OK).json(updatedSubject);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: updatedSubject });
   } catch (error) {
     next(error);
   }
@@ -53,7 +55,9 @@ async function deleteSubject(req, res, next) {
   try {
     const deletedSubject = await subjectService.deleteSubject(req.params.id);
 
-    res.status(StatusCodes.OK).json(deletedSubject);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: deletedSubject });
   } catch (error) {
     next();
   }

@@ -59,8 +59,30 @@ const deleteTheory = async (id) => {
   }
 };
 
-// Delete Question
-const deleteLessonFromTheory = async (theoryId, questionId) => {
+// Create Lesson
+const createLessonFromTheory = async (theoryId, reqBody) => {
+  try {
+    const result = await theoryModel.createLessonFromTheory(theoryId, reqBody);
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Update Lesson
+const updateLessonFromTheory = async (theoryId, reqBody) => {
+  try {
+    const result = await theoryModel.updateLessonFromTheory(theoryId, reqBody);
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Delete Lesson
+const deleteLessonFromTheory = async (theoryId, lessonId) => {
   try {
     const result = await theoryModel.deleteLessonFromTheory(theoryId, lessonId);
 
@@ -76,5 +98,7 @@ module.exports = {
   createTheory,
   updateTheory,
   deleteTheory,
+  createLessonFromTheory,
+  updateLessonFromTheory,
   deleteLessonFromTheory,
 };

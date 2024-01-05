@@ -4,16 +4,26 @@ const { StatusCodes } = require("http-status-codes");
 // Validate Create
 const createTheory = async (req, res, next) => {
   const correctCondition = Joi.object({
-    theoryId: Joi.number().required(),
+    classId: Joi.number().required(),
+    subject: Joi.string().required(),
+    chapter: Joi.string().required(),
     theory_name: Joi.string().required().min(3).max(50).trim().strict(),
-    // chapterId: Joi.number().default(),
     lessons: Joi.array()
       .items(
         Joi.object({
-          lessonId: Joi.number().required(),
-          lesson_title: Joi.string().required().trim(),
-          lesson_content: Joi.string(),
-          lesson_img: Joi.string().default(""),
+          lessonId: Joi.number().required().default(""),
+          lesson_title: Joi.string().required().trim().default(""),
+          lesson_img: Joi.string().trim().default(""),
+          lesson_content: Joi.array()
+            .items(
+              Joi.object({
+                content: Joi.string().trim(),
+                content_img: Joi.string().trim(),
+                descriptions: Joi.array().default([]),
+                example: Joi.array().default([]),
+              })
+            )
+            .default([]),
         })
       )
       .default([]),
@@ -31,16 +41,26 @@ const createTheory = async (req, res, next) => {
 
 const updateTheory = async (req, res, next) => {
   const correctCondition = Joi.object({
-    theoryId: Joi.number().required(),
+    classId: Joi.number().required(),
+    subject: Joi.string().required(),
+    chapter: Joi.string().required(),
     theory_name: Joi.string().required().min(3).max(50).trim().strict(),
-    // chapterId: Joi.number().default(),
     lessons: Joi.array()
       .items(
         Joi.object({
-          lessonId: Joi.number().required(),
-          lesson_title: Joi.string().required().trim(),
-          lesson_content: Joi.string(),
-          lesson_img: Joi.string().default(""),
+          lessonId: Joi.number().required().default(""),
+          lesson_title: Joi.string().required().trim().default(""),
+          lesson_img: Joi.string().trim().default(""),
+          lesson_content: Joi.array()
+            .items(
+              Joi.object({
+                content: Joi.string().trim(),
+                content_img: Joi.string().trim(),
+                descriptions: Joi.array().default([]),
+                example: Joi.array().default([]),
+              })
+            )
+            .default([]),
         })
       )
       .default([]),

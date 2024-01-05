@@ -12,10 +12,19 @@ const COLLECTION_SCHEMA = Joi.object({
   lessons: Joi.array()
     .items(
       Joi.object({
-        lessonId: Joi.number().required(),
-        lesson_title: Joi.string().required().trim(),
-        lesson_img: Joi.string().default(""),
-        lesson_content: Joi.string(),
+        lessonId: Joi.number().required().default(""),
+        lesson_title: Joi.string().required().trim().default(""),
+        lesson_img: Joi.string().trim().default(""),
+        lesson_content: Joi.array()
+          .items(
+            Joi.object({
+              content: Joi.string().trim(),
+              content_img: Joi.string().trim(),
+              descriptions: Joi.array().default([]),
+              example: Joi.array().default([]),
+            }).default({})
+          )
+          .default([]),
       })
     )
     .default([]),
@@ -126,18 +135,72 @@ const deleteTheory = async (id) => {
   }
 };
 
+// CREATE Lesson
+const createLessonFromTheory = async (theoryId, reqBody) => {
+  try {
+    const create = {
+      lessonId: reqBody.lessonId,
+      lesson_title: reqBody.lesson_title,
+      lesson_img: reqBody.lesson_img,
+      lesson_content: reqBody.lesson_content,
+    };
+
+    const createdLesson = await connect
+      .GET_DB()
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        { _id: new ObjectId(theoryId) },
+        { $push: { lessons: create } },
+        { new: true }
+      );
+
+    return createdLesson;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// UPDATE Lesson
+const updateLessonFromTheory = async (theoryId, reqBody) => {
+  try {
+    const update = {
+      lessonId: reqBody.lessonId,
+      lesson_title: reqBody.lesson_title,
+      lesson_img: reqBody.lesson_img,
+      lesson_content: reqBody.lesson_content,
+    };
+
+    const updatedLesson = await connect
+      .GET_DB()
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        {
+          _id: new ObjectId(theoryId),
+          "lessons.lessonId": reqBody.lessonId,
+        },
+        {
+          $set: { "lessons.$": update },
+        },
+        { new: true }
+      );
+
+    return updatedLesson;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 // DELETE Question
 const deleteLessonFromTheory = async (theoryId, lessonId) => {
   try {
     const deletedLesson = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
-      .updateOne(
-        { theoryId: new ObjectId(theoryId) },
-        { $pull: { theory: { lessonId: lessonId } } },
-        { new: true }
+      .findOneAndUpdate(
+        { _id: new ObjectId(theoryId) },
+        { $pull: { lessons: { lessonId: lessonId } } },
+        { returnDocument: "after" }
       );
-
     return deletedLesson;
   } catch (error) {
     throw new Error(error);
@@ -153,5 +216,7 @@ module.exports = {
   getTheoryAfterCreate,
   updateTheory,
   deleteTheory,
+  createLessonFromTheory,
+  updateLessonFromTheory,
   deleteLessonFromTheory,
 };

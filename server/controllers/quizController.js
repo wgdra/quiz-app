@@ -27,7 +27,9 @@ async function getOneQuiz(req, res, next) {
 async function createQuiz(req, res, next) {
   try {
     const createdQuiz = await quizService.createQuiz(req.body);
-    res.status(StatusCodes.CREATED).json(createdQuiz);
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.CREATED, data: createdQuiz });
   } catch (error) {
     next(error);
   }
@@ -37,7 +39,9 @@ async function createQuiz(req, res, next) {
 async function updateQuiz(req, res, next) {
   try {
     const updatedQuiz = await quizService.updateQuiz(req.params.id, req.body);
-    res.status(StatusCodes.OK).json(updatedQuiz);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: updatedQuiz });
   } catch (error) {
     next(error);
   }
@@ -48,7 +52,9 @@ async function deleteQuiz(req, res, next) {
   try {
     const deletedQuiz = await quizService.deleteQuiz(req.params.id);
 
-    res.status(StatusCodes.OK).json(deletedQuiz);
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: deletedQuiz });
   } catch (error) {
     next();
   }
