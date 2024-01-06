@@ -310,7 +310,7 @@ const Theories = () => {
 
       case "theory":
         const resTheory = await updateTheory(dataSelected.theoryId, {
-          quiz_name: data,
+          theory_name: data,
           classId: dataSelected.class,
           subject: dataSelected.subject,
           chapter: dataSelected.chapter,

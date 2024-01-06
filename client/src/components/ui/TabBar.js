@@ -1,15 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Form, Input, Row, Tabs, Upload, message } from "antd";
 import RadioInput from "../form/RadioInput";
-import FormInput from "../form/FormInput";
-import PopConfirm from "./Popconfirm";
 import ButtonBasic from "./Button";
 import ButtonGroup from "./ButtonGroup";
 
 const TabBar = ({ ...props }) => {
   const {
     items,
-    setItems,
     handleCreateQuestion,
     handleUpdateQuestion,
     handleDeleteQuestion,
