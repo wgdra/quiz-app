@@ -63,6 +63,7 @@ const UploadPicturesWall = ({ ...props }) => {
         {imageUrl ? (
           <img
             src={imageUrl}
+            alt="avatar"
             style={{
               width: "100%",
             }}

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Form, Row, Input, Card, Space } from "antd";
-import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Row, Input, Upload } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import UploadPicturesWall from "./UploadPicturesWall";
 import ButtonBasic from "./Button";
 import ButtonGroup from "./ButtonGroup";
-import LessonContent from "./LessonContent";
 
 const ManageTheories = ({ ...props }) => {
   const { dataContent } = props;
@@ -88,358 +87,338 @@ const ManageTheories = ({ ...props }) => {
           padding: "16px 32px",
         }}
       >
-        {
-          // dataContent &&
-          //   dataContent.length > 0 &&
-          dataItems.map((content, index) => {
-            return (
-              <Col
-                key={index}
+        {dataItems.map((content, index) => {
+          return (
+            <Col
+              key={index}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+                marginBottom: 30,
+              }}
+              span={24}
+            >
+              <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  marginBottom: 30,
+                  alignItems: "center",
+                  marginBottom: 16,
                 }}
-                span={24}
               >
-                <div
+                <h2
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: 16,
+                    margin: "0px 16px 0px 0px",
+                    color: "#EC8E00",
+                    textDecoration: "underline",
                   }}
                 >
-                  <h2
+                  Tiêu đề {index + 1}
+                </h2>
+
+                {content.state === 0 && (
+                  <ButtonBasic
+                    type="primary"
+                    label="Chỉnh sửa"
+                    style={{ background: "#eb9a25" }}
+                    onClick={(e) => handleClickUpdate(e, content.item, index)}
+                  />
+                )}
+              </div>
+              <Form
+                layout="vertical"
+                disabled={content.disabled}
+                onFinish={(data) => onFinish(content.item.lessonId, data)}
+                style={{
+                  width: "100%",
+                  position: "relative",
+                }}
+              >
+                {content.state === 1 && (
+                  <div
                     style={{
-                      margin: "0px 16px 0px 0px",
-                      color: "#EC8E00",
-                      textDecoration: "underline",
+                      position: "absolute",
+                      top: "-46px",
+                      left: "110px",
                     }}
                   >
-                    Tiêu đề {index + 1}
-                  </h2>
-
-                  {content.state === 0 && (
-                    <ButtonBasic
-                      type="primary"
-                      label="Chỉnh sửa"
-                      style={{ background: "#eb9a25" }}
-                      onClick={(e) => handleClickUpdate(e, content.item, index)}
+                    <ButtonGroup
+                      items={[
+                        {
+                          name: "update",
+                          type: "primary",
+                          label: "Lưu chỉnh sửa",
+                          style: { background: "#04aa6d" },
+                          htmlType: "submit",
+                        },
+                        {
+                          type: "primary",
+                          label: "Hủy bỏ",
+                          danger: true,
+                          submit: "button",
+                          onClick: (e) =>
+                            handleClickUpdate(e, content.item, index),
+                        },
+                      ]}
                     />
-                  )}
-                </div>
-                <Form
-                  layout="vertical"
-                  disabled={content.disabled}
-                  onFinish={(data) => onFinish(content.item.lessonId, data)}
+                  </div>
+                )}
+                <Form.Item
+                  name="lesson_title"
+                  style={{ width: "50%" }}
+                  initialValue={content.item.lesson_title}
+                >
+                  <Input placeholder="Nhập để thêm" />
+                </Form.Item>
+                <h2
                   style={{
-                    width: "100%",
-                    position: "relative",
+                    margin: 0,
+                    textDecoration: "underline",
                   }}
                 >
-                  {content.state === 1 && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "-46px",
-                        left: "110px",
-                      }}
-                    >
-                      <ButtonGroup
-                        items={[
-                          {
-                            name: "update",
-                            type: "primary",
-                            label: "Lưu chỉnh sửa",
-                            style: { background: "#04aa6d" },
-                            htmlType: "submit",
-                          },
-                          {
-                            type: "primary",
-                            label: "Hủy bỏ",
-                            danger: true,
-                            submit: "button",
-                            onClick: (e) =>
-                              handleClickUpdate(e, content.item, index),
-                          },
-                        ]}
-                      />
-                    </div>
-                  )}
-                  <Form.Item
-                    name="lesson_title"
-                    style={{ width: "50%" }}
-                    initialValue={content.item.lesson_title}
-                  >
-                    <Input placeholder="Nhập để thêm" />
-                  </Form.Item>
-                  <h2
-                    style={{
-                      margin: 0,
-                      textDecoration: "underline",
-                    }}
-                  >
-                    Nội dung
-                  </h2>
+                  Nội dung
+                </h2>
 
-                  <Form.List
-                    name="lesson_content"
-                    initialValue={content.item.lesson_content}
-                  >
-                    {(content) => (
-                      <>
-                        {content.map((lesson, idx) => (
-                          <div
-                            key={idx}
+                <Form.List
+                  name="lesson_content"
+                  initialValue={content.item.lesson_content}
+                >
+                  {(content, { add, remove }) => (
+                    <>
+                      {content.map((lesson, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "flex-start",
+                            fontSize: "1.2em",
+                            marginBottom: 16,
+                            width: "100%",
+                          }}
+                        >
+                          {console.log("lesson", lesson.content_img)}
+
+                          <p
                             style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-start",
-                              fontSize: "1.2em",
-                              marginBottom: 16,
-                              width: "100%",
+                              fontSize: "1.1em",
+                              fontWeight: "bold",
+                              margin: "8px 0px",
                             }}
                           >
-                            <p
-                              style={{
-                                fontSize: "1.1em",
-                                fontWeight: "bold",
-                                margin: "8px 0px",
+                            Đề mục {idx + 1}
+                            <Button
+                              danger
+                              style={{ marginLeft: 8 }}
+                              onClick={() => {
+                                remove(lesson.name);
                               }}
                             >
-                              Đề mục {idx + 1}
-                              <Button
-                                danger
-                                style={{ marginLeft: 8 }}
-                                onClick={handleClick}
-                              >
-                                Xóa
-                              </Button>
-                            </p>
+                              Xóa
+                            </Button>
+                          </p>
+                          <div
+                            style={{
+                              width: "100%",
+                              padding: "16px 32px",
+                              border: "1px solid #78909C",
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Form.Item
+                              name={[lesson.name, "content"]}
+                              label="Tên đề mục"
+                              initialValue={lesson.content}
+                            >
+                              <Input placeholder="Nhập để thêm" />
+                            </Form.Item>
+
+                            <Form.Item
+                              name={[lesson.name, "content_img"]}
+                              label="Hình ảnh đề mục"
+                            >
+                              <UploadPicturesWall
+                                initialValue={lesson.content_img}
+                                thumbUrl={lesson.content_img}
+                              />
+                            </Form.Item>
+
                             <div
                               style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "flex-start",
                                 width: "100%",
-                                padding: "16px 32px",
-                                border: "1px solid #78909C",
-                                borderRadius: 5,
                               }}
                             >
-                              <Form.Item
-                                name={[lesson.name, "content"]}
-                                label="Tên đề mục"
-                                initialValue={lesson.content}
-                              >
-                                <Input placeholder="Nhập để thêm" />
-                              </Form.Item>
-
-                              <Form.Item
-                                name={[lesson.name, "content_img"]}
-                                label="Hình ảnh đề mục"
-                                initialValue={lesson.content_img}
-                              >
-                                <UploadPicturesWall
-                                  thumbUrl={
-                                    lesson.content_img
-                                    // ? lesson.content_img
-                                    // : null
-                                  }
-                                  // onChangeImage={(value) => onChangeImage(value, index)}
-                                />
-                              </Form.Item>
-
-                              <div
+                              <p
                                 style={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  alignItems: "flex-start",
+                                  fontSize: "1em",
+                                  fontWeight: "bold",
+                                  margin: 0,
+                                }}
+                              >
+                                - Nội dung đề mục
+                              </p>
+                              <Form.Item
+                                style={{
                                   width: "100%",
                                 }}
                               >
-                                <p
-                                  style={{
-                                    fontSize: "1em",
-                                    fontWeight: "bold",
-                                    margin: 0,
-                                  }}
-                                >
-                                  - Nội dung đề mục
-                                </p>
-                                <Form.Item
-                                  style={{
-                                    width: "100%",
-                                  }}
-                                >
-                                  <Form.List
-                                    name={[lesson.name, "descriptions"]}
-                                  >
-                                    {(descriptions) =>
-                                      descriptions.map((description, idx) => {
-                                        return (
-                                          <div
-                                            key={idx}
-                                            style={{
-                                              display: "flex",
-                                              flexDirection: "column",
-                                              alignItems: "flex-start",
-                                              marginBottom: 16,
-                                            }}
-                                          >
-                                            <Form.Item
-                                              name={[
-                                                description.name,
-                                                "description_content",
-                                              ]}
-                                              style={{
-                                                width: "100%",
-                                              }}
-                                            >
-                                              <Input placeholder="Nhập để thêm" />
-                                            </Form.Item>
-                                            <Form.Item
-                                              name={[
-                                                description.name,
-                                                "description_img",
-                                              ]}
-                                            >
-                                              <UploadPicturesWall
-                                                thumbUrl={
-                                                  description.description_img
-                                                    ? description.description_img
-                                                    : null
-                                                }
-                                              />
-                                            </Form.Item>
-                                          </div>
-                                        );
-                                      })
-                                    }
-                                  </Form.List>
-                                </Form.Item>
-                                <Button onClick={handleClick}>
-                                  Thêm nội dung
-                                </Button>
-                              </div>
-
-                              <Form.Item>
-                                <Form.List name={[lesson.name, "example"]}>
-                                  {(example) => (
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "flex-start",
-                                        marginBottom: 16,
-                                        width: "100%",
-                                      }}
-                                    >
-                                      {example.map((ex) => {
-                                        return (
+                                <Form.List name={[lesson.name, "descriptions"]}>
+                                  {(descriptions, subOpt) => (
+                                    <>
+                                      {descriptions.map(
+                                        (description, descriptionIdx) => (
                                           <>
-                                            <p
+                                            <div
+                                              key={descriptionIdx}
                                               style={{
-                                                margin: "10px 0px",
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                alignItems: "flex-start",
+                                                marginBottom: 16,
                                               }}
                                             >
-                                              <span
+                                              <Form.Item
+                                                name={[
+                                                  description.name,
+                                                  "description_content",
+                                                ]}
                                                 style={{
-                                                  fontWeight: "bold",
+                                                  width: "100%",
                                                 }}
                                               >
-                                                - Ví dụ:{" "}
-                                              </span>
-                                            </p>
-                                            {ex.example_content !== "" ? (
-                                              <>
-                                                <Form.Item
-                                                  name={[
-                                                    ex.name,
-                                                    "example_content",
-                                                  ]}
-                                                  style={{
-                                                    width: "100%",
-                                                  }}
-                                                >
-                                                  <Input
-                                                    placeholder={
-                                                      ex.example_content
-                                                    }
-                                                  />
-                                                </Form.Item>
-                                                <Form.Item
-                                                  name={[
-                                                    ex.name,
-                                                    "example_img",
-                                                  ]}
-                                                >
-                                                  <UploadPicturesWall
-                                                    thumbUrl={
-                                                      ex.example_img
-                                                        ? ex.example_img
-                                                        : null
-                                                    }
-                                                  />
-                                                </Form.Item>
-                                                <span
-                                                  style={{
-                                                    fontWeight: "bold",
-                                                  }}
-                                                >
-                                                  - Bài giải:{" "}
-                                                </span>
-                                                <Form.Item
-                                                  name={[ex.name, "solution"]}
-                                                  style={{
-                                                    width: "100%",
-                                                  }}
-                                                >
-                                                  <Input
-                                                    placeholder={ex.solution}
-                                                  />
-                                                </Form.Item>
-                                                <Form.Item
-                                                  name={[
-                                                    ex.name,
-                                                    "example_img",
-                                                  ]}
-                                                >
-                                                  <UploadPicturesWall
-                                                    thumbUrl={
-                                                      ex.solution_img
-                                                        ? ex.solution_img
-                                                        : null
-                                                    }
-                                                  />
-                                                </Form.Item>
-                                                <Button onClick={handleClick}>
-                                                  Thêm ví dụ
-                                                </Button>
-                                              </>
-                                            ) : (
-                                              <Button onClick={handleClick}>
-                                                Thêm ví dụ
-                                              </Button>
-                                            )}
+                                                <Input placeholder="Nhập để thêm" />
+                                              </Form.Item>
+                                              <Form.Item
+                                                name={[
+                                                  description.name,
+                                                  "description_img",
+                                                ]}
+                                              >
+                                                <UploadPicturesWall
+                                                  thumbUrl={
+                                                    description.description_img
+                                                  }
+                                                />
+                                              </Form.Item>
+                                            </div>
                                           </>
-                                        );
-                                      })}
-                                    </div>
+                                        )
+                                      )}
+                                      <Button onClick={() => subOpt.add()}>
+                                        <PlusOutlined />
+                                        Thêm nội dung
+                                      </Button>
+                                    </>
                                   )}
                                 </Form.List>
                               </Form.Item>
                             </div>
+
+                            <Form.Item>
+                              <Form.List name={[lesson.name, "example"]}>
+                                {(example, subOpt) => (
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "flex-start",
+                                      marginBottom: 16,
+                                      width: "100%",
+                                    }}
+                                  >
+                                    {example.map((ex) => {
+                                      return (
+                                        <>
+                                          <p
+                                            style={{
+                                              margin: "10px 0px",
+                                            }}
+                                          >
+                                            <span
+                                              style={{
+                                                fontSize: "1.3em",
+                                                fontWeight: "bold",
+                                              }}
+                                            >
+                                              - Ví dụ:{" "}
+                                            </span>
+                                            <Button
+                                              type="link"
+                                              danger
+                                              onClick={() => {
+                                                subOpt.remove(ex.name);
+                                              }}
+                                            >
+                                              <MinusCircleOutlined />
+                                              Xóa
+                                            </Button>
+                                          </p>
+
+                                          <Form.Item
+                                            name={[ex.name, "example_content"]}
+                                            style={{
+                                              width: "100%",
+                                            }}
+                                          >
+                                            <Input placeholder="Nhập để thêm" />
+                                          </Form.Item>
+                                          <Form.Item
+                                            name={[ex.name, "example_img"]}
+                                          >
+                                            <UploadPicturesWall
+                                              thumbUrl={ex.example_img}
+                                            />
+                                          </Form.Item>
+                                          <span
+                                            style={{
+                                              fontWeight: "bold",
+                                            }}
+                                          >
+                                            - Bài giải:{" "}
+                                          </span>
+                                          <Form.Item
+                                            name={[ex.name, "solution"]}
+                                            style={{
+                                              width: "100%",
+                                            }}
+                                          >
+                                            <Input placeholder="Nhập để thêm" />
+                                          </Form.Item>
+                                          <Form.Item
+                                            name={[ex.name, "example_img"]}
+                                          >
+                                            <UploadPicturesWall
+                                              thumbUrl={ex.solution_img}
+                                            />
+                                          </Form.Item>
+                                        </>
+                                      );
+                                    })}
+                                    <Button onClick={() => subOpt.add()}>
+                                      <PlusOutlined />
+                                      Thêm ví dụ
+                                    </Button>
+                                  </div>
+                                )}
+                              </Form.List>
+                            </Form.Item>
                           </div>
-                        ))}
-                      </>
-                    )}
-                  </Form.List>
-                  <Button onClick={handleClick}>Thêm đề mục</Button>
-                </Form>
-              </Col>
-            );
-          })
-        }
-        <Button onClick={handleClick}>Thêm tieu đề</Button>
+                        </div>
+                      ))}
+                      <Button type="dashed" onClick={() => add()} block>
+                        + Thêm đề mục
+                      </Button>
+                    </>
+                  )}
+                </Form.List>
+              </Form>
+            </Col>
+          );
+        })}
+        <Button onClick={handleClick}>Thêm tiêu đề</Button>
       </Row>
     </>
   );
