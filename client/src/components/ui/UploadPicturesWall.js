@@ -3,8 +3,7 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Upload, message } from "antd";
 
 const UploadPicturesWall = ({ ...props }) => {
-  const { thumbUrl, onChangeImage } = props;
-
+  const { thumbUrl, name, onChangeImage } = props;
   const [imageUrl, setImageUrl] = useState(thumbUrl);
   const [loading, setLoading] = useState(false);
 
@@ -32,7 +31,7 @@ const UploadPicturesWall = ({ ...props }) => {
       getBase64(info.file.originFileObj, (url) => {
         setLoading(false);
         setImageUrl(url);
-        onChangeImage(url);
+        onChangeImage(url, name);
       });
     }, 1000);
   };

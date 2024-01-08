@@ -49,7 +49,6 @@ const TabBar = ({ ...props }) => {
 
     // onChange Image Question
     const onChangeImageQuestion = (info) => {
-      console.log("ìno", info);
       if (info.file.status === "done") {
         message.success(`${info.file.name} đã tải ảnh lên`);
       } else if (info.file.status === "error") {

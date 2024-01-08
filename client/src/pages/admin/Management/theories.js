@@ -57,6 +57,10 @@ const Theories = () => {
     console.log("items in create", dataInput);
   };
 
+  const isItemLesson = (dataItem) => {
+    console.log("dataItem lee", dataItem);
+  };
+
   const handleOptionSelect = (isOption) => {
     if (isOption.option.class_name !== undefined) {
       setData((prev) => ({ ...prev, dataSubject: isOption.option.subjects }));
@@ -103,6 +107,7 @@ const Theories = () => {
       }));
     }
     if (isOption.option.theory_name !== undefined) {
+      isItemLesson(isOption.option.lessons);
       setItemsLesson(isOption.option.lessons);
       setDataSelected((prev) => ({
         ...prev,
@@ -404,90 +409,71 @@ const Theories = () => {
     }
   };
 
-  // // Handle API Questions
-  // const handleCreateQuestion = async (
-  //   questionId,
-  //   dataQuestion,
-  //   options,
-  //   answer
-  // ) => {
-  //   const res = await createQuestion(dataSelected.quizId, {
-  //     questionId: questionId,
-  //     question_name: dataQuestion.question_name,
-  //     question_img:
-  //       dataQuestion.question_img !== undefined
-  //         ? dataQuestion.question_img.file.thumbUrl
-  //         : "",
-  //     options: options,
-  //     suggest: dataQuestion.suggest,
-  //     answer: answer,
-  //   });
-  //   if (res.status !== 201) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Có lỗi !!!",
-  //     });
-  //     return;
-  //   }
-  //   if (res.status === 201) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Thêm mới thành công",
-  //     });
-  //     fetchData();
-  //   }
-  // };
+  // // Handle API Lesson
+  const handleCreateLesson = async (data) => {
+    const res = await createLesson(dataSelected.theoryId, {
+      lessonId: data.lessonId,
+      lesson_title: data.lesson_title,
+      lesson_img: data.lesson_img,
+      lesson_content: data.lesson_content,
+    });
 
-  // const handleUpdateQuestion = async (
-  //   questionId,
-  //   dataQuestion,
-  //   options,
-  //   answer
-  // ) => {
-  //   const res = await updateQuestion(dataSelected.quizId, {
-  //     questionId: questionId,
-  //     question_name: dataQuestion.question_name,
-  //     question_img:
-  //       dataQuestion.question_img !== undefined
-  //         ? dataQuestion.question_img.file.thumbUrl
-  //         : "",
-  //     options: options,
-  //     suggest: dataQuestion.suggest,
-  //     answer: answer,
-  //   });
-  //   if (res.status !== 200) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Có lỗi !!!",
-  //     });
-  //     return;
-  //   }
-  //   if (res.status === 200) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Cập nhật thành công",
-  //     });
-  //     fetchData();
-  //   }
-  // };
+    if (res.status !== 201) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 201) {
+      messageApi.open({
+        type: "success",
+        content: "Thêm mới thành công",
+      });
+      fetchData();
+    }
+  };
 
-  // const handleDeleteQuestion = async (questionId) => {
-  //   const res = await deleteQuestion(dataSelected.quizId, questionId);
-  //   if (res.status !== 200) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Có lỗi !!!",
-  //     });
-  //     return;
-  //   }
-  //   if (res.status === 200) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Xóa thành công",
-  //     });
-  //     fetchData();
-  //   }
-  // };
+  const handleUpdateLesson = async (lessonId, data) => {
+    const res = await updateLesson(dataSelected.theoryId, {
+      lessonId: lessonId,
+      lesson_title: data.lesson_title,
+      lesson_img: data.lesson_img,
+      lesson_content: data.lesson_content,
+    });
+    if (res.status !== 200) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 200) {
+      messageApi.open({
+        type: "success",
+        content: "Cập nhật thành công",
+      });
+      fetchData();
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId) => {
+    const res = await deleteLesson(dataSelected.theoryId, lessonId);
+    if (res.status !== 200) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 200) {
+      messageApi.open({
+        type: "success",
+        content: "Xóa thành công",
+      });
+      fetchData();
+    }
+  };
 
   return (
     <>
@@ -584,7 +570,12 @@ const Theories = () => {
                 />
               </Col>
             </Row>
-            <ManageTheories dataContent={itemsLesson} />
+            <ManageTheories
+              dataContent={itemsLesson}
+              handleCreateLesson={handleCreateLesson}
+              handleUpdateLesson={handleUpdateLesson}
+              handleDeleteLesson={handleDeleteLesson}
+            />
           </div>
         </Col>
       </Row>

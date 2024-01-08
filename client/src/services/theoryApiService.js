@@ -29,7 +29,7 @@ const deleteTheory = (_id) => {
 };
 
 const createLesson = (_id, data) => {
-  return instance.put(`/api/theories/question/create/${_id}`, {
+  return instance.put(`/api/theories/lesson/create/${_id}`, {
     lessonId: data.lessonId,
     lesson_title: data.lesson_title,
     lesson_img: data.lesson_img,
@@ -38,7 +38,7 @@ const createLesson = (_id, data) => {
 };
 
 const updateLesson = (_id, data) => {
-  return instance.put(`/api/theories/question/update/${_id}`, {
+  return instance.put(`/api/theories/lesson/update/${_id}`, {
     lessonId: data.lessonId,
     lesson_title: data.lesson_title,
     lesson_img: data.lesson_img,
@@ -47,7 +47,7 @@ const updateLesson = (_id, data) => {
 };
 
 const deleteLesson = (_id, lessonId) => {
-  return instance.patch(`/api/theories/question/delete/${_id}`, {
+  return instance.patch(`/api/theories/lesson/delete/${_id}`, {
     lessonId: lessonId,
   });
 };

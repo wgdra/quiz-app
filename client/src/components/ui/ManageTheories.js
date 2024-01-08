@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Form, Row, Input, Upload } from "antd";
+import { Button, Col, Form, Row, Input, Upload, message } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import UploadPicturesWall from "./UploadPicturesWall";
 import ButtonBasic from "./Button";
 import ButtonGroup from "./ButtonGroup";
 
 const ManageTheories = ({ ...props }) => {
-  const { dataContent } = props;
+  const {
+    dataContent,
+    handleCreateLesson,
+    handleUpdateLesson,
+    handleDeleteLesson,
+  } = props;
 
   const [form] = Form.useForm();
 
   const [dataItems, setDataItems] = useState([]);
+  const [imageUrl, setImageUrl] = useState("");
+
   const newData = dataContent.map((item) => {
     return {
       item: item,
@@ -23,22 +29,7 @@ const ManageTheories = ({ ...props }) => {
     setDataItems(newData);
   }, [dataContent]);
 
-  // console.log("dataItems", dataItems);
-
   // Handle Form
-  const onFinish = (lessonId, data) => {
-    console.log("lessonId", lessonId);
-    console.log("Data form", data);
-
-    // const newDataContent = [...dataItems];
-    // newDataContent.splice(index, 1, {
-    //   item: item,
-    //   state: 0,
-    //   disabled: true,
-    // });
-    // setDataItems(newDataContent);
-  };
-
   const handleClickUpdate = (e, item, index) => {
     const nameButton = e.target.innerText;
     switch (nameButton) {
@@ -50,6 +41,16 @@ const ManageTheories = ({ ...props }) => {
           disabled: false,
         });
         setDataItems(newDataContent);
+        break;
+
+      case "Xóa":
+        handleDeleteLesson(item.lessonId);
+
+        const cloneDataContent = [...dataItems];
+        const newDataContentDelete = cloneDataContent.filter(
+          (data) => data.item.lessonId !== item.lessonId
+        );
+        setDataItems(newDataContentDelete);
         break;
 
       case "Hủy bỏ":
@@ -66,12 +67,71 @@ const ManageTheories = ({ ...props }) => {
     }
   };
 
-  const handleClick = (e) => {
-    console.log("e", e);
+  const onFinish = (lessonId, data, index) => {
+    handleUpdateLesson(lessonId, data);
+
+    const newDataContent = [...dataItems];
+    newDataContent.splice(index, 1, {
+      item: {
+        lessonId: lessonId,
+        lesson_title: data.lesson_title,
+        lesson_content: data.lesson_content,
+      },
+      state: 0,
+      disabled: true,
+    });
+    setDataItems(newDataContent);
   };
 
-  const onChange = (e) => {
-    console.log("change", e);
+  const customRequest = ({ file, onSuccess }) => {
+    setTimeout(() => {
+      onSuccess({
+        url: imageUrl,
+      });
+    }, 1000);
+  };
+
+  const normFile = (e) => {
+    const getBase64 = (img, callback) => {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => callback(reader.result));
+      reader.readAsDataURL(img);
+    };
+
+    getBase64(e.file.originFileObj, (url) => {
+      setImageUrl(url);
+    });
+    return imageUrl;
+  };
+
+  const beforeUpload = (file) => {
+    const isImage = file.type.startsWith("image/");
+    if (!isImage) {
+      message.error("Chỉ tải lên tệp hình ảnh !");
+    }
+    return isImage;
+  };
+
+  const handleClickAddLesson = (lessonId) => {
+    handleCreateLesson({
+      lessonId: lessonId + 1,
+      lesson_title: "",
+      lesson_img: "",
+      lesson_content: [],
+    });
+
+    const newDataContent = [...dataItems];
+    newDataContent.push({
+      item: {
+        lessonId: lessonId + 1,
+        lesson_title: "",
+        lesson_img: "",
+        lesson_content: [],
+      },
+      state: 0,
+      disabled: true,
+    });
+    setDataItems(newDataContent);
   };
 
   return (
@@ -117,21 +177,32 @@ const ManageTheories = ({ ...props }) => {
                 </h2>
 
                 {content.state === 0 && (
-                  <ButtonBasic
-                    type="primary"
-                    label="Chỉnh sửa"
-                    style={{ background: "#eb9a25" }}
-                    onClick={(e) => handleClickUpdate(e, content.item, index)}
-                  />
+                  <>
+                    <ButtonBasic
+                      type="primary"
+                      label="Chỉnh sửa"
+                      style={{ background: "#eb9a25", marginRight: 8 }}
+                      onClick={(e) => handleClickUpdate(e, content.item, index)}
+                    />
+                    <ButtonBasic
+                      type="primary"
+                      label="Xóa"
+                      style={{ background: "red" }}
+                      onClick={(e) => handleClickUpdate(e, content.item, index)}
+                    />
+                  </>
                 )}
               </div>
               <Form
                 layout="vertical"
                 disabled={content.disabled}
-                onFinish={(data) => onFinish(content.item.lessonId, data)}
+                onFinish={(data) =>
+                  onFinish(content.item.lessonId, data, index)
+                }
                 style={{
                   width: "100%",
                   position: "relative",
+                  marginBottom: 16,
                 }}
               >
                 {content.state === 1 && (
@@ -183,9 +254,9 @@ const ManageTheories = ({ ...props }) => {
                   name="lesson_content"
                   initialValue={content.item.lesson_content}
                 >
-                  {(content, { add, remove }) => (
+                  {(dataContents, { add, remove }) => (
                     <>
-                      {content.map((lesson, idx) => (
+                      {dataContents.map((lesson, idx) => (
                         <div
                           key={idx}
                           style={{
@@ -197,8 +268,6 @@ const ManageTheories = ({ ...props }) => {
                             width: "100%",
                           }}
                         >
-                          {console.log("lesson", lesson.content_img)}
-
                           <p
                             style={{
                               fontSize: "1.1em",
@@ -234,13 +303,31 @@ const ManageTheories = ({ ...props }) => {
                             </Form.Item>
 
                             <Form.Item
-                              name={[lesson.name, "content_img"]}
                               label="Hình ảnh đề mục"
+                              name={[lesson.name, "content_img"]}
+                              valuePropName="content_img"
+                              getValueFromEvent={normFile}
                             >
-                              <UploadPicturesWall
-                                initialValue={lesson.content_img}
-                                thumbUrl={lesson.content_img}
-                              />
+                              <Upload
+                                customRequest={customRequest}
+                                showUploadList={false}
+                                beforeUpload={beforeUpload}
+                                multiple={false}
+                                maxCount={1}
+                                fileList={form.getFieldValue([
+                                  "images",
+                                  lesson.key,
+                                  "content_img",
+                                ])}
+                                listType="picture-card"
+                              >
+                                <div>
+                                  <PlusOutlined />
+                                  <div style={{ marginTop: 8 }}>
+                                    Thêm hình ảnh
+                                  </div>
+                                </div>
+                              </Upload>
                             </Form.Item>
 
                             <div
@@ -255,7 +342,7 @@ const ManageTheories = ({ ...props }) => {
                                 style={{
                                   fontSize: "1em",
                                   fontWeight: "bold",
-                                  margin: 0,
+                                  margin: "0px 0px 8px 0px",
                                 }}
                               >
                                 - Nội dung đề mục
@@ -280,6 +367,18 @@ const ManageTheories = ({ ...props }) => {
                                                 marginBottom: 16,
                                               }}
                                             >
+                                              <Button
+                                                type="link"
+                                                danger
+                                                onClick={() => {
+                                                  subOpt.remove(
+                                                    description.name
+                                                  );
+                                                }}
+                                              >
+                                                <MinusCircleOutlined />
+                                                Xóa
+                                              </Button>
                                               <Form.Item
                                                 name={[
                                                   description.name,
@@ -296,12 +395,30 @@ const ManageTheories = ({ ...props }) => {
                                                   description.name,
                                                   "description_img",
                                                 ]}
+                                                getValueFromEvent={normFile}
                                               >
-                                                <UploadPicturesWall
-                                                  thumbUrl={
-                                                    description.description_img
-                                                  }
-                                                />
+                                                <Upload
+                                                  customRequest={customRequest}
+                                                  showUploadList={false}
+                                                  beforeUpload={beforeUpload}
+                                                  multiple={false}
+                                                  maxCount={1}
+                                                  fileList={form.getFieldValue([
+                                                    "images",
+                                                    lesson.key,
+                                                    "description_img",
+                                                  ])}
+                                                  listType="picture-card"
+                                                >
+                                                  <div>
+                                                    <PlusOutlined />
+                                                    <div
+                                                      style={{ marginTop: 8 }}
+                                                    >
+                                                      Thêm hình ảnh
+                                                    </div>
+                                                  </div>
+                                                </Upload>
                                               </Form.Item>
                                             </div>
                                           </>
@@ -367,10 +484,28 @@ const ManageTheories = ({ ...props }) => {
                                           </Form.Item>
                                           <Form.Item
                                             name={[ex.name, "example_img"]}
+                                            getValueFromEvent={normFile}
                                           >
-                                            <UploadPicturesWall
-                                              thumbUrl={ex.example_img}
-                                            />
+                                            <Upload
+                                              customRequest={customRequest}
+                                              showUploadList={false}
+                                              beforeUpload={beforeUpload}
+                                              multiple={false}
+                                              maxCount={1}
+                                              fileList={form.getFieldValue([
+                                                "images",
+                                                lesson.key,
+                                                "example_img",
+                                              ])}
+                                              listType="picture-card"
+                                            >
+                                              <div>
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>
+                                                  Thêm hình ảnh
+                                                </div>
+                                              </div>
+                                            </Upload>
                                           </Form.Item>
                                           <span
                                             style={{
@@ -388,11 +523,29 @@ const ManageTheories = ({ ...props }) => {
                                             <Input placeholder="Nhập để thêm" />
                                           </Form.Item>
                                           <Form.Item
-                                            name={[ex.name, "example_img"]}
+                                            name={[ex.name, "solution_img"]}
+                                            getValueFromEvent={normFile}
                                           >
-                                            <UploadPicturesWall
-                                              thumbUrl={ex.solution_img}
-                                            />
+                                            <Upload
+                                              customRequest={customRequest}
+                                              showUploadList={false}
+                                              beforeUpload={beforeUpload}
+                                              multiple={false}
+                                              maxCount={1}
+                                              fileList={form.getFieldValue([
+                                                "images",
+                                                lesson.key,
+                                                "solution_img",
+                                              ])}
+                                              listType="picture-card"
+                                            >
+                                              <div>
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>
+                                                  Thêm hình ảnh
+                                                </div>
+                                              </div>
+                                            </Upload>
                                           </Form.Item>
                                         </>
                                       );
@@ -415,10 +568,17 @@ const ManageTheories = ({ ...props }) => {
                   )}
                 </Form.List>
               </Form>
+              {index === dataItems.length - 1 && (
+                <ButtonBasic
+                  type="primary"
+                  label="Thêm tiêu đề"
+                  style={{ background: "#6DAE40" }}
+                  onClick={() => handleClickAddLesson(content.item.lessonId)}
+                />
+              )}
             </Col>
           );
         })}
-        <Button onClick={handleClick}>Thêm tiêu đề</Button>
       </Row>
     </>
   );
