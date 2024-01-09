@@ -15,6 +15,7 @@ import Quiz from "./pages/projects/Contents/Quiz";
 import Theory from "./pages/projects/Contents/Theory";
 import Test from "./pages/projects/Contents/Test";
 import Theories from "./pages/admin/Management/theories";
+import Exam from "./pages/admin/Management/exam";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/manage/user" element={<User />} />
           <Route path="/manage/synthetic" element={<Synthetic />} />
           <Route path="/manage/theories" element={<Theories />} />
+          <Route path="/manage/exam" element={<Exam />} />
         </Route>
         <Route path="/project" element={<MainProject />}>
           <Route path="/project/overview" element={<OverView />} />

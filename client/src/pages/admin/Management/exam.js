@@ -2,42 +2,27 @@ import { useEffect, useState } from "react";
 import { Col, Row, message } from "antd";
 import FormTitle from "../../../components/form/FormTitle";
 import FormSelect from "../../../components/form/FormSelect";
-import ManageTheories from "../../../components/ui/ManageTheories";
+import ManageExam from "../../../components/ui/ManageExam";
 import { getData } from "../../../services/apiService";
 import {
   createSubject,
   deleteSubject,
   updateSubject,
 } from "../../../services/subjectApiService";
-import {
-  createChapter,
-  deleteChapter,
-  updateChapter,
-} from "../../../services/chapterApiService";
-import {
-  createTheory,
-  updateTheory,
-  deleteTheory,
-  createLesson,
-  updateLesson,
-  deleteLesson,
-} from "../../../services/theoryApiService";
 
-const Theories = () => {
+const Exam = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [data, setData] = useState({
     dataClass: [],
     dataSubject: [],
     dataMethod: [],
-    dataChapter: [],
-    dataTheories: [],
+    dataTest: [],
   });
 
   const [state, setState] = useState({
     subject: { disabled: true, placeholder: "Vui lòng chọn lớp" },
-    chapter: { disabled: true, placeholder: "Vui lòng chọn môn học" },
-    theory: { disabled: true, placeholder: "Vui lòng chọn chương học" },
+    test: { disabled: true, placeholder: "Vui lòng chọn môn học" },
   });
 
   const [dataSelected, setDataSelected] = useState({
@@ -45,12 +30,12 @@ const Theories = () => {
     subjectId: "",
     subject: "",
     method: "",
-    chapterId: "",
-    chapter: "",
-    theoryId: "",
+    testId: "",
   });
 
-  const [itemsLesson, setItemsLesson] = useState([]);
+  const [itemsTest, setItemsTest] = useState("");
+
+  console.log("itemsTest", itemsTest);
 
   // Handle data item
   const handleOptionSelect = (isOption) => {
@@ -65,17 +50,14 @@ const Theories = () => {
         class: isOption.option.classId,
       }));
     }
-
+    console.log("is option", isOption);
     if (isOption.option.subject_name !== undefined) {
       isOption.option.methods.forEach((method) => {
-        if (method.method === "Ôn tập lý thuyết") {
-          setData((prev) => ({
-            ...prev,
-            dataChapter: method.chapters,
-          }));
+        if (method.method === "Làm bài thi") {
+          setData((prev) => ({ ...prev, dataTest: method.set }));
           setState((prev) => ({
             ...prev,
-            chapter: { disabled: false, placeholder: "Chọn chương học" },
+            test: { disabled: false, placeholder: "Chọn đề thi" },
           }));
           setDataSelected((prev) => ({
             ...prev,
@@ -86,23 +68,11 @@ const Theories = () => {
         }
       });
     }
-    if (isOption.option.chapter_name !== undefined) {
-      setData((prev) => ({ ...prev, dataTheories: isOption.option.theories }));
-      setState((prev) => ({
-        ...prev,
-        theory: { disabled: false, placeholder: "Chọn bài học" },
-      }));
+    if (isOption.option.test_name !== undefined) {
+      setItemsTest(isOption.option);
       setDataSelected((prev) => ({
         ...prev,
-        chapterId: isOption.option._id,
-        chapter: isOption.option.chapter_name,
-      }));
-    }
-    if (isOption.option.theory_name !== undefined) {
-      setItemsLesson(isOption.option.lessons);
-      setDataSelected((prev) => ({
-        ...prev,
-        theoryId: isOption.option._id,
+        testId: isOption.option._id,
       }));
     }
   };
@@ -132,13 +102,11 @@ const Theories = () => {
       dataClass: [],
       dataSubject: [],
       dataMethod: [],
-      dataChapter: [],
-      dataTheories: [],
+      dataTest: [],
     });
     setState({
       subject: { disabled: true, placeholder: "Vui lòng chọn lớp" },
-      chapter: { disabled: true, placeholder: "Vui lòng chọn môn học" },
-      theory: { disabled: true, placeholder: "Vui lòng chọn chương học" },
+      test: { disabled: true, placeholder: "Vui lòng chọn môn học" },
     });
   };
 
@@ -181,56 +149,6 @@ const Theories = () => {
           fetchData();
           initData();
         }
-        break;
-
-      case "chapter":
-        const resChapter = await createChapter({
-          chapter_name: data,
-          classId: dataSelected.class,
-          subject: dataSelected.subject,
-          method: dataSelected.method,
-        });
-        if (resChapter.status !== 201) {
-          messageApi.open({
-            type: "error",
-            content: "Có lỗi !!!",
-          });
-          return;
-        }
-        if (resChapter.status === 201) {
-          messageApi.open({
-            type: "success",
-            content: "Thêm mới thành công",
-          });
-          fetchData();
-          initData();
-        }
-
-        break;
-
-      case "theory":
-        const resTheory = await createTheory({
-          theory_name: data,
-          classId: dataSelected.class,
-          subject: dataSelected.subject,
-          chapter: dataSelected.chapter,
-        });
-        if (resTheory.status !== 201) {
-          messageApi.open({
-            type: "error",
-            content: "Có lỗi !!!",
-          });
-          return;
-        }
-        if (resTheory.status === 201) {
-          messageApi.open({
-            type: "success",
-            content: "Thêm mới thành công",
-          });
-          fetchData();
-          initData();
-        }
-
         break;
 
       default:
@@ -279,56 +197,6 @@ const Theories = () => {
         }
         break;
 
-      case "chapter":
-        const resChapter = await updateChapter(dataSelected.chapterId, {
-          chapter_name: data,
-          classId: dataSelected.class,
-          subject: dataSelected.subject,
-          method: dataSelected.method,
-        });
-        if (resChapter.status !== 200) {
-          messageApi.open({
-            type: "error",
-            content: "Có lỗi !!!",
-          });
-          return;
-        }
-        if (resChapter.status === 200) {
-          messageApi.open({
-            type: "success",
-            content: "Chỉnh sửa thành công",
-          });
-          fetchData();
-          initData();
-        }
-
-        break;
-
-      case "theory":
-        const resTheory = await updateTheory(dataSelected.theoryId, {
-          theory_name: data,
-          classId: dataSelected.class,
-          subject: dataSelected.subject,
-          chapter: dataSelected.chapter,
-        });
-        if (resTheory.status !== 200) {
-          messageApi.open({
-            type: "error",
-            content: "Có lỗi !!!",
-          });
-          return;
-        }
-        if (resTheory.status === 200) {
-          messageApi.open({
-            type: "success",
-            content: "Chỉnh sửa thành công",
-          });
-          fetchData();
-          initData();
-        }
-
-        break;
-
       default:
         break;
     }
@@ -355,116 +223,76 @@ const Theories = () => {
         }
         break;
 
-      case "chapter":
-        const resChapter = await deleteChapter(dataSelected.chapterId);
-        if (resChapter.status !== 200) {
-          messageApi.open({
-            type: "error",
-            content: "Có lỗi !!!",
-          });
-          return;
-        }
-        if (resChapter.status === 200) {
-          messageApi.open({
-            type: "success",
-            content: "Xóa thành công",
-          });
-          fetchData();
-          initData();
-        }
-
-        break;
-
-      case "theory":
-        const resTheory = await deleteTheory(dataSelected.theoryId);
-        if (resTheory.status !== 200) {
-          messageApi.open({
-            type: "error",
-            content: "Có lỗi !!!",
-          });
-          return;
-        }
-        if (resTheory.status === 200) {
-          messageApi.open({
-            type: "success",
-            content: "Xóa thành công",
-          });
-          fetchData();
-          initData();
-        }
-
-        break;
-
       default:
         break;
     }
   };
 
   // // Handle API Lesson
-  const handleCreateLesson = async (data) => {
-    const res = await createLesson(dataSelected.theoryId, {
-      lessonId: data.lessonId,
-      lesson_title: data.lesson_title,
-      lesson_img: data.lesson_img,
-      lesson_content: data.lesson_content,
-    });
+  // const handleCreateLesson = async (data) => {
+  //   const res = await createLesson(dataSelected.theoryId, {
+  //     lessonId: data.lessonId,
+  //     lesson_title: data.lesson_title,
+  //     lesson_img: data.lesson_img,
+  //     lesson_content: data.lesson_content,
+  //   });
 
-    if (res.status !== 201) {
-      messageApi.open({
-        type: "error",
-        content: "Có lỗi !!!",
-      });
-      return;
-    }
-    if (res.status === 201) {
-      messageApi.open({
-        type: "success",
-        content: "Thêm mới thành công",
-      });
-      fetchData();
-    }
-  };
+  //   if (res.status !== 201) {
+  //     messageApi.open({
+  //       type: "error",
+  //       content: "Có lỗi !!!",
+  //     });
+  //     return;
+  //   }
+  //   if (res.status === 201) {
+  //     messageApi.open({
+  //       type: "success",
+  //       content: "Thêm mới thành công",
+  //     });
+  //     fetchData();
+  //   }
+  // };
 
-  const handleUpdateLesson = async (lessonId, data) => {
-    const res = await updateLesson(dataSelected.theoryId, {
-      lessonId: lessonId,
-      lesson_title: data.lesson_title,
-      lesson_img: data.lesson_img,
-      lesson_content: data.lesson_content,
-    });
-    if (res.status !== 200) {
-      messageApi.open({
-        type: "error",
-        content: "Có lỗi !!!",
-      });
-      return;
-    }
-    if (res.status === 200) {
-      messageApi.open({
-        type: "success",
-        content: "Cập nhật thành công",
-      });
-      fetchData();
-    }
-  };
+  // const handleUpdateLesson = async (lessonId, data) => {
+  //   const res = await updateLesson(dataSelected.theoryId, {
+  //     lessonId: lessonId,
+  //     lesson_title: data.lesson_title,
+  //     lesson_img: data.lesson_img,
+  //     lesson_content: data.lesson_content,
+  //   });
+  //   if (res.status !== 200) {
+  //     messageApi.open({
+  //       type: "error",
+  //       content: "Có lỗi !!!",
+  //     });
+  //     return;
+  //   }
+  //   if (res.status === 200) {
+  //     messageApi.open({
+  //       type: "success",
+  //       content: "Cập nhật thành công",
+  //     });
+  //     fetchData();
+  //   }
+  // };
 
-  const handleDeleteLesson = async (lessonId) => {
-    const res = await deleteLesson(dataSelected.theoryId, lessonId);
-    if (res.status !== 200) {
-      messageApi.open({
-        type: "error",
-        content: "Có lỗi !!!",
-      });
-      return;
-    }
-    if (res.status === 200) {
-      messageApi.open({
-        type: "success",
-        content: "Xóa thành công",
-      });
-      fetchData();
-    }
-  };
+  // const handleDeleteLesson = async (lessonId) => {
+  //   const res = await deleteLesson(dataSelected.theoryId, lessonId);
+  //   if (res.status !== 200) {
+  //     messageApi.open({
+  //       type: "error",
+  //       content: "Có lỗi !!!",
+  //     });
+  //     return;
+  //   }
+  //   if (res.status === 200) {
+  //     messageApi.open({
+  //       type: "success",
+  //       content: "Xóa thành công",
+  //     });
+  //     fetchData();
+  //   }
+  // };
 
   return (
     <>
@@ -482,12 +310,8 @@ const Theories = () => {
               fontSize="1.4em"
               background="#1677ff"
             />
-            <Row
-              gutter={[16, 24]}
-              // justify="space-around"
-              style={{ padding: 8 }}
-            >
-              <Col className="gutter-row" span={6}>
+            <Row gutter={[16, 24]} style={{ padding: 8 }}>
+              <Col className="gutter-row" span={8}>
                 <FormTitle
                   title="Danh sách lớp"
                   fontSize="1.1em"
@@ -502,7 +326,7 @@ const Theories = () => {
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <FormTitle
                   title="Danh sách môn học"
                   fontSize="1.1em"
@@ -521,38 +345,19 @@ const Theories = () => {
                   handleOptionSelect={handleOptionSelect}
                 />
               </Col>
-              <Col className="gutter-row" span={6}>
+              <Col className="gutter-row" span={8}>
                 <FormTitle
-                  title="Danh sách chương"
+                  title="Danh sách đề thi"
                   fontSize="1.1em"
                   background="#0092ff"
                   margin="0px 0px 8px 0px"
                 />
 
                 <FormSelect
-                  name="chapter"
-                  items={data.dataChapter}
-                  disabled={state.chapter.disabled}
-                  placeholder={state.chapter.placeholder}
-                  handleCreate={handleCreate}
-                  handleUpdate={handleUpdate}
-                  handleDelete={handleDelete}
-                  handleOptionSelect={handleOptionSelect}
-                />
-              </Col>
-              <Col className="gutter-row" span={6}>
-                <FormTitle
-                  title="Danh sách bài tập"
-                  fontSize="1.1em"
-                  background="#0092ff"
-                  margin="0px 0px 8px 0px"
-                />
-
-                <FormSelect
-                  name="theory"
-                  items={data.dataTheories}
-                  disabled={state.theory.disabled}
-                  placeholder={state.theory.placeholder}
+                  name="test"
+                  items={data.dataTest}
+                  disabled={state.test.disabled}
+                  placeholder={state.test.placeholder}
                   handleCreate={handleCreate}
                   handleUpdate={handleUpdate}
                   handleDelete={handleDelete}
@@ -560,12 +365,14 @@ const Theories = () => {
                 />
               </Col>
             </Row>
-            <ManageTheories
-              dataContent={itemsLesson}
-              handleCreateLesson={handleCreateLesson}
-              handleUpdateLesson={handleUpdateLesson}
-              handleDeleteLesson={handleDeleteLesson}
-            />
+            {itemsTest !== "" && (
+              <ManageExam
+                dataContent={itemsTest}
+                // handleCreateLesson={handleCreateLesson}
+                // handleUpdateLesson={handleUpdateLesson}
+                // handleDeleteLesson={handleDeleteLesson}
+              />
+            )}
           </div>
         </Col>
       </Row>
@@ -573,4 +380,4 @@ const Theories = () => {
   );
 };
 
-export default Theories;
+export default Exam;

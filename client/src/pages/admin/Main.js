@@ -62,7 +62,7 @@ const MainAdmin = () => {
         break;
 
       case "6":
-        navigate("/manage/test");
+        navigate("/manage/exam");
         break;
 
       case "9":

@@ -109,7 +109,8 @@ const FormSelect = ({ ...props }) => {
                     dataOption.subject_name ||
                     dataOption.chapter_name ||
                     dataOption.quiz_name ||
-                    dataOption.theory_name
+                    dataOption.theory_name ||
+                    `${dataOption.test_name}-${dataOption.description}`
                   }
                   ref={inputRef}
                   value={dataInputUpdate}
@@ -140,7 +141,8 @@ const FormSelect = ({ ...props }) => {
             item.subject_name ||
             item.chapter_name ||
             item.quiz_name ||
-            item.theory_name,
+            item.theory_name ||
+            `${item.test_name} - ${item.description}`,
           option: item,
         }))}
       />
