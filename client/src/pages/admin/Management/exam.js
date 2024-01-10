@@ -9,6 +9,11 @@ import {
   deleteSubject,
   updateSubject,
 } from "../../../services/subjectApiService";
+import {
+  createExam,
+  updateExam,
+  deleteExam,
+} from "../../../services/examApiService";
 
 const Exam = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -151,6 +156,29 @@ const Exam = () => {
         }
         break;
 
+      case "test":
+        const resExam = await createExam({
+          classId: dataSelected.class,
+          subject: dataSelected.subject,
+          test_name: data,
+        });
+
+        if (resExam.status !== 201) {
+          messageApi.open({
+            type: "error",
+            content: "Có lỗi !!!",
+          });
+          return;
+        }
+        if (resExam.status === 201) {
+          messageApi.open({
+            type: "success",
+            content: "Thêm mới thành công",
+          });
+          fetchData();
+          initData();
+        }
+        break;
       default:
         break;
     }
@@ -228,71 +256,51 @@ const Exam = () => {
     }
   };
 
-  // // Handle API Lesson
-  // const handleCreateLesson = async (data) => {
-  //   const res = await createLesson(dataSelected.theoryId, {
-  //     lessonId: data.lessonId,
-  //     lesson_title: data.lesson_title,
-  //     lesson_img: data.lesson_img,
-  //     lesson_content: data.lesson_content,
-  //   });
+  // // Handle API Exam
+  const handleUpdateExam = async (testId, data) => {
+    console.log("dât", data);
+    const res = await updateExam(testId, {
+      classId: dataSelected.class,
+      subject: dataSelected.subject,
+      test_name: data.test_name,
+      description: data.description,
+      time: data.time,
+      content: data.content,
+    });
 
-  //   if (res.status !== 201) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Có lỗi !!!",
-  //     });
-  //     return;
-  //   }
-  //   if (res.status === 201) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Thêm mới thành công",
-  //     });
-  //     fetchData();
-  //   }
-  // };
+    if (res.status !== 200) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 200) {
+      messageApi.open({
+        type: "success",
+        content: "Cập nhật thành công",
+      });
+      fetchData();
+    }
+  };
 
-  // const handleUpdateLesson = async (lessonId, data) => {
-  //   const res = await updateLesson(dataSelected.theoryId, {
-  //     lessonId: lessonId,
-  //     lesson_title: data.lesson_title,
-  //     lesson_img: data.lesson_img,
-  //     lesson_content: data.lesson_content,
-  //   });
-  //   if (res.status !== 200) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Có lỗi !!!",
-  //     });
-  //     return;
-  //   }
-  //   if (res.status === 200) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Cập nhật thành công",
-  //     });
-  //     fetchData();
-  //   }
-  // };
-
-  // const handleDeleteLesson = async (lessonId) => {
-  //   const res = await deleteLesson(dataSelected.theoryId, lessonId);
-  //   if (res.status !== 200) {
-  //     messageApi.open({
-  //       type: "error",
-  //       content: "Có lỗi !!!",
-  //     });
-  //     return;
-  //   }
-  //   if (res.status === 200) {
-  //     messageApi.open({
-  //       type: "success",
-  //       content: "Xóa thành công",
-  //     });
-  //     fetchData();
-  //   }
-  // };
+  const handleDeleteExam = async (testId) => {
+    const res = await deleteExam(testId);
+    if (res.status !== 200) {
+      messageApi.open({
+        type: "error",
+        content: "Có lỗi !!!",
+      });
+      return;
+    }
+    if (res.status === 200) {
+      messageApi.open({
+        type: "success",
+        content: "Xóa thành công",
+      });
+      fetchData();
+    }
+  };
 
   return (
     <>
@@ -368,9 +376,8 @@ const Exam = () => {
             {itemsTest !== "" && (
               <ManageExam
                 dataContent={itemsTest}
-                // handleCreateLesson={handleCreateLesson}
-                // handleUpdateLesson={handleUpdateLesson}
-                // handleDeleteLesson={handleDeleteLesson}
+                handleUpdateExam={handleUpdateExam}
+                handleDeleteExam={handleDeleteExam}
               />
             )}
           </div>
