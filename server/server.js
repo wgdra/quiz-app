@@ -14,6 +14,7 @@ const subjects = require("./router/subjectsRoute");
 const chapters = require("./router/chapterRoute");
 const quizes = require("./router/quizRoute");
 const theories = require("./router/theoryRoute");
+const test = require("./router/testRoute");
 
 const START_SERVER = () => {
   const app = express();
@@ -31,6 +32,7 @@ const START_SERVER = () => {
   app.use("/api/chapters", chapters);
   app.use("/api/quizes", quizes);
   app.use("/api/theories", theories);
+  app.use("/api/test", test);
 
   // Middlewares
   app.use(errorHandling);

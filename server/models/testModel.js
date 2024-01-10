@@ -8,18 +8,17 @@ const COLLECTION_SCHEMA = Joi.object({
   classId: Joi.number().required(),
   subject: Joi.string().required(),
   test_name: Joi.string().required().trim().strict(),
-  test_img: Joi.string().default(""),
-  questions: Joi.array()
+  description: Joi.string().default(""),
+  content: Joi.array()
     .items(
       Joi.object({
-        questionId: Joi.number().required(),
-        question_name: Joi.string().required().trim(),
-        question_img: Joi.string().default(""),
-        options: Joi.array().items(Joi.string().trim()).default([]),
-        answer: Joi.number().required(),
+        title: Joi.string().required().trim(),
+        questions: Joi.array().items(Joi.object()).default([]),
+        answer: Joi.array().items(Joi.number()).default([]),
       })
     )
     .default([]),
+  time: Joi.number().default(""),
   createdAt: Joi.date().default(Date.now),
   updatedAt: Joi.date().default(null),
 });
@@ -96,9 +95,10 @@ const updateTest = async (id, reqBody) => {
       $set: {
         classId: validateReq.classId,
         subject: validateReq.subject,
-        test_name: validateReq.quiz_name,
-        test_img: validateReq.quiz_img,
-        questions: validateReq.questions,
+        test_name: validateReq.test_name,
+        description: validateReq.description,
+        time: validateReq.time,
+        content: validateReq.content,
       },
     };
 
@@ -127,24 +127,6 @@ const deleteTest = async (id) => {
   }
 };
 
-// DELETE Question
-const deleteQuestionFromTest = async (quizId, questionId) => {
-  try {
-    const deletedQuestion = await connect
-      .GET_DB()
-      .collection(COLLECTION_NAME)
-      .updateOne(
-        { quizId: new ObjectId(quizId) },
-        { $pull: { quiz: { questionId: questionId } } },
-        { new: true }
-      );
-
-    return deletedQuestion;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
 module.exports = {
   COLLECTION_NAME,
   COLLECTION_SCHEMA,
@@ -154,5 +136,4 @@ module.exports = {
   getTestAfterCreate,
   updateTest,
   deleteTest,
-  deleteQuestionFromTest,
 };
