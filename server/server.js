@@ -15,6 +15,7 @@ const chapters = require("./router/chapterRoute");
 const quizes = require("./router/quizRoute");
 const theories = require("./router/theoryRoute");
 const test = require("./router/testRoute");
+const auth = require("./router/authRoute");
 
 const START_SERVER = () => {
   const app = express();
@@ -25,8 +26,9 @@ const START_SERVER = () => {
   app.use(express.json());
 
   // Routes
-  app.use("/api/users", users);
+  app.use("/api/auth", auth);
   app.use("/api/v1/data", data);
+  app.use("/api/users", users);
   app.use("/api/classes", classes);
   app.use("/api/subjects", subjects);
   app.use("/api/chapters", chapters);
