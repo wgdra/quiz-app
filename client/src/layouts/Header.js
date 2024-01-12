@@ -7,14 +7,7 @@ const HeaderWrapper = ({ ...props }) => {
   const { Header } = Layout;
 
   return (
-    <Header
-      {...props}
-      // style={{
-      //   padding: "0px 16px",
-      //   display: "flex",
-      //   alignItems: "center",
-      // }}
-    >
+    <Header {...props}>
       {/* {role === 0 && (
         <MenuNavigate
           theme="light"

@@ -40,8 +40,6 @@ const Exam = () => {
 
   const [itemsTest, setItemsTest] = useState("");
 
-  console.log("itemsTest", itemsTest);
-
   // Handle data item
   const handleOptionSelect = (isOption) => {
     if (isOption.option.class_name !== undefined) {

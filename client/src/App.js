@@ -16,12 +16,18 @@ import Theory from "./pages/projects/Contents/Theory";
 import Test from "./pages/projects/Contents/Test";
 import Theories from "./pages/admin/Management/theories";
 import Exam from "./pages/admin/Management/exam";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home" element={<Home />} />
+        <Route path="/" element={<Home />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+
         <Route path="/" element={<MainAdmin />}>
           <Route path="/manage" element={<Manage />} />
           <Route path="/manage/user" element={<User />} />

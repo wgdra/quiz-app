@@ -16,6 +16,7 @@ const ButtonBasic = ({ ...props }) => {
             defaultBg: props.tokenDefaultColor,
             defaultBorderColor:
               props.tokenDefaultColor || props.defaultBorderColor,
+            fontWeight: props.fontWeight,
           },
         },
       }}
