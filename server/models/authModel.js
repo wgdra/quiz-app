@@ -1,6 +1,5 @@
 const connect = require("../database/connect");
 const { COLLECTION_NAME, COLLECTION_SCHEMA } = require("./userModel");
-const { ObjectId } = require("mongodb");
 const bcrypt = require("bcrypt");
 
 // Validation

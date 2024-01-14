@@ -14,7 +14,16 @@ async function loginUser(req, res, next) {
 
     const token = createToken(dataUser._id);
 
-    res.status(StatusCodes.OK).json({ status: StatusCodes.OK, token: token });
+    const user = {
+      _id: dataUser._id,
+      username: dataUser.username,
+      full_name: dataUser.full_name,
+      role: dataUser.role,
+      email: dataUser.email,
+      token: token,
+    };
+
+    res.status(StatusCodes.OK).json({ status: StatusCodes.OK, data: user });
   } catch (error) {
     next(error);
   }

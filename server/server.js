@@ -4,7 +4,9 @@ const cors = require("cors");
 const { corsOptions } = require("./config/cors");
 const { ENV } = require("./config/environment");
 const connect = require("./database/connect");
+const requireAuth = require("./middlewares/requireAuth");
 const errorHandling = require("./middlewares/errorHandling");
+const checkUserRole = require("./middlewares/roleHandle");
 
 // router
 const users = require("./router/usersRoute");
@@ -25,10 +27,19 @@ const START_SERVER = () => {
   // app.use(cors(corsOptions));
   app.use(express.json());
 
-  // Routes
   app.use("/api/auth", auth);
+
+  // Middlewares authorization
+  app.use(requireAuth);
+
+  // Routes
   app.use("/api/v1/data", data);
   app.use("/api/users", users);
+
+  // Middlewares check role
+  app.use(checkUserRole);
+
+  // Routes
   app.use("/api/classes", classes);
   app.use("/api/subjects", subjects);
   app.use("/api/chapters", chapters);
@@ -36,7 +47,7 @@ const START_SERVER = () => {
   app.use("/api/theories", theories);
   app.use("/api/test", test);
 
-  // Middlewares
+  // Middlewares error
   app.use(errorHandling);
 
   app.listen(ENV.PORT, () => {

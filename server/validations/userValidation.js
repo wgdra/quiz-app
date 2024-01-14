@@ -17,7 +17,9 @@ const createUser = async (req, res, next) => {
     });
     next();
   } catch (error) {
-    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(error.message);
+    res
+      .status(StatusCodes.UNPROCESSABLE_ENTITY)
+      .json({ status: StatusCodes.BAD_REQUEST, message: error.message });
   }
 };
 
@@ -36,7 +38,9 @@ const updateUser = async (req, res, next) => {
     });
     next();
   } catch (error) {
-    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json(error.message);
+    res
+      .status(StatusCodes.UNPROCESSABLE_ENTITY)
+      .json({ status: StatusCodes.BAD_REQUEST, message: error.message });
   }
 };
 
