@@ -5,10 +5,8 @@ import { Outlet } from "react-router-dom";
 import { Layout } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
-  AppstoreOutlined,
   TeamOutlined,
   UnorderedListOutlined,
-  SnippetsOutlined,
   CarryOutOutlined,
 } from "@ant-design/icons";
 

@@ -23,7 +23,6 @@ const FormInModal = ({ ...props }) => {
           })
           .catch((info) => {
             onHandleForm(info, isHandle);
-            console.log("Validate Failed:", info);
           });
       }}
     >

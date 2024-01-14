@@ -1,5 +1,5 @@
 import "./assets/styles/App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import MainAdmin from "./pages/admin/Main";
 import Manage from "./pages/admin/Manage";
@@ -18,6 +18,7 @@ import Theories from "./pages/admin/Management/theories";
 import Exam from "./pages/admin/Management/exam";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
+import { ProtectedAdmin } from "./context/ProtectedRoles";
 
 function App() {
   return (
@@ -28,13 +29,21 @@ function App() {
           <Route path="/signup" element={<Signup />} />
         </Route>
 
-        <Route path="/" element={<MainAdmin />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedAdmin>
+              <MainAdmin />
+            </ProtectedAdmin>
+          }
+        >
           <Route path="/manage" element={<Manage />} />
           <Route path="/manage/user" element={<User />} />
           <Route path="/manage/synthetic" element={<Synthetic />} />
           <Route path="/manage/theories" element={<Theories />} />
           <Route path="/manage/exam" element={<Exam />} />
         </Route>
+
         <Route path="/project" element={<MainProject />}>
           <Route path="/project/overview" element={<OverView />} />
           <Route path="/project/classes" element={<Classes />} />

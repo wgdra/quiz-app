@@ -1,6 +1,5 @@
 const BoxContentTheory = ({ ...props }) => {
   const { dataContent } = props;
-  console.log("dataContent", dataContent);
   return (
     <div
       style={{

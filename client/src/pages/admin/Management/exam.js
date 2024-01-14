@@ -53,7 +53,6 @@ const Exam = () => {
         class: isOption.option.classId,
       }));
     }
-    console.log("is option", isOption);
     if (isOption.option.subject_name !== undefined) {
       isOption.option.methods.forEach((method) => {
         if (method.method === "Làm bài thi") {
@@ -256,7 +255,6 @@ const Exam = () => {
 
   // // Handle API Exam
   const handleUpdateExam = async (testId, data) => {
-    console.log("dât", data);
     const res = await updateExam(testId, {
       classId: dataSelected.class,
       subject: dataSelected.subject,

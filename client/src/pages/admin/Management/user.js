@@ -10,8 +10,11 @@ import {
   updateUser,
   deleteUser,
 } from "../../../services/userApiService";
+import { useAuthContext } from "../../../hooks/useAuthContext";
 
 const User = () => {
+  const { user } = useAuthContext();
+
   const [open, setOpen] = useState(false);
 
   const [data, setData] = useState([]);
@@ -38,7 +41,7 @@ const User = () => {
 
   const fetchDataUser = async () => {
     // GET API
-    let result = await getDataUser();
+    let result = await getDataUser(user?.token);
 
     if (result.status === 200) {
       setTimeout(() => {
@@ -56,7 +59,7 @@ const User = () => {
   // Handle API
   const handleCreate = async (dataForm) => {
     // POST data
-    let result = await createUser(dataForm);
+    let result = await createUser(dataForm, user?.token);
 
     if (result.status === 201) {
       setConfirmLoading(false);
@@ -89,7 +92,7 @@ const User = () => {
         message: "Vui lòng điền đầy đủ thông tin",
       });
     } else {
-      let result = await updateUser(isRecord._id, dataForm);
+      let result = await updateUser(isRecord._id, dataForm, user?.token);
 
       if (result.res === true) {
         if (result.status === 200) {
@@ -123,7 +126,7 @@ const User = () => {
 
   const handleDelete = async (_id) => {
     // DELETE data
-    let result = await deleteUser(_id);
+    let result = await deleteUser(_id, user?.token);
 
     if (result.status === 200) {
       fetchDataUser();

@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Avatar, Row, Col, Progress, Space } from "antd";
 import BoxTitle from "../../components/ui/BoxTitle";
 import BoxContent from "../../components/ui/BoxContent";
 import FormChart from "../../components/form/Chart";
-import { useNavigate, useLocation } from "react-router-dom";
 import { getData } from "../../services/apiService";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const OverView = () => {
   const navigate = useNavigate();
+  const { user } = useAuthContext();
 
-  const [user, setUser] = useState("T");
   const [data, setData] = useState("T");
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchData = async () => {
-    let res = await getData();
+    let res = await getData(user?.token);
 
     if (res.status !== 200) return;
     if (res.status === 200) {
@@ -51,9 +52,11 @@ const OverView = () => {
           size={58}
           gap={4}
         >
-          {user}
+          T
         </Avatar>
-        <h1 style={{ marginLeft: "15px" }}>Xin chào Trung !</h1>
+        <h1 style={{ marginLeft: "15px" }}>
+          Xin chào {user && user.full_name ? user.full_name : ""} !
+        </h1>
       </div>
       <Row
         gutter={{

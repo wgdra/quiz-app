@@ -2,15 +2,11 @@ import React from "react";
 import { ConfigProvider, Dropdown } from "antd";
 
 const DropDown = ({ ...props }) => {
-  const { items } = props;
-
-  const handleMenuClick = (e) => {
-    console.log("e", e);
-  };
+  const { items, handleMenuClick } = props;
 
   const menuProps = {
     items,
-    onClick: handleMenuClick,
+    onClick: (e) => handleMenuClick(e.domEvent.target.innerText),
   };
 
   return (

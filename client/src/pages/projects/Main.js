@@ -15,6 +15,8 @@ import {
 import { Layout } from "antd";
 import DropDown from "../../components/ui/Dropdown";
 import { getData } from "../../services/apiService.js";
+import { useAuthContext } from "../../hooks/useAuthContext.js";
+import { useLogout } from "../../hooks/useLogout.js";
 
 function getItem(label, key, icon, children) {
   return {
@@ -27,18 +29,19 @@ function getItem(label, key, icon, children) {
 
 const MainProject = () => {
   const { Content } = Layout;
+  const { user } = useAuthContext();
+  const { logout } = useLogout();
   const navigate = useNavigate();
 
   const [data, setData] = useState({});
-  const full_name = "Nguyễn Tiến Trung";
 
   // API
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [user]);
 
   const fetchData = async () => {
-    let res = await getData();
+    let res = await getData(user.token);
 
     if (res.status !== 200) return;
     if (res.status === 200) {
@@ -106,8 +109,21 @@ const MainProject = () => {
     }
   };
 
-  const handleButtonClick = () => {
+  const handleClickAccount = () => {
     console.log("account");
+  };
+  const handleMenuClick = (innerText) => {
+    switch (innerText) {
+      case "Hồ Sơ":
+        break;
+      case "Thiết lập":
+        break;
+      case "Đăng Xuất":
+        logout();
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -147,7 +163,9 @@ const MainProject = () => {
           }}
         >
           <DropDown
-            label={full_name}
+            label={
+              user && user.full_name ? user.full_name : "Đặt tên tài khoản"
+            }
             icon={<DownOutlined />}
             items={[
               {
@@ -174,7 +192,8 @@ const MainProject = () => {
               margin: "30px 0px",
             }}
             colorPrimary="#6051f8"
-            onClick={handleButtonClick}
+            onClick={handleClickAccount}
+            handleMenuClick={handleMenuClick}
           />
         </HeaderWrapper>
         <Content

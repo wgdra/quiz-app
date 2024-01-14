@@ -33,14 +33,7 @@ const ManageExam = ({ ...props }) => {
     setDataItems(newData);
   }, [dataContent]);
 
-  console.log("dataItems", dataItems);
-
   // Handle
-  const onChangeRadio = (value, questionIdx) => {
-    console.log("value", value);
-    console.log("questionIdx", questionIdx);
-  };
-
   const handleClickUpdate = (e) => {
     const nameBtn = e.target.innerText;
     switch (nameBtn) {
@@ -339,14 +332,7 @@ const ManageExam = ({ ...props }) => {
                                                 onClick={() => subOpt.add()}
                                               />
                                             </div>
-                                            <Radio.Group
-                                              onChange={(e) =>
-                                                onChangeRadio(
-                                                  e.target.value,
-                                                  questionIdx
-                                                )
-                                              }
-                                            >
+                                            <Radio.Group>
                                               <Row>
                                                 {options.map(
                                                   (option, optionIdx) => (

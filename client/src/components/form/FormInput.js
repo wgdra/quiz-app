@@ -6,7 +6,6 @@ const HandleSubmit = ({ form }) => {
 
   // Watch all values
   const values = Form.useWatch([], form);
-  console.log("values", values);
 
   useEffect(() => {
     form
@@ -32,8 +31,6 @@ const HandleSubmit = ({ form }) => {
 const FormInput = ({ ...props }) => {
   const [form] = Form.useForm();
   const items = props?.items;
-
-  console.log("form", form);
 
   return (
     <Form form={form} name="form" layout="vertical" autoComplete="off">

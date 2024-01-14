@@ -1,50 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Input, message } from "antd";
+import { Row, Col, Input } from "antd";
 import FormAuth from "./FormAuth";
-import { signupUser } from "../../services/authApiService";
+import { useSignup } from "../../hooks/useSignup";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const [loadings, setLoadings] = useState(false);
+  const { signup, loadings, contextHolder } = useSignup();
 
   // Handle
-  const onFinish = (data) => {
-    setLoadings(true);
-    handleSignupUser(data);
+  const onFinish = async (data) => {
+    await signup(data);
   };
 
   const onClickLink = () => {
     navigate("/login");
-  };
-
-  const handleSignupUser = async (data) => {
-    const res = await signupUser(data);
-    console.log("res", res);
-
-    if (res.status !== 201) {
-      setTimeout(() => {
-        setLoadings(false);
-        messageApi.open({
-          type: "error",
-          content: res.message,
-        });
-        return;
-      }, 1500);
-    }
-
-    if (res.status === 201) {
-      setTimeout(() => {
-        setLoadings(false);
-        messageApi.open({
-          type: "success",
-          content: "Đăng ký thành công",
-        });
-        navigate("/login");
-      }, 1500);
-    }
   };
 
   return (

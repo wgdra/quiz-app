@@ -64,7 +64,6 @@ const Classes = () => {
   ];
 
   const handleClickClass = (data) => {
-    console.log("data", data);
     navigate("/project/method", {
       state: {
         data: data,
