@@ -1,9 +1,6 @@
 import instance from "../utils/axiosCustomize";
 
-const user = JSON.parse(localStorage.getItem("user"));
-const token = user.token;
-
-const getDataExam = () => {
+const getDataExam = (token) => {
   return instance.get("/api/test", {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -12,7 +9,7 @@ const getDataExam = () => {
   });
 };
 
-const createExam = (data) => {
+const createExam = (data, token) => {
   return instance.post(
     "/api/test",
     {
@@ -32,7 +29,7 @@ const createExam = (data) => {
   );
 };
 
-const updateExam = (_id, data) => {
+const updateExam = (_id, data, token) => {
   return instance.put(
     `/api/test/update/${_id}`,
     {
@@ -52,7 +49,7 @@ const updateExam = (_id, data) => {
   );
 };
 
-const deleteExam = (_id) => {
+const deleteExam = (_id, token) => {
   return instance.delete(`/api/test/delete/${_id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

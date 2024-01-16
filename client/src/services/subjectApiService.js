@@ -1,9 +1,6 @@
 import instance from "../utils/axiosCustomize";
 
-const user = JSON.parse(localStorage.getItem("user"));
-const token = user.token;
-
-const getDataSubject = () => {
+const getDataSubject = (token) => {
   return instance.get("/api/subjects", {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -12,7 +9,7 @@ const getDataSubject = () => {
   });
 };
 
-const createSubject = (data) => {
+const createSubject = (data, token) => {
   return instance.post(
     "/api/subjects",
     {
@@ -29,7 +26,7 @@ const createSubject = (data) => {
   );
 };
 
-const updateSubject = (_id, data) => {
+const updateSubject = (_id, data, token) => {
   return instance.put(
     `/api/subjects/update/${_id}`,
     {
@@ -46,7 +43,7 @@ const updateSubject = (_id, data) => {
   );
 };
 
-const deleteSubject = (_id) => {
+const deleteSubject = (_id, token) => {
   return instance.delete(`/api/subjects/delete/${_id}`, {
     headers: {
       Authorization: `Bearer ${token}`,

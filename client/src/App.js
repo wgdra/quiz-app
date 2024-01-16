@@ -1,23 +1,26 @@
 import "./assets/styles/App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import MainAdmin from "./pages/admin/Main";
 import Manage from "./pages/admin/Manage";
 import User from "./pages/admin/Management/user";
 import Synthetic from "./pages/admin/Management/synthetic";
-import MainProject from "./pages/projects/Main";
-import OverView from "./pages/projects/Overview";
 import Error from "./pages/Error";
-import Classes from "./pages/projects/Contents/Classes";
-import Method from "./pages/projects/Contents/Method";
-import Set from "./pages/projects/Contents/Set";
-import Quiz from "./pages/projects/Contents/Quiz";
-import Theory from "./pages/projects/Contents/Theory";
-import Test from "./pages/projects/Contents/Test";
 import Theories from "./pages/admin/Management/theories";
 import Exam from "./pages/admin/Management/exam";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
+import {
+  MainProject,
+  OverView,
+  Classes,
+  Method,
+  Set,
+  Quiz,
+  Theory,
+  Test,
+  Profile,
+} from "./pages/projects/ProjectRoute";
 import { ProtectedAdmin } from "./context/ProtectedRoles";
 
 function App() {
@@ -30,7 +33,7 @@ function App() {
         </Route>
 
         <Route
-          path="/"
+          path="/manage"
           element={
             <ProtectedAdmin>
               <MainAdmin />
@@ -52,6 +55,7 @@ function App() {
           <Route path="/project/quiz" element={<Quiz />} />
           <Route path="/project/theory" element={<Theory />} />
           <Route path="/project/test" element={<Test />} />
+          <Route path="/project/profile" element={<Profile />} />
         </Route>
         <Route path="*" element={<Error />} />
       </Routes>

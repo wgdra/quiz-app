@@ -1,9 +1,6 @@
 import instance from "../utils/axiosCustomize";
 
-const user = JSON.parse(localStorage.getItem("user"));
-const token = user.token;
-
-const getDataQuiz = () => {
+const getDataQuiz = (token) => {
   return instance.get("/api/quizes", {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -12,7 +9,7 @@ const getDataQuiz = () => {
   });
 };
 
-const createQuiz = (data) => {
+const createQuiz = (data, token) => {
   return instance.post(
     "/api/quizes",
     {
@@ -30,7 +27,7 @@ const createQuiz = (data) => {
   );
 };
 
-const updateQuiz = (_id, data) => {
+const updateQuiz = (_id, data, token) => {
   return instance.put(
     `/api/quizes/update/${_id}`,
     {
@@ -48,7 +45,7 @@ const updateQuiz = (_id, data) => {
   );
 };
 
-const deleteQuiz = (_id) => {
+const deleteQuiz = (_id, token) => {
   return instance.delete(`/api/quizes/delete/${_id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -57,7 +54,7 @@ const deleteQuiz = (_id) => {
   });
 };
 
-const createQuestion = (_id, data) => {
+const createQuestion = (_id, data, token) => {
   return instance.put(
     `/api/quizes/question/create/${_id}`,
     {
@@ -77,7 +74,7 @@ const createQuestion = (_id, data) => {
   );
 };
 
-const updateQuestion = (_id, data) => {
+const updateQuestion = (_id, data, token) => {
   return instance.put(
     `/api/quizes/question/update/${_id}`,
     {
@@ -97,7 +94,7 @@ const updateQuestion = (_id, data) => {
   );
 };
 
-const deleteQuestion = (_id, questionId) => {
+const deleteQuestion = (_id, questionId, token) => {
   return instance.patch(
     `/api/quizes/question/delete/${_id}`,
     {

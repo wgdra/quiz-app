@@ -24,6 +24,7 @@ const ButtonGroup = ({ ...props }) => {
               <Button
                 key={_}
                 {...props}
+                loading={item.loading || props.loading}
                 name={item.name}
                 htmlType={item.htmlType || props.htmlType}
                 onClick={item.onClick}

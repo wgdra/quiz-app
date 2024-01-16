@@ -53,6 +53,16 @@ const Login = () => {
                       required: true,
                       message: "Vui lòng nhập mật khẩu!",
                     },
+                    {
+                      validator: async (_, value) => {
+                        if (value.length < 6) {
+                          return Promise.reject(
+                            new Error("Mật khẩu phải có ít nhất 6 ký tự!")
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
                   ],
                 },
               ]}

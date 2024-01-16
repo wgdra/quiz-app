@@ -110,11 +110,12 @@ const MainProject = () => {
   };
 
   const handleClickAccount = () => {
-    console.log("account");
+    navigate("/project/profile");
   };
   const handleMenuClick = (innerText) => {
     switch (innerText) {
       case "Hồ Sơ":
+        navigate("/project/profile");
         break;
       case "Thiết lập":
         break;
