@@ -1,8 +1,11 @@
 const express = require("express");
 const theoryController = require("../controllers/theoryController");
 const theoryValidation = require("../validations/theoryValidation");
+const checkUserRole = require("../middlewares/roleHandle");
 
 const router = express.Router();
+
+router.use(checkUserRole);
 
 router.route("/").get(theoryController.getTheory);
 router.route("/:id").get(theoryController.getOneTheory);

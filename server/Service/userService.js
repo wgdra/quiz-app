@@ -36,6 +36,7 @@ const createUser = async (reqBody) => {
   }
 };
 
+// Update
 const updateUser = async (id, reqBody) => {
   try {
     const result = await userModel.updateUser(id, reqBody);
@@ -45,7 +46,22 @@ const updateUser = async (id, reqBody) => {
     throw error;
   }
 };
+// Change Password
+const changePassword = async (id, reqBody) => {
+  try {
+    const result = await userModel.changePassword(
+      id,
+      reqBody.oldPassword,
+      reqBody.newPassword
+    );
 
+    console.log("result", result);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+// Delete
 const deleteUser = async (id) => {
   try {
     const result = await userModel.deleteUser(id);
@@ -56,4 +72,11 @@ const deleteUser = async (id) => {
   }
 };
 
-module.exports = { getAllUser, getOneUser, createUser, updateUser, deleteUser };
+module.exports = {
+  getAllUser,
+  getOneUser,
+  createUser,
+  updateUser,
+  changePassword,
+  deleteUser,
+};

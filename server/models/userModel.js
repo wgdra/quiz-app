@@ -1,12 +1,13 @@
 const Joi = require("joi");
 const connect = require("../database/connect");
 const { ObjectId } = require("mongodb");
+const bcrypt = require("bcrypt");
 
 // SCHEMA
 const COLLECTION_NAME = "users";
 const COLLECTION_SCHEMA = Joi.object({
-  username: Joi.string().required().min(3).max(20).trim().strict(),
-  password: Joi.string().required().min(6).max(20),
+  username: Joi.string().min(3).max(20).trim().strict(),
+  password: Joi.string().min(6).max(20),
   full_name: Joi.string().min(3).max(20).trim().strict().default(""),
   role: Joi.number().default(1),
   email: Joi.string().email().strict().default(""),
@@ -84,8 +85,6 @@ const updateUser = async (id, reqBody) => {
     const _id = { _id: new ObjectId(id) };
     const update = {
       $set: {
-        username: validateReq.username,
-        password: validateReq.password,
         full_name: validateReq.full_name,
         email: validateReq.email,
       },
@@ -97,6 +96,41 @@ const updateUser = async (id, reqBody) => {
       .updateOne(_id, update);
 
     return updateUser;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+// Change Password
+const changePassword = async (id, oldPassword, newPassword) => {
+  try {
+    const user = await connect
+      .GET_DB()
+      .collection(COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) });
+
+    const match = await bcrypt.compare(oldPassword, user.password);
+
+    if (!match) {
+      throw Error("Mật khẩu chưa chính xác");
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(newPassword, salt);
+
+    const updatePassword = await connect
+      .GET_DB()
+      .collection(COLLECTION_NAME)
+      .updateOne(
+        { _id: new ObjectId(id) },
+        {
+          $set: {
+            password: hash,
+          },
+        }
+      );
+
+    return updatePassword;
   } catch (error) {
     throw new Error(error);
   }
@@ -124,5 +158,6 @@ module.exports = {
   createUser,
   getUserAfterCreate,
   updateUser,
+  changePassword,
   deleteUser,
 };

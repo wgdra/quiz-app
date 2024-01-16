@@ -1,8 +1,11 @@
 const express = require("express");
 const subjectController = require("../controllers/subjectsController");
 const subjectValidation = require("../validations/subjectValidation");
+const checkUserRole = require("../middlewares/roleHandle");
 
 const router = express.Router();
+
+router.use(checkUserRole);
 
 // Subject
 router.route("/").get(subjectController.getSubject);

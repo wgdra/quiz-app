@@ -1,8 +1,11 @@
 const express = require("express");
 const quizController = require("../controllers/quizController");
 const quizValidation = require("../validations/quizValidation");
+const checkUserRole = require("../middlewares/roleHandle");
 
 const router = express.Router();
+
+router.use(checkUserRole);
 
 router.route("/").get(quizController.getQuiz);
 router.route("/:id").get(quizController.getOneQuiz);

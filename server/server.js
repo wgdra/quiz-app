@@ -11,6 +11,8 @@ const checkUserRole = require("./middlewares/roleHandle");
 // router
 const users = require("./router/usersRoute");
 const data = require("./router/dataRoute");
+const chat = require("./router/chatRoute");
+
 const classes = require("./router/classesRoute");
 const subjects = require("./router/subjectsRoute");
 const chapters = require("./router/chapterRoute");
@@ -35,11 +37,8 @@ const START_SERVER = () => {
   // Routes
   app.use("/api/v1/data", data);
   app.use("/api/users", users);
+  app.use("/api/chat", chat);
 
-  // Middlewares check role
-  app.use(checkUserRole);
-
-  // Routes
   app.use("/api/classes", classes);
   app.use("/api/subjects", subjects);
   app.use("/api/chapters", chapters);

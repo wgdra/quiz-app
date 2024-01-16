@@ -1,8 +1,11 @@
 const express = require("express");
 const chapterController = require("../controllers/chapterController");
 const chapterValidation = require("../validations/chapterValidation");
+const checkUserRole = require("../middlewares/roleHandle");
 
 const router = express.Router();
+
+router.use(checkUserRole);
 
 // Chapter
 router.route("/").get(chapterController.getChapter);

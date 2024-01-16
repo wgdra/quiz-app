@@ -47,6 +47,22 @@ async function updateUser(req, res, next) {
   }
 }
 
+// Change Password
+async function changePassword(req, res, next) {
+  try {
+    const changePassword = await userService.changePassword(
+      req.params.id,
+      req.body
+    );
+
+    res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, data: changePassword });
+  } catch (error) {
+    next(error);
+  }
+}
+
 // DELETE ONE
 async function deleteUser(req, res, next) {
   try {
@@ -65,5 +81,6 @@ module.exports = {
   getOneUser,
   createUser,
   updateUser,
+  changePassword,
   deleteUser,
 };
