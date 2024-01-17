@@ -28,7 +28,7 @@ const getConversationUser = async (userId) => {
     const conversationUserData = Promise.all(
       conversations.map(async (conversation) => {
         const receiverId = conversation.members.find(
-          (member) => member !== userId
+          (member) => member.toString() !== new ObjectId(userId).toString()
         );
 
         const user = await userModel.getOneUser(receiverId);
@@ -111,7 +111,7 @@ const createMessages = async (reqBody) => {
         .GET_DB()
         .collection(COLLECTION_MESSAGES)
         .insertOne({
-          conversationId: newCoversation.insertedId,
+          conversationId: new ObjectId(newCoversation.insertedId),
           senderId: new ObjectId(senderId),
           message,
         });
@@ -122,7 +122,11 @@ const createMessages = async (reqBody) => {
     const newMessage = await connect
       .GET_DB()
       .collection(COLLECTION_MESSAGES)
-      .insertOne({ conversationId, senderId: new ObjectId(senderId), message });
+      .insertOne({
+        conversationId: new ObjectId(conversationId),
+        senderId: new ObjectId(senderId),
+        message,
+      });
 
     return newMessage;
   } catch (error) {

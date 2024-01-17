@@ -6,7 +6,6 @@ const { ENV } = require("./config/environment");
 const connect = require("./database/connect");
 const requireAuth = require("./middlewares/requireAuth");
 const errorHandling = require("./middlewares/errorHandling");
-const checkUserRole = require("./middlewares/roleHandle");
 
 // router
 const users = require("./router/usersRoute");
