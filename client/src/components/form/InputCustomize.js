@@ -1,6 +1,8 @@
 import { ConfigProvider, Input } from "antd";
 
 const InputCustomize = ({ ...props }) => {
+  const { inputRef } = props;
+
   return (
     <ConfigProvider
       theme={{
@@ -9,7 +11,7 @@ const InputCustomize = ({ ...props }) => {
         },
       }}
     >
-      <Input {...props} />
+      <Input {...props} ref={inputRef} />
     </ConfigProvider>
   );
 };

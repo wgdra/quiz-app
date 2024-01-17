@@ -20,6 +20,7 @@ import {
   Theory,
   Test,
   Profile,
+  ChatApp,
 } from "./pages/projects/ProjectRoute";
 import { ProtectedAdmin } from "./context/ProtectedRoles";
 
@@ -49,6 +50,7 @@ function App() {
 
         <Route path="/project" element={<MainProject />}>
           <Route path="/project/overview" element={<OverView />} />
+          <Route path="/project/chat" element={<ChatApp />} />
           <Route path="/project/classes" element={<Classes />} />
           <Route path="/project/method" element={<Method />} />
           <Route path="/project/set" element={<Set />} />

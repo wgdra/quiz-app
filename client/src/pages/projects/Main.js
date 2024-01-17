@@ -69,6 +69,10 @@ const MainProject = () => {
         navigate("/project/overview");
         break;
 
+      case "chat":
+        navigate("/project/chat");
+        break;
+
       case "1":
         navigate("/project/method", {
           state: {

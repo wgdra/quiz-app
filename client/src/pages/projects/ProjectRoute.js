@@ -7,6 +7,7 @@ import Quiz from "./Contents/Quiz";
 import Theory from "./Contents/Theory";
 import Test from "./Contents/Test";
 import Profile from "./Contents/Profile";
+import ChatApp from "./Contents/ChatApp";
 
 export {
   MainProject,
@@ -18,4 +19,5 @@ export {
   Theory,
   Test,
   Profile,
+  ChatApp,
 };
