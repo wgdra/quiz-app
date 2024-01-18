@@ -5,6 +5,7 @@ import HeaderWrapper from "../layouts/Header";
 import Logo from "../assets/images/Sprout-logo.png";
 import ButtonGroup from "../components/ui/ButtonGroup";
 import ButtonBasic from "../components/ui/Button";
+import wallpaper_home_4 from "../assets/images/wallpaper-home-i4.jpg";
 
 const Home = () => {
   const { Content } = Layout;
@@ -128,6 +129,10 @@ const Home = () => {
         }}
       >
         <Outlet />
+        <img
+          src={wallpaper_home_4}
+          style={{ width: "96vw", height: "100vh", margin: "-30px, -30px" }}
+        />
       </Content>
     </Layout>
   );

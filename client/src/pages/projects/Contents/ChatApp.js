@@ -3,14 +3,35 @@ import { Row, Col, List, Avatar, Space, message } from "antd";
 import VirtualList from "rc-virtual-list";
 import BoxChat from "../../../components/ui/BoxChat";
 import { getConversationUser } from "../../../services/chatAppApi";
+import { io } from "socket.io-client";
 
 const ChatApp = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   const [conversation, setConversation] = useState([]);
   const [dataMessage, setDataMessage] = useState("");
+  const [socket, setSocket] = useState(null);
 
   const isUser = JSON.parse(localStorage.getItem("user"));
+
+  // Websocket
+  useEffect(() => {
+    setSocket(io("http://localhost:8080"));
+  }, []);
+
+  console.log("soc", socket);
+  useEffect(() => {
+    socket?.emit("addUser", isUser?._id);
+    socket?.on("getUsers", (users) => {
+      console.log("activeUsers :>> ", users);
+    });
+    // socket?.on('getMessage', data => {
+    // 	setMessages(prev => ({
+    // 		...prev,
+    // 		messages: [...prev.messages, { user: data.user, message: data.message }]
+    // 	}))
+    // })
+  }, [socket]);
 
   // Api
   useEffect(() => {
@@ -113,7 +134,11 @@ const ChatApp = () => {
         >
           <Space align="baseline">
             <Avatar
-              src="https://upload.wikimedia.org/wikipedia/commons/0/03/Logo_HAU.png"
+              src={
+                dataMessage
+                  ? "https://upload.wikimedia.org/wikipedia/commons/0/03/Logo_HAU.png"
+                  : ""
+              }
               style={{ width: 36, height: 36 }}
             />
             <span
@@ -144,10 +169,10 @@ const ChatApp = () => {
           }}
         >
           <span style={{ margin: 0, fontSize: "1.3em", fontWeight: "bolder" }}>
-            Tim kiem
+            Tìm kiếm
           </span>
         </div>
-        <div>content</div>
+        <div></div>
       </Col>
       {contextHolder}
     </Row>

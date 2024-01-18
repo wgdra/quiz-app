@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Row, Col, message } from "antd";
+import { Row, Col, message, Avatar } from "antd";
 import BoxProfilePicture from "../../../components/ui/BoxProfilePicture";
 import BoxProfileInfo from "../../../components/ui/BoxProfileInfo";
 import { useAuthContext } from "../../../hooks/useAuthContext";
@@ -86,7 +86,13 @@ const Profile = () => {
           >
             Ảnh hồ sơ
           </h2>
-          <BoxProfilePicture />
+          <div style={{ height: 320, textAlign: "center" }}>
+            <Avatar
+              src="https://upload.wikimedia.org/wikipedia/commons/0/03/Logo_HAU.png"
+              style={{ width: 240, height: 240, marginTop: 30 }}
+            />
+          </div>
+          {/* <BoxProfilePicture /> */}
         </div>
       </Col>
       <Col span={18}>

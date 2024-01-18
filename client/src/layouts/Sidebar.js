@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ConfigProvider, Layout, Menu } from "antd";
+import logo_app from "../assets/images/Sprout-logo.png";
 
 const SideWrapper = ({ ...props }) => {
   const { items, handleNavigate, background } = props;
@@ -38,7 +39,9 @@ const SideWrapper = ({ ...props }) => {
           className="demo-logo-vertical"
           style={{ textAlign: "center", color: "white" }}
         >
-          <h1 onClick={() => setCollapsed(!collapsed)}>Logooo</h1>
+          <h1 onClick={() => setCollapsed(!collapsed)}>
+            <img src={logo_app} style={{ width: 80 }} />
+          </h1>
         </div>
         <Menu
           theme="dark"

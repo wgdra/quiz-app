@@ -27,7 +27,7 @@ const ButtonGroup = ({ ...props }) => {
                 loading={item.loading || props.loading}
                 name={item.name}
                 htmlType={item.htmlType || props.htmlType}
-                onClick={item.onClick}
+                onClick={item.onClick || props.onClick}
               >
                 {item.label}
               </Button>
