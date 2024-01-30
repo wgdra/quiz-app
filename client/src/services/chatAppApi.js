@@ -26,6 +26,15 @@ const createConversation = (data, token) => {
   );
 };
 
+const deleteConversation = (conversationId, token) => {
+  return instance.delete(`/api/chat/delete/conversation/${conversationId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+};
+
 // Messages
 const getMessagesConversation = (conversationId, token) => {
   return instance.get(`/api/chat/messages/${conversationId}`, {
@@ -57,6 +66,7 @@ const createMessages = (data, token) => {
 export {
   getConversationUser,
   createConversation,
+  deleteConversation,
   getMessagesConversation,
   createMessages,
 };

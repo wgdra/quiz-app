@@ -10,17 +10,25 @@ import {
 } from "../../services/chatAppApi";
 
 const BoxChat = ({ ...props }) => {
-  const { dataMessage } = props;
+  const { dataMessage, socket } = props;
 
   const [messageApi, contextHolder] = message.useMessage();
-
-  console.log("dataMessage", dataMessage);
 
   const inputRef = useRef(null);
 
   const [dataUser, setDataUser] = useState("");
   const [messages, setMessages] = useState([]);
   const [dataInput, setDataInput] = useState("");
+
+  useEffect(() => {
+    socket?.on("getMessage", (data) => {
+      console.log("dat", data);
+      setMessages((prev) => [
+        ...prev,
+        { user: data.user, message: data.message },
+      ]);
+    });
+  }, [socket]);
 
   // API
   useEffect(() => {
@@ -34,12 +42,22 @@ const BoxChat = ({ ...props }) => {
       dataMessage.conversationId,
       token
     );
+    if (res.status !== 200) {
+      setMessages([]);
+    }
     if (res.status === 200) {
       setMessages(res.data);
     }
   };
 
   const handleSend = async () => {
+    socket?.emit("sendMessage", {
+      conversationId: dataMessage.conversationId || null,
+      senderId: dataUser._id,
+      receiverId: dataMessage.user.receiverId,
+      message: dataInput,
+    });
+
     const res = await createMessages(
       {
         conversationId: dataMessage.conversationId || null,
@@ -57,9 +75,6 @@ const BoxChat = ({ ...props }) => {
       });
       return;
     }
-    if (res.status === 201) {
-      fetchMessages(dataUser.token);
-    }
   };
 
   console.log("messages", messages);
@@ -75,8 +90,6 @@ const BoxChat = ({ ...props }) => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-
-    console.log("send");
   };
 
   const handleKeyPress = (e) => {
@@ -215,6 +228,7 @@ const BoxChat = ({ ...props }) => {
             }}
           >
             <InputCustomize
+              disabled={!dataMessage ? true : false}
               inputRef={inputRef}
               placeholder="Nhập tin nhắn..."
               style={{ width: "90%", height: 40 }}
@@ -229,6 +243,7 @@ const BoxChat = ({ ...props }) => {
             />
 
             <ButtonBasic
+              disabled={!dataMessage ? true : false}
               size="large"
               label={<SendOutlined />}
               defaultColor="#ffff"
