@@ -6,6 +6,9 @@ const router = express.Router();
 // CONVERSATION
 router.route("/conversation/:id").get(chatController.getConversationUser);
 router.route("/conversation").post(chatController.createConversation);
+router
+  .route("/delete/conversation/:id")
+  .delete(chatController.deleteConversation);
 
 // MESSAGES
 router.route("/messages/:id").get(chatController.getMessagesConversation);

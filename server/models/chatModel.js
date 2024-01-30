@@ -60,7 +60,24 @@ const createConversation = async (reqBody) => {
         members: [new ObjectId(senderId), new ObjectId(receiverId)],
       });
 
-    return createNew;
+    const result = await connect
+      .GET_DB()
+      .collection(COLLECTION_CONVERSATION)
+      .findOne({ _id: createNew.insertedId });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+const deleteConversation = async (conversationId) => {
+  try {
+    const deleted = await connect
+      .GET_DB()
+      .collection(COLLECTION_CONVERSATION)
+      .deleteOne({ _id: new ObjectId(conversationId) });
+
+    return deleted;
   } catch (error) {
     throw new Error(error);
   }
@@ -113,6 +130,7 @@ const createMessages = async (reqBody) => {
         .insertOne({
           conversationId: new ObjectId(newCoversation.insertedId),
           senderId: new ObjectId(senderId),
+          receiverId: new ObjectId(receiverId),
           message,
         });
 
@@ -125,6 +143,7 @@ const createMessages = async (reqBody) => {
       .insertOne({
         conversationId: new ObjectId(conversationId),
         senderId: new ObjectId(senderId),
+        receiverId: new ObjectId(receiverId),
         message,
       });
 
@@ -143,6 +162,7 @@ module.exports = {
 
   getConversationUser,
   createConversation,
+  deleteConversation,
 
   getMessagesConversation,
   createMessages,

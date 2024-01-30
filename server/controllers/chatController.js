@@ -14,7 +14,7 @@ const getConversationUser = async (req, res, next) => {
   }
 };
 
-// Create CONVERSATION MESSAGES
+// Create CONVERSATION
 const createConversation = async (req, res, next) => {
   try {
     const createConversation = await chatService.createConversation(req.body);
@@ -22,6 +22,22 @@ const createConversation = async (req, res, next) => {
     res
       .status(StatusCodes.CREATED)
       .json({ status: StatusCodes.CREATED, data: createConversation });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// delete CONVERSATION
+const deleteConversation = async (req, res, next) => {
+  try {
+    const conversationId = req.params.id;
+    const deleteConversation = await chatService.deleteConversation(
+      conversationId
+    );
+
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: StatusCodes.OK, data: deleteConversation });
   } catch (error) {
     next(error);
   }
@@ -55,6 +71,7 @@ const createMessages = async (req, res, next) => {
 module.exports = {
   getConversationUser,
   createConversation,
+  deleteConversation,
   getMessagesConversation,
   createMessages,
 };

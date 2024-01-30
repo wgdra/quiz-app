@@ -6,13 +6,8 @@ const { ENV } = require("./config/environment");
 const connect = require("./database/connect");
 const requireAuth = require("./middlewares/requireAuth");
 const errorHandling = require("./middlewares/errorHandling");
-// const http = require("http");
-// const configureSocket = require("./sockets/socket");
-const io = require("socket.io")(8080, {
-  cors: {
-    origin: "http://localhost:3002",
-  },
-});
+const http = require("http");
+const configureSocket = require("./sockets/socket");
 
 // router
 const users = require("./router/usersRoute");
@@ -29,22 +24,8 @@ const auth = require("./router/authRoute");
 
 const START_SERVER = () => {
   const app = express();
-  // const server = http.createServer(app);
-  // const io = configureSocket(server);
-
-  let us = [];
-  io.on("connection", (socket) => {
-    console.log("User connected", socket.id);
-    socket.on("addUser", (userId) => {
-      console.log("userID", userId);
-      // const isUserExist = users.find(user => user.userId === userId);
-      // if (!isUserExist) {
-      //     const user = { userId, socketId: socket.id };
-      //     users.push(user);
-      //     io.emit('getUsers', users);
-      // }
-    });
-  });
+  const server = http.createServer(app);
+  const io = configureSocket(server);
 
   app.use(morgan("tiny"));
   app.use(cors());
@@ -70,7 +51,7 @@ const START_SERVER = () => {
   // Middlewares error
   app.use(errorHandling);
 
-  app.listen(ENV.PORT, () => {
+  server.listen(ENV.PORT, () => {
     console.log(`Server connected to http://localhost:${ENV.PORT}`);
   });
 };

@@ -11,12 +11,25 @@ const getConversationUser = async (userId) => {
   }
 };
 
-// Create CONVERSATION MESSAGES
+// Create CONVERSATION
 const createConversation = async (reqBody) => {
   try {
     const createConversation = await chatModel.createConversation(reqBody);
 
     return createConversation;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// delete CONVERSATION
+const deleteConversation = async (conversationId) => {
+  try {
+    const deletedConversation = await chatModel.deleteConversation(
+      conversationId
+    );
+
+    return deletedConversation;
   } catch (error) {
     throw error;
   }
@@ -47,6 +60,7 @@ const createMessages = async (reqBody) => {
 module.exports = {
   getConversationUser,
   createConversation,
+  deleteConversation,
   getMessagesConversation,
   createMessages,
 };
