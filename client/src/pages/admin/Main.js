@@ -8,6 +8,7 @@ import {
   TeamOutlined,
   UnorderedListOutlined,
   CarryOutOutlined,
+  CommentOutlined,
 } from "@ant-design/icons";
 
 const getItem = (label, key, icon, children, type) => {
@@ -28,6 +29,7 @@ const items = [
     getItem("Ôn Tập Lý Thuyết", "5"),
     getItem("Bài Thi", "6"),
   ]),
+  getItem("Liên Hệ", "7", <CommentOutlined />),
   getItem("Kết Quả", "sub2", <CarryOutOutlined />, [
     getItem("Bài Thi", "sub3", <CarryOutOutlined />, [
       getItem("Môn Toán", "9"),
@@ -61,6 +63,10 @@ const MainAdmin = () => {
 
       case "6":
         navigate("/manage/exam");
+        break;
+
+      case "7":
+        navigate("/manage/contact");
         break;
 
       case "9":

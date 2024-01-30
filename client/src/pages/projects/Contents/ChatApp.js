@@ -45,16 +45,6 @@ const ChatApp = () => {
     socket?.on("getUsers", (users) => {
       console.log("activeUsers", users);
     });
-    // socket?.on("getMessage", (data) => {
-    //   console.log("data message", data);
-    // setMessages((prev) => ({
-    //   ...prev,
-    //   messages: [
-    //     ...prev.messages,
-    //     { user: data.user, message: data.message },
-    //   ],
-    // }));
-    // });
   }, [socket]);
 
   // Api

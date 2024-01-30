@@ -141,13 +141,17 @@ const Home = () => {
       </HeaderWrapper>
 
       {isHomePage ? (
-        <Carousel autoplay effect="fade" autoplaySpeed={6000} speed={800}>
-          <img src={wallpaper_home_1} />
-          <img src={wallpaper_home_2} />
-          <img src={wallpaper_home_3} />
-          <img src={wallpaper_home_4} />
-          <img src={wallpaper_home_5} />
-        </Carousel>
+        <Row>
+          <Col span={24} style={{ position: "fixed" }}>
+            <Carousel autoplay effect="fade" autoplaySpeed={6000} speed={800}>
+              <img src={wallpaper_home_1} width={"100%"} height={1000} />
+              <img src={wallpaper_home_2} width={"100%"} height={1000} />
+              <img src={wallpaper_home_3} width={"100%"} height={1000} />
+              <img src={wallpaper_home_4} width={"100%"} height={1000} />
+              <img src={wallpaper_home_5} width={"100%"} height={1000} />
+            </Carousel>
+          </Col>
+        </Row>
       ) : (
         <Content
           style={{

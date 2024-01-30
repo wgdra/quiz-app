@@ -22,7 +22,6 @@ const BoxChat = ({ ...props }) => {
 
   useEffect(() => {
     socket?.on("getMessage", (data) => {
-      console.log("dat", data);
       setMessages((prev) => [
         ...prev,
         { user: data.user, message: data.message },
@@ -77,7 +76,6 @@ const BoxChat = ({ ...props }) => {
     }
   };
 
-  console.log("messages", messages);
   // Handle
   const onChange = (value) => {
     setDataInput(value);

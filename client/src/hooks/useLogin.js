@@ -36,7 +36,7 @@ export const useLogin = () => {
           content: "Đăng nhập thành công",
         });
         if (res.data.role === 0) {
-          navigate("/manage");
+          navigate("/manage/user");
         } else {
           navigate("/project/overview");
         }

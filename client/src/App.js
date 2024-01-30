@@ -1,15 +1,19 @@
 import "./assets/styles/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import MainAdmin from "./pages/admin/Main";
-import Manage from "./pages/admin/Manage";
-import User from "./pages/admin/Management/user";
-import Synthetic from "./pages/admin/Management/synthetic";
-import Error from "./pages/Error";
-import Theories from "./pages/admin/Management/theories";
-import Exam from "./pages/admin/Management/exam";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
+import Error from "./pages/Error";
+import {
+  MainAdmin,
+  Manage,
+  User,
+  Synthetic,
+  Theories,
+  Exam,
+  Contact,
+} from "./pages/admin/AdminRoute";
+
 import {
   MainProject,
   OverView,
@@ -46,6 +50,7 @@ function App() {
           <Route path="/manage/synthetic" element={<Synthetic />} />
           <Route path="/manage/theories" element={<Theories />} />
           <Route path="/manage/exam" element={<Exam />} />
+          <Route path="/manage/contact" element={<Contact />} />
         </Route>
 
         <Route path="/project" element={<MainProject />}>
