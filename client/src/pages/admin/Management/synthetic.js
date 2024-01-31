@@ -26,6 +26,7 @@ import {
 const Synthetic = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
+  const [token, setToken] = useState();
   const [data, setData] = useState({
     dataClass: [],
     dataSubject: [],
@@ -112,20 +113,23 @@ const Synthetic = () => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
     fetchData(user.token);
   }, []);
 
   const fetchData = async (token) => {
     // Fetch data
+    setToken(token);
+
     let res = await getData(token);
 
     if (res.status === 200) {
       setData((prev) => ({ ...prev, dataClass: res.data }));
     } else {
-      messageApi.open({
-        type: "error",
-        content: "Lỗi lấy dữ liệu !!!",
-      });
+      // messageApi.open({
+      //   type: "error",
+      //   content: "Lỗi lấy dữ liệu !!!",
+      // });
       return;
     }
   };

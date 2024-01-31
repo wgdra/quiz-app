@@ -16,6 +16,9 @@ const Contact = () => {
   const isUser = JSON.parse(localStorage.getItem("user"));
 
   // Api
+  console.log("conversation", conversation);
+  console.log("isUser._id", isUser._id);
+
   useEffect(() => {
     fetchConversation();
   }, []);

@@ -23,9 +23,10 @@ const Test = () => {
   const dataAnswerChoise = [];
   const dataAnswerEssay = [];
   data.content.map((item) => {
-    if (item.answer) {
+    if (item.answer.length > 0) {
       dataAnswerChoise.push(item.answer);
     }
+
     item.questions.forEach((question) => {
       if (question.answer) {
         dataAnswerEssay.push(question.answer);
@@ -49,6 +50,11 @@ const Test = () => {
 
   const [docHidden, setDocHidden] = useState(0);
   // UI
+
+  console.log("point 1", pointChoise);
+  console.log("point 2", pointEssay);
+  console.log("point", pointChoise + pointEssay);
+
   const ChildrenModal = () => {
     return (
       <>
@@ -271,12 +277,13 @@ const Test = () => {
 
   const handleCorrectResult = () => {
     dataAnswerChoise.forEach((answer) => {
-      const point = 5 / answer.length;
+      console.log("ans", answer);
       if (dataUserAnswerChoise.length > 0) {
         const correctResult = answer.filter(
           (element, index) => element === dataUserAnswerChoise[index]
         );
-        setPointChoise(correctResult.length * point);
+        const point = correctResult.length * (5 / answer.length);
+        setPointChoise(point);
       }
     });
 
