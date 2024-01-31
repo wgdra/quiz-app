@@ -54,10 +54,24 @@ const getOneUser = async (id) => {
 const createUser = async (reqBody) => {
   try {
     const validateReq = await validate(reqBody);
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(validateReq.password, salt);
+
+    const create = {
+      username: validateReq.username,
+      password: hash,
+      full_name: validateReq.full_name,
+      role: validateReq.role,
+      email: validateReq.email,
+      createdAt: validateReq.createdAt,
+      updatedAt: validateReq.updatedAt,
+    };
+
     const createNew = await connect
       .GET_DB()
       .collection(COLLECTION_NAME)
-      .insertOne(validateReq);
+      .insertOne(create);
     return createNew;
   } catch (error) {
     throw new Error(error);
